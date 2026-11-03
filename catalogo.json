@@ -1,5 +1,20 @@
 [
   {
+    "id": 1793737601997,
+    "tmdb_id": 559,
+    "title": "El hombre araña 3",
+    "type": "pelicula",
+    "rating": 6.5,
+    "year": 2007,
+    "duration": "2h 19m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/yqQRaD0uBWKLvSVe6LuMveb0ZLv.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/FfAU0PUs8AJkMU2VbkVNFtRXR4.jpg",
+    "synopsis": "Una extraña entidad negra de otro mundo se vincula con Peter Parker y le provoca confusión interna mientras lucha contra nuevos villanos, tentaciones y venganza."
+  },
+  {
     "id": 1793737591719,
     "tmdb_id": 569094,
     "title": "Spider-Man: A través del Spider-Verso",
