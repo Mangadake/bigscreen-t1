@@ -1,5 +1,21 @@
 [
   {
+    "id": 1793744521605,
+    "tmdb_id": 1058424,
+    "title": "Hope: El primer impacto",
+    "type": "pelicula",
+    "rating": 6.8,
+    "year": 2026,
+    "duration": "2h 37m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/hHPIefotew38oJm3YCJPAzpi26c.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/j96rurZqmBjyY37Fncl3IB0qJNe.jpg",
+    "synopsis": "Tras un extraño hallazgo cerca de una aislada ciudad portuaria, los habitantes se ven envueltos en una desesperada lucha por la supervivencia.",
+    "quality": "CAM"
+  },
+  {
     "id": 1793744453608,
     "tmdb_id": 292741,
     "title": "Nocturno",
