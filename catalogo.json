@@ -1,5 +1,20 @@
 [
   {
+    "id": 1793737554813,
+    "tmdb_id": 324857,
+    "title": "Spider-Man: Un nuevo universo",
+    "type": "pelicula",
+    "rating": 8.4,
+    "year": 2018,
+    "duration": "1h 57m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/9l9exwzYsEtSbtuLHJQoNQVQGp7.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/1ntePsIqeklfmrQJqZPncCydsqY.jpg",
+    "synopsis": "En un universo paralelo donde Peter Parker ha muerto, un jóven de secundaria llamado Miles Morales es el nuevo Spider-Man. Sin embargo, cuando el líder mafioso Wilson Fisk (a.k.a Kingpin) construye el \"Super Colisionador\" trae a una versión alternativa de Peter Parker que tratará de enseñarle a Miles como ser un mejor Spider-Man. Pero no será el único Spider Man en entrar a este universo, 4 versiones alternas de Spidey aparecerán y buscarán regresar a su universo antes de que toda la realidad colapse."
+  },
+  {
     "id": 1793737531650,
     "tmdb_id": 634649,
     "title": "Spider-Man: Sin camino a casa",
