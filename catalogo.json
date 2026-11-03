@@ -1,5 +1,21 @@
 [
   {
+    "id": 1793745005256,
+    "tmdb_id": 985939,
+    "title": "Vértigo",
+    "type": "pelicula",
+    "rating": 7.2,
+    "year": 2022,
+    "duration": "1h 47m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/aOidBN8Ch4LD6M9HyvDjTqM9fLF.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/hlxduUs8y9icWGMzYCDLcYHEQ2u.jpg",
+    "synopsis": "Para Becky y Hunter, la vida trata de superar tus miedos y empujar tus límites. Sin embargo, después de subir hasta la cima de una torre de comunicaciones abandonada, se encuentran atrapadas y sin forma de bajar. A 600 metros del suelo y totalmente alejadas de la civilización, las chicas pondrán a prueba sus habilidades de escaladoras expertas y lucharán desesperadamente por sobrevivir aunque lo tengan todo en contra. ¿Lo conseguirán?",
+    "quality": "720p"
+  },
+  {
     "id": 1793744954406,
     "tmdb_id": 1294189,
     "title": "The Mongoose",
