@@ -1,5 +1,21 @@
 [
   {
+    "id": 1793744048031,
+    "tmdb_id": 1507696,
+    "title": "Apocalipsis Z: Nuevo mundo",
+    "type": "pelicula",
+    "rating": 6.1,
+    "year": 2026,
+    "duration": "1h 36m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/pS2R3DEiucuizVkKP80qzdO97TE.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/o3XwuDUj0n8qnK91p6q8LKfr6rj.jpg",
+    "synopsis": "Secuela de 'Apocalipsis Z: El principio del fin'. La historia nos traslada a unas Islas Canarias que se han convertido en el último refugio de Europa tras el brote del virus TSJ. Cuando una misión especial parte hacia la península en busca de suministros vitales, Roberto (Carlos Alcaide) se une al equipo con dudosas intenciones. La peligrosa operación se transforma en una carrera desesperada por la supervivencia, y Roberto y sus compañeros se encontrarán entre hordas de infectados y lealtades divididas. Entonces surge la eterna pregunta: ¿salvarse uno mismo o arriesgarlo todo para salvar lo poco que queda de humanidad?",
+    "quality": "1080p"
+  },
+  {
     "id": 1793743779820,
     "tmdb_id": 96677,
     "title": "Lupin",
