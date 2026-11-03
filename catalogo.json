@@ -1,5 +1,27 @@
 [
   {
+    "id": 1793743109083,
+    "tmdb_id": 289517,
+    "title": "Un trabajo maldito",
+    "type": "serie",
+    "rating": 7.4,
+    "year": 2026,
+    "duration": null,
+    "episodes": 8,
+    "seasons": 1,
+    "seasons_detail": [
+      {
+        "season_number": 1,
+        "name": "Miniserie",
+        "episode_count": 8
+      }
+    ],
+    "poster": "https://image.tmdb.org/t/p/w500/vxXNPQjCZkdTWmXZEkgxVVrftex.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/cyH2fZUjIJjLmgpF3tgA5CSGz4L.jpg",
+    "synopsis": "Agobiado por las deudas, un hombre acepta una serie de lucrativos trabajos de medio tiempo, pero sus esfuerzos por ganar dinero desatan una pesadilla.",
+    "quality": "1080p"
+  },
+  {
     "id": 1793743050253,
     "tmdb_id": 1283515,
     "title": "Verity: La sombra de un engaño",
