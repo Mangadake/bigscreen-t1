@@ -1,5 +1,20 @@
 [
   {
+    "id": 1793737518739,
+    "tmdb_id": 315635,
+    "title": "Spider-Man: De regreso a casa",
+    "type": "pelicula",
+    "rating": 7.3,
+    "year": 2017,
+    "duration": "2h 13m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/h1Iq6WfE4RWc9klGvN8sdi5aR6V.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/lAsr1ytUq0ATWdCbcjf59pupPFy.jpg",
+    "synopsis": "Peter Parker comienza a experimentar su recién descubierta identidad como el superhéroe Spider-Man (El Hombre Araña). Después de la experiencia vivida con los Vengadores, Peter regresa a casa, donde vive con su tía. Bajo la atenta mirada de su mentor Tony Stark, Peter intenta mantener una vida normal como cualquier joven de su edad, pero interrumpe en su rutina diaria el nuevo villano Vulture y, con él, lo más importante de la vida de Peter comenzará a verse amenazado."
+  },
+  {
     "id": 1793737462998,
     "tmdb_id": 557,
     "title": "El hombre araña",
