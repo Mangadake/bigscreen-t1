@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel de Administración - StreamLab</title>
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css?v=3">
   <style>
     .admin-container {
       max-width: 820px;
@@ -295,4 +295,671 @@
       background: #2563eb;
       color: #fff;
       border: none;
-      padding: 0.2rem
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .btn-save-inline:hover {
+      background: #1d4ed8;
+    }
+    .btn-delete {
+      background: #dc2626;
+      color: #fff;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      flex-shrink: 0;
+      transition: background-color 0.2s;
+    }
+    .btn-delete:hover {
+      background: #b91c1c;
+    }
+    .btn-reload {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--text-secondary);
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .btn-reload:hover {
+      color: #fff;
+      border-color: #fff;
+    }
+    .bookmark-box {
+      margin-top: 1rem;
+      background: #182230;
+      border: 1px dashed #3b82f6;
+      padding: 0.8rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <h2>Panel de Administración</h2>
+    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.5rem;">
+      Las credenciales se guardan automáticamente en tu navegador.
+    </p>
+
+    <!-- Configuración de llaves -->
+    <details style="margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;" id="details-keys">
+      <summary style="cursor: pointer; color: var(--accent); font-weight: 600;">Configurar Llaves de Acceso</summary>
+      
+      <div class="form-group" style="margin-top: 1rem;">
+        <label>API Key de TMDB (v3 auth):</label>
+        <input type="text" id="tmdb-key" placeholder="Pega tu llave de TMDB">
+      </div>
+      <div class="form-group">
+        <label>GitHub Personal Access Token (permiso 'repo'):</label>
+        <input type="password" id="gh-token" placeholder="ghp_xxxx">
+      </div>
+      <div class="form-group">
+        <label>Tu Usuario de GitHub / Nombre del Repo:</label>
+        <input type="text" id="gh-repo" value="Mangadake/bigscreen-T1">
+      </div>
+
+      <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+        <button class="btn-action" style="background: #374151;" id="save-keys-btn">Guardar Llaves</button>
+        <button class="btn-action" style="background: #2563eb;" id="btn-create-bookmark">Crear Enlace Permanente (Marcador)</button>
+      </div>
+
+      <div class="bookmark-box" id="bookmark-box">
+        <p style="margin-bottom: 0.5rem; color: #93c5fd;"><strong>¡Enlace creado!</strong> Guarda este enlace directo en tus Marcadores de Chrome:</p>
+        <a id="bookmark-link" href="#" style="color: #60a5fa; font-weight: bold; word-break: break-all;" target="_blank">Mi Acceso Directo con Llaves</a>
+      </div>
+    </details>
+
+    <!-- EXPLORADOR DE TÍTULOS -->
+    <div class="catalog-explorer">
+      <div class="explorer-header">
+        <h3>Explorar y Descubrir Contenido</h3>
+        <div class="explorer-tabs">
+          <button class="tab-btn active" data-type="trending">Tendencias</button>
+          <button class="tab-btn" data-type="popular_movies">Películas Populares</button>
+          <button class="tab-btn" data-type="popular_series">Series Populares</button>
+          <button class="tab-btn" data-type="anime">Anime</button>
+        </div>
+      </div>
+
+      <div class="explorer-search-row">
+        <input type="text" id="explorer-search-input" placeholder="Buscar título por nombre (ej: Batman, One Piece)...">
+        <button id="btn-search-tmdb">Buscar</button>
+      </div>
+
+      <div class="explorer-results" id="explorer-results">
+        <p style="color: var(--text-secondary); font-size: 0.85rem; grid-column: 1 / -1; text-align: center; padding: 1.5rem;">
+          Cargando títulos sugeridos...
+        </p>
+      </div>
+    </div>
+
+    <!-- IMPORTAR POR URL MANUAL -->
+    <div class="form-group">
+      <label>O pega la URL completa de TMDB manualmente:</label>
+      <input type="url" id="tmdb-url" placeholder="https://www.themoviedb.org/tv/1396-breaking-bad">
+    </div>
+
+    <button class="btn-action" id="fetch-btn">Analizar y Obtener Datos</button>
+
+    <!-- PREVIEW Y PUBLICACIÓN -->
+    <div class="preview-card" id="preview-box">
+      <div class="modal-detail-grid">
+        <img id="prev-img" src="" alt="Poster">
+        <div class="modal-detail-text">
+          <h3 id="prev-title"></h3>
+          <p id="prev-meta" style="color: var(--text-secondary);"></p>
+          <p id="prev-synopsis" style="font-size: 0.85rem;"></p>
+        </div>
+      </div>
+
+      <!-- Selector de Calidad -->
+      <div class="form-group" style="margin-top: 1rem;">
+        <label for="prev-quality" style="color: #60a5fa;">Etiqueta de Calidad (Opcional):</label>
+        <select id="prev-quality">
+          <option value="" selected>Ninguna (No mostrar etiqueta)</option>
+          <option value="CAM">CAM (Naranja)</option>
+          <option value="720p">720p (Azul Celeste)</option>
+          <option value="1080p">1080p (Verde)</option>
+          <option value="4K">4K (Púrpura)</option>
+        </select>
+      </div>
+
+      <div class="stream-checker-box">
+        <div class="checker-title">
+          <span>▶ Verificación en Vivo de FacilitoPlay:</span>
+        </div>
+        <p style="font-size: 0.78rem; color: var(--text-secondary);">
+          Comprueba abajo si el reproductor arranca con audio o subtítulos antes de publicar.
+        </p>
+        <div class="checker-frame-container">
+          <iframe id="checker-iframe" src="" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+
+      <button class="btn-action" id="publish-btn" style="background: #10b981; margin-top: 1.2rem;">Confirmar y Publicar en GitHub</button>
+    </div>
+
+    <p class="status-msg" id="status-text"></p>
+
+    <!-- GESTOR Y EDITOR DE CALIDAD -->
+    <div class="catalog-manager">
+      <h3>
+        Títulos Publicados en tu Web
+        <button class="btn-reload" id="btn-refresh-list">↻ Recargar Lista</button>
+      </h3>
+      <div class="manage-list" id="manage-list">
+        <p style="color: var(--text-secondary); font-size: 0.85rem;">Cargando títulos...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tmdbInput = document.getElementById("tmdb-key");
+    const ghTokenInput = document.getElementById("gh-token");
+    const ghRepoInput = document.getElementById("gh-repo");
+    const explorerResults = document.getElementById("explorer-results");
+    const explorerSearchInput = document.getElementById("explorer-search-input");
+    const prevQualitySelect = document.getElementById("prev-quality");
+
+    function inicializarLlaves() {
+      if (window.location.hash) {
+        const params = new URLSearchParams(window.location.hash.substring(1));
+        if (params.get("tmdb")) localStorage.setItem("tmdb_key", params.get("tmdb"));
+        if (params.get("gh")) localStorage.setItem("gh_token", params.get("gh"));
+        if (params.get("repo")) localStorage.setItem("gh_repo", params.get("repo"));
+        history.replaceState(null, null, "admin.html");
+      }
+
+      const savedTmdb = localStorage.getItem("tmdb_key") || "";
+      const savedGh = localStorage.getItem("gh_token") || "";
+      const savedRepo = localStorage.getItem("gh_repo") || "Mangadake/bigscreen-T1";
+
+      tmdbInput.value = savedTmdb;
+      ghTokenInput.value = savedGh;
+      ghRepoInput.value = savedRepo;
+
+      if (!savedTmdb || !savedGh) {
+        document.getElementById("details-keys").open = true;
+      }
+    }
+
+    document.getElementById("save-keys-btn").addEventListener("click", () => {
+      localStorage.setItem("tmdb_key", tmdbInput.value.trim());
+      localStorage.setItem("gh_token", ghTokenInput.value.trim());
+      localStorage.setItem("gh_repo", ghRepoInput.value.trim());
+      alert("Llaves guardadas correctamente.");
+      cargarExplorador("trending");
+      cargarTitulosActuales();
+    });
+
+    document.getElementById("btn-create-bookmark").addEventListener("click", () => {
+      const tmdb = tmdbInput.value.trim();
+      const gh = ghTokenInput.value.trim();
+      const repo = ghRepoInput.value.trim();
+
+      if (!tmdb || !gh) return alert("Escribe primero tu clave de TMDB y tu Token de GitHub.");
+
+      const fullUrl = `${window.location.origin}${window.location.pathname}#tmdb=${encodeURIComponent(tmdb)}&gh=${encodeURIComponent(gh)}&repo=${encodeURIComponent(repo)}`;
+      const bookmarkBox = document.getElementById("bookmark-box");
+      const bookmarkLink = document.getElementById("bookmark-link");
+
+      bookmarkLink.href = fullUrl;
+      bookmarkBox.style.display = "block";
+    });
+
+    inicializarLlaves();
+
+    let currentItemData = null;
+
+    function obtenerUrlFacilitoPlayTest(type, tmdb_id) {
+      const base = "https://facilitoplay.com/e";
+      if (type === "pelicula") return `${base}/pelicula/${tmdb_id}`;
+      return `${base}/${type}/${tmdb_id}/1/1`;
+    }
+
+    async function cargarExplorador(categoria, query = "") {
+      const tmdbKey = tmdbInput.value.trim() || localStorage.getItem("tmdb_key");
+      if (!tmdbKey) {
+        explorerResults.innerHTML = `<p style="color: #f59e0b; font-size: 0.9rem; grid-column: 1 / -1; text-align: center; padding: 1.5rem;">⚠️ Despliega arriba "Configurar Llaves de Acceso" y guarda tu API Key de TMDB para activar el explorador.</p>`;
+        return;
+      }
+
+      explorerResults.innerHTML = `<p style="color: var(--text-secondary); font-size: 0.85rem; grid-column: 1 / -1; text-align: center; padding: 1.5rem;">Buscando en TMDB...</p>`;
+
+      let endpoint = "";
+      if (query) {
+        endpoint = `https://api.themoviedb.org/3/search/multi?api_key=${tmdbKey}&language=es-MX&query=${encodeURIComponent(query)}&page=1`;
+      } else if (categoria === "trending") {
+        endpoint = `https://api.themoviedb.org/3/trending/all/week?api_key=${tmdbKey}&language=es-MX`;
+      } else if (categoria === "popular_movies") {
+        endpoint = `https://api.themoviedb.org/3/movie/popular?api_key=${tmdbKey}&language=es-MX&page=1`;
+      } else if (categoria === "popular_series") {
+        endpoint = `https://api.themoviedb.org/3/tv/popular?api_key=${tmdbKey}&language=es-MX&page=1`;
+      } else if (categoria === "anime") {
+        endpoint = `https://api.themoviedb.org/3/discover/tv?api_key=${tmdbKey}&language=es-MX&sort_by=popularity.desc&with_genres=16&with_origin_country=JP&page=1`;
+      }
+
+      try {
+        const res = await fetch(endpoint);
+        if (!res.ok) throw new Error("Llave de TMDB inválida o error en el servidor.");
+        const data = await res.json();
+        const items = (data.results || []).filter(i => (i.media_type === "movie" || i.media_type === "tv" || !i.media_type) && i.poster_path);
+
+        if (items.length === 0) {
+          explorerResults.innerHTML = `<p style="color: var(--text-secondary); font-size: 0.85rem; grid-column: 1 / -1; text-align: center; padding: 1.5rem;">No se encontraron resultados.</p>`;
+          return;
+        }
+
+        explorerResults.innerHTML = "";
+        items.forEach(item => {
+          const isMovie = item.title !== undefined || item.media_type === "movie";
+          const title = item.title || item.name;
+          const mediaType = isMovie ? "movie" : "tv";
+          const year = (item.release_date || item.first_air_date || "").substring(0, 4);
+          const poster = `https://image.tmdb.org/t/p/w200${item.poster_path}`;
+
+          const card = document.createElement("div");
+          card.className = "explorer-item";
+          card.innerHTML = `
+            <img src="${poster}" alt="${title}" loading="lazy">
+            <div class="explorer-item-info">
+              <div>
+                <div class="explorer-item-title" title="${title}">${title}</div>
+                <div class="explorer-item-meta">${mediaType.toUpperCase()} • ${year || "N/A"}</div>
+              </div>
+              <button class="btn-inspect" data-type="${mediaType}" data-id="${item.id}">Inspeccionar</button>
+            </div>
+          `;
+
+          card.querySelector(".btn-inspect").addEventListener("click", () => {
+            inspeccionarPorId(mediaType, item.id);
+          });
+
+          explorerResults.appendChild(card);
+        });
+
+      } catch (err) {
+        explorerResults.innerHTML = `<p style="color: #ef4444; font-size: 0.85rem; grid-column: 1 / -1; text-align: center; padding: 1.5rem;">Error: ${err.message}</p>`;
+      }
+    }
+
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        explorerSearchInput.value = "";
+        cargarExplorador(btn.dataset.type);
+      });
+    });
+
+    document.getElementById("btn-search-tmdb").addEventListener("click", () => {
+      const q = explorerSearchInput.value.trim();
+      if (!q) return;
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      cargarExplorador(null, q);
+    });
+
+    explorerSearchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        document.getElementById("btn-search-tmdb").click();
+      }
+    });
+
+    async function inspeccionarPorId(endpointType, tmdbId) {
+      const tmdbKey = tmdbInput.value.trim() || localStorage.getItem("tmdb_key");
+      const statusText = document.getElementById("status-text");
+
+      statusText.style.color = "var(--text-secondary)";
+      statusText.innerText = "Cargando ficha y reproductor de prueba...";
+      document.getElementById("tmdb-url").value = `https://www.themoviedb.org/${endpointType}/${tmdbId}`;
+
+      try {
+        const res = await fetch(`https://api.themoviedb.org/3/${endpointType}/${tmdbId}?api_key=${tmdbKey}&language=es-MX`);
+        if (!res.ok) throw new Error("No se pudo obtener información del título.");
+        const data = await res.json();
+
+        let detectedType = (endpointType === "movie") ? "pelicula" : "serie";
+        if (endpointType === "tv") {
+          const esJapon = data.origin_country && data.origin_country.includes("JP");
+          const esAnimacion = data.genres && data.genres.some(g => g.id === 16);
+          if (esJapon && esAnimacion) detectedType = "anime";
+        }
+
+        const year = (data.release_date || data.first_air_date || "").substring(0, 4);
+        const duration = data.runtime ? `${Math.floor(data.runtime / 60)}h ${data.runtime % 60}m` : null;
+
+        let seasonsDetail = [];
+        if (endpointType === "tv" && data.seasons) {
+          seasonsDetail = data.seasons
+            .filter(s => s.season_number > 0 && s.episode_count > 0)
+            .map(s => ({
+              season_number: s.season_number,
+              name: s.name || `Temporada ${s.season_number}`,
+              episode_count: s.episode_count
+            }));
+        }
+
+        prevQualitySelect.value = "";
+
+        currentItemData = {
+          id: Date.now(),
+          tmdb_id: parseInt(tmdbId),
+          title: data.title || data.name,
+          type: detectedType,
+          rating: parseFloat(data.vote_average.toFixed(1)),
+          year: parseInt(year) || new Date().getFullYear(),
+          duration: duration,
+          episodes: data.number_of_episodes || null,
+          seasons: data.number_of_seasons || 1,
+          seasons_detail: seasonsDetail.length > 0 ? seasonsDetail : null,
+          poster: data.poster_path ? `https://image.tmdb.org/t/p/w500${data.poster_path}` : "https://via.placeholder.com/500x750",
+          backdrop: data.backdrop_path ? `https://image.tmdb.org/t/p/original${data.backdrop_path}` : null,
+          synopsis: data.overview || "Sin sinopsis disponible.",
+          quality: null
+        };
+
+        document.getElementById("prev-img").src = currentItemData.poster;
+        document.getElementById("prev-title").innerText = currentItemData.title;
+        document.getElementById("prev-meta").innerText = `${currentItemData.type.toUpperCase()} | ★ ${currentItemData.rating} | ${currentItemData.year}`;
+        document.getElementById("prev-synopsis").innerText = currentItemData.synopsis;
+
+        const checkerIframe = document.getElementById("checker-iframe");
+        checkerIframe.src = obtenerUrlFacilitoPlayTest(currentItemData.type, currentItemData.tmdb_id);
+
+        document.getElementById("preview-box").style.display = "block";
+        document.getElementById("preview-box").scrollIntoView({ behavior: "smooth" });
+        statusText.innerText = "Datos cargados. Revisa el reproductor de FacilitoPlay antes de confirmar.";
+
+      } catch (err) {
+        statusText.style.color = "#ef4444";
+        statusText.innerText = `Error: ${err.message}`;
+      }
+    }
+
+    document.getElementById("fetch-btn").addEventListener("click", () => {
+      const urlInput = document.getElementById("tmdb-url").value.trim();
+      if (!urlInput) return alert("Pega una URL válida de TMDB.");
+
+      const isMovie = urlInput.includes("/movie/");
+      const isTv = urlInput.includes("/tv/");
+      if (!isMovie && !isTv) return alert("La URL debe ser de themoviedb.org (/movie/ o /tv/)");
+
+      const match = urlInput.match(/(movie|tv)\/(\d+)/);
+      if (!match) return alert("No se pudo extraer el ID numérico de la URL.");
+
+      inspeccionarPorId(match[1], match[2]);
+    });
+
+    document.getElementById("publish-btn").addEventListener("click", async () => {
+      const token = ghTokenInput.value.trim() || localStorage.getItem("gh_token");
+      let repo = ghRepoInput.value.trim() || localStorage.getItem("gh_repo") || "";
+      const statusText = document.getElementById("status-text");
+
+      repo = repo.replace("https://github.com/", "").replace("/", " ").trim().replace(" ", "/");
+
+      if (!token || !repo) return alert("Falta el Token de GitHub o el Nombre del Repositorio.");
+      if (!currentItemData) return;
+
+      const valCalidad = prevQualitySelect.value.trim();
+      currentItemData.quality = valCalidad ? valCalidad : null;
+
+      statusText.style.color = "var(--text-secondary)";
+      statusText.innerText = "Conectando con GitHub...";
+
+      try {
+        const fileUrl = `https://api.github.com/repos/${repo}/contents/catalogo.json`;
+        let actualJson = [];
+        let fileSha = null;
+
+        const getRes = await fetch(fileUrl, {
+          headers: { 
+            "Authorization": `token ${token}`,
+            "Accept": "application/vnd.github.v3+json"
+          }
+        });
+
+        if (getRes.status === 401) throw new Error("Token de GitHub inválido o sin permisos.");
+        
+        if (getRes.ok) {
+          const resData = await getRes.json();
+          fileSha = resData.sha;
+          if (resData.content) {
+            actualJson = JSON.parse(decodeURIComponent(escape(atob(resData.content))));
+          }
+        }
+
+        const yaExiste = actualJson.some(i => i.tmdb_id === currentItemData.tmdb_id && i.type === currentItemData.type);
+        if (yaExiste) throw new Error("Este título ya está en el catálogo.");
+
+        actualJson.unshift(currentItemData);
+
+        const nuevoContenidoBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(actualJson, null, 2))));
+
+        const putRes = await fetch(fileUrl, {
+          method: "PUT",
+          headers: {
+            "Authorization": `token ${token}`,
+            "Content-Type": "application/json",
+            "Accept": "application/vnd.github.v3+json"
+          },
+          body: JSON.stringify({
+            message: `Añadido: ${currentItemData.title} ${currentItemData.quality ? `(${currentItemData.quality})` : ''}`,
+            content: nuevoContenidoBase64,
+            sha: fileSha
+          })
+        });
+
+        if (!putRes.ok) throw new Error("Error al guardar en GitHub.");
+
+        statusText.style.color = "#10b981";
+        statusText.innerText = `¡"${currentItemData.title}" se publicó correctamente!`;
+        document.getElementById("preview-box").style.display = "none";
+        document.getElementById("checker-iframe").src = "";
+        document.getElementById("tmdb-url").value = "";
+        currentItemData = null;
+
+        cargarTitulosActuales();
+
+      } catch (err) {
+        statusText.style.color = "#ef4444";
+        statusText.innerText = `Error al publicar: ${err.message}`;
+      }
+    });
+
+    async function cargarTitulosActuales() {
+      const manageList = document.getElementById("manage-list");
+      manageList.innerHTML = `<p style="color: var(--text-secondary); font-size: 0.85rem;">Cargando títulos...</p>`;
+
+      try {
+        const res = await fetch(`catalogo.json?t=${Date.now()}`);
+        if (!res.ok) throw new Error("No se pudo leer catalogo.json");
+        
+        const items = await res.json();
+
+        if (items.length === 0) {
+          manageList.innerHTML = `<p style="color: var(--text-secondary); font-size: 0.85rem;">No tienes títulos en el catálogo aún.</p>`;
+          return;
+        }
+
+        manageList.innerHTML = "";
+        items.forEach((item, index) => {
+          const div = document.createElement("div");
+          div.className = "manage-item";
+          
+          let currentQ = (item.quality || "").trim().toUpperCase();
+          if (currentQ === "HD") currentQ = "720p";
+          if (currentQ === "FHD") currentQ = "1080p";
+          if (currentQ === "UHD") currentQ = "4K";
+
+          div.innerHTML = `
+            <div class="manage-item-info">
+              <img src="${item.poster}" alt="${item.title}">
+              <div class="manage-item-text">
+                <h4 title="${item.title}">${item.title}</h4>
+                <span>${item.type} • ${item.year}</span>
+                <div class="manage-quality-row">
+                  <select id="edit-quality-${index}">
+                    <option value="" ${currentQ === '' ? 'selected' : ''}>Sin etiqueta</option>
+                    <option value="CAM" ${currentQ === 'CAM' ? 'selected' : ''}>CAM</option>
+                    <option value="720p" ${currentQ === '720P' || currentQ === '720p' ? 'selected' : ''}>720p</option>
+                    <option value="1080p" ${currentQ === '1080P' || currentQ === '1080p' ? 'selected' : ''}>1080p</option>
+                    <option value="4K" ${currentQ === '4K' || currentQ === '4k' ? 'selected' : ''}>4K</option>
+                  </select>
+                  <button class="btn-save-inline" id="btn-save-q-${index}">Guardar</button>
+                </div>
+              </div>
+            </div>
+            <button class="btn-delete" data-index="${index}">Eliminar</button>
+          `;
+
+          div.querySelector(`#btn-save-q-${index}`).addEventListener("click", () => {
+            const nuevaCalidad = div.querySelector(`#edit-quality-${index}`).value;
+            actualizarCalidadDeTitulo(item.title, index, nuevaCalidad);
+          });
+
+          div.querySelector(".btn-delete").addEventListener("click", () => {
+            eliminarTitulo(item.title, index);
+          });
+
+          manageList.appendChild(div);
+        });
+
+      } catch (err) {
+        manageList.innerHTML = `<p style="color: #ef4444; font-size: 0.85rem;">Error al cargar lista: ${err.message}</p>`;
+      }
+    }
+
+    async function actualizarCalidadDeTitulo(titulo, index, nuevaCalidad) {
+      const token = ghTokenInput.value.trim() || localStorage.getItem("gh_token");
+      let repo = ghRepoInput.value.trim() || localStorage.getItem("gh_repo") || "";
+      const statusText = document.getElementById("status-text");
+
+      repo = repo.replace("https://github.com/", "").replace("/", " ").trim().replace(" ", "/");
+
+      if (!token) return alert("Falta el Token de GitHub para autorizar el cambio.");
+
+      statusText.style.color = "var(--text-secondary)";
+      statusText.innerText = `Actualizando calidad de "${titulo}" en GitHub...`;
+
+      try {
+        const fileUrl = `https://api.github.com/repos/${repo}/contents/catalogo.json`;
+
+        const getRes = await fetch(fileUrl, {
+          headers: { 
+            "Authorization": `token ${token}`,
+            "Accept": "application/vnd.github.v3+json"
+          }
+        });
+
+        if (!getRes.ok) throw new Error("No se pudo conectar con catalogo.json.");
+        const resData = await getRes.json();
+        const actualJson = JSON.parse(decodeURIComponent(escape(atob(resData.content))));
+
+        actualJson[index].quality = nuevaCalidad ? nuevaCalidad : null;
+
+        const nuevoContenidoBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(actualJson, null, 2))));
+
+        const putRes = await fetch(fileUrl, {
+          method: "PUT",
+          headers: {
+            "Authorization": `token ${token}`,
+            "Content-Type": "application/json",
+            "Accept": "application/vnd.github.v3+json"
+          },
+          body: JSON.stringify({
+            message: `Actualizada calidad: ${titulo} -> ${nuevaCalidad || 'Ninguna'}`,
+            content: nuevoContenidoBase64,
+            sha: resData.sha
+          })
+        });
+
+        if (!putRes.ok) throw new Error("Error al guardar cambios en GitHub.");
+
+        statusText.style.color = "#10b981";
+        statusText.innerText = `Etiqueta de "${titulo}" actualizada a "${nuevaCalidad || 'Sin etiqueta'}".`;
+
+        cargarTitulosActuales();
+
+      } catch (err) {
+        statusText.style.color = "#ef4444";
+        statusText.innerText = `Error: ${err.message}`;
+      }
+    }
+
+    async function eliminarTitulo(titulo, indexABorrar) {
+      const confirmacion = confirm(`¿Estás seguro de que deseas eliminar "${titulo}" del catálogo?`);
+      if (!confirmacion) return;
+
+      const token = ghTokenInput.value.trim() || localStorage.getItem("gh_token");
+      let repo = ghRepoInput.value.trim() || localStorage.getItem("gh_repo") || "";
+      const statusText = document.getElementById("status-text");
+
+      repo = repo.replace("https://github.com/", "").replace("/", " ").trim().replace(" ", "/");
+
+      if (!token) return alert("Falta el Token de GitHub para autorizar la eliminación.");
+
+      statusText.style.color = "var(--text-secondary)";
+      statusText.innerText = `Eliminando "${titulo}" de GitHub...`;
+
+      try {
+        const fileUrl = `https://api.github.com/repos/${repo}/contents/catalogo.json`;
+
+        const getRes = await fetch(fileUrl, {
+          headers: { 
+            "Authorization": `token ${token}`,
+            "Accept": "application/vnd.github.v3+json"
+          }
+        });
+
+        if (!getRes.ok) throw new Error("No se pudo leer catalogo.json.");
+        const resData = await getRes.json();
+        const actualJson = JSON.parse(decodeURIComponent(escape(atob(resData.content))));
+
+        actualJson.splice(indexABorrar, 1);
+
+        const nuevoContenidoBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(actualJson, null, 2))));
+
+        const putRes = await fetch(fileUrl, {
+          method: "PUT",
+          headers: {
+            "Authorization": `token ${token}`,
+            "Content-Type": "application/json",
+            "Accept": "application/vnd.github.v3+json"
+          },
+          body: JSON.stringify({
+            message: `Eliminado: ${titulo}`,
+            content: nuevoContenidoBase64,
+            sha: resData.sha
+          })
+        });
+
+        if (!putRes.ok) throw new Error("Error al guardar cambios en GitHub.");
+
+        statusText.style.color = "#10b981";
+        statusText.innerText = `"${titulo}" ha sido eliminado con éxito.`;
+
+        cargarTitulosActuales();
+
+      } catch (err) {
+        statusText.style.color = "#ef4444";
+        statusText.innerText = `Error al eliminar: ${err.message}`;
+      }
+    }
+
+    document.getElementById("btn-refresh-list").addEventListener("click", cargarTitulosActuales);
+
+    cargarExplorador("trending");
+    cargarTitulosActuales();
+  </script>
+</body>
+</html>
