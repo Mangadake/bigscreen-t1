@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Streaming</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap">
+</head>
+<body>
+  <!-- Barra Superior -->
+  <header class="navbar">
+    <div class="logo">Stream<span>Lab</span></div>
+    
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Buscar por título..." autocomplete="off">
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">Todos</button>
+      <button class="filter-btn" data-filter="pelicula">Películas</button>
+      <button class="filter-btn" data-filter="serie">Series</button>
+      <button class="filter-btn" data-filter="anime">Anime</button>
+      <button class="filter-btn" data-filter="favoritos">⭐ Mi Lista</button>
+    </div>
+  </header>
+
+  <!-- Hero Banner Destacado -->
+  <section id="hero-banner" class="hero-banner"></section>
+
+  <!-- Grilla del Catálogo -->
+  <main class="container">
+    <section class="catalog-grid" id="catalog-grid"></section>
+  </main>
+
+  <!-- Modal Emergente -->
+  <div class="modal-overlay" id="modal-overlay" style="display: none;">
+    <div class="modal">
+      <button class="close-btn" id="close-modal">&times;</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,604 @@
+[
+  {
+    "id": 1793734264424,
+    "tmdb_id": 969681,
+    "title": "Spider-Man: Un nuevo día",
+    "type": "pelicula",
+    "rating": 8.5,
+    "year": 2026,
+    "duration": "2h 25m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/fBFjaDWfNslvrs6bJjknmG27wOS.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/4tjxYg2AbOzzG9G1YuiT2NzYhlH.jpg",
+    "synopsis": "A medida qué Spider-Man está en la cima de su carrera protegiendo la ciudad de Nueva York, una serie de crímenes inusuales lo arrastran a una red de misterios más grande de lo que jamás haya enfrentado."
+  },
+  {
+    "id": 1793733210779,
+    "tmdb_id": 456,
+    "title": "Los Simpson",
+    "type": "serie",
+    "rating": 8,
+    "year": 1989,
+    "duration": null,
+    "episodes": 816,
+    "seasons": 38,
+    "seasons_detail": [
+      {
+        "season_number": 1,
+        "name": "Temporada 1",
+        "episode_count": 13
+      },
+      {
+        "season_number": 2,
+        "name": "Temporada 2",
+        "episode_count": 22
+      },
+      {
+        "season_number": 3,
+        "name": "Temporada 3",
+        "episode_count": 24
+      },
+      {
+        "season_number": 4,
+        "name": "Temporada 4",
+        "episode_count": 22
+      },
+      {
+        "season_number": 5,
+        "name": "Temporada 5",
+        "episode_count": 22
+      },
+      {
+        "season_number": 6,
+        "name": "Temporada 6",
+        "episode_count": 25
+      },
+      {
+        "season_number": 7,
+        "name": "Temporada 7",
+        "episode_count": 25
+      },
+      {
+        "season_number": 8,
+        "name": "Temporada 8",
+        "episode_count": 25
+      },
+      {
+        "season_number": 9,
+        "name": "Temporada 9",
+        "episode_count": 25
+      },
+      {
+        "season_number": 10,
+        "name": "Temporada 10",
+        "episode_count": 23
+      },
+      {
+        "season_number": 11,
+        "name": "Temporada 11",
+        "episode_count": 22
+      },
+      {
+        "season_number": 12,
+        "name": "Temporada 12",
+        "episode_count": 21
+      },
+      {
+        "season_number": 13,
+        "name": "Temporada 13",
+        "episode_count": 22
+      },
+      {
+        "season_number": 14,
+        "name": "Temporada 14",
+        "episode_count": 22
+      },
+      {
+        "season_number": 15,
+        "name": "Temporada 15",
+        "episode_count": 22
+      },
+      {
+        "season_number": 16,
+        "name": "Temporada 16",
+        "episode_count": 21
+      },
+      {
+        "season_number": 17,
+        "name": "Temporada 17",
+        "episode_count": 22
+      },
+      {
+        "season_number": 18,
+        "name": "Temporada 18",
+        "episode_count": 22
+      },
+      {
+        "season_number": 19,
+        "name": "Temporada 19",
+        "episode_count": 20
+      },
+      {
+        "season_number": 20,
+        "name": "Temporada 20",
+        "episode_count": 21
+      },
+      {
+        "season_number": 21,
+        "name": "Temporada 21",
+        "episode_count": 23
+      },
+      {
+        "season_number": 22,
+        "name": "Temporada 22",
+        "episode_count": 22
+      },
+      {
+        "season_number": 23,
+        "name": "Temporada 23",
+        "episode_count": 22
+      },
+      {
+        "season_number": 24,
+        "name": "Temporada 24",
+        "episode_count": 22
+      },
+      {
+        "season_number": 25,
+        "name": "Temporada 25",
+        "episode_count": 22
+      },
+      {
+        "season_number": 26,
+        "name": "Temporada 26",
+        "episode_count": 22
+      },
+      {
+        "season_number": 27,
+        "name": "Temporada 27",
+        "episode_count": 22
+      },
+      {
+        "season_number": 28,
+        "name": "Temporada 28",
+        "episode_count": 22
+      },
+      {
+        "season_number": 29,
+        "name": "Temporada 29",
+        "episode_count": 21
+      },
+      {
+        "season_number": 30,
+        "name": "Temporada 30",
+        "episode_count": 23
+      },
+      {
+        "season_number": 31,
+        "name": "Temporada 31",
+        "episode_count": 22
+      },
+      {
+        "season_number": 32,
+        "name": "Temporada 32",
+        "episode_count": 22
+      },
+      {
+        "season_number": 33,
+        "name": "Temporada 33",
+        "episode_count": 22
+      },
+      {
+        "season_number": 34,
+        "name": "Temporada 34",
+        "episode_count": 22
+      },
+      {
+        "season_number": 35,
+        "name": "Temporada 35",
+        "episode_count": 18
+      },
+      {
+        "season_number": 36,
+        "name": "Temporada 36",
+        "episode_count": 18
+      },
+      {
+        "season_number": 37,
+        "name": "Temporada 37",
+        "episode_count": 15
+      },
+      {
+        "season_number": 38,
+        "name": "Temporada 38",
+        "episode_count": 15
+      }
+    ],
+    "poster": "https://image.tmdb.org/t/p/w500/mpizUstxJmMbgMwc8MDEXQ6kXTP.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/jIArNHIekrCSVgdMbKPAXpPY03Y.jpg",
+    "synopsis": "La familia Simpson (Homero, Marge, Bart, Lisa y Maggie), y un reparto virtual de miles, viven aventuras cotidianas en Springfield, una ciudad estadounidense promedio."
+  },
+  {
+    "id": 1793731999320,
+    "tmdb_id": 44217,
+    "title": "Vikings",
+    "type": "serie",
+    "rating": 8.1,
+    "year": 2013,
+    "duration": null,
+    "episodes": 89,
+    "seasons": 6,
+    "seasons_detail": [
+      {
+        "season_number": 1,
+        "name": "Temporada 1",
+        "episode_count": 9
+      },
+      {
+        "season_number": 2,
+        "name": "Temporada 2",
+        "episode_count": 10
+      },
+      {
+        "season_number": 3,
+        "name": "Temporada 3",
+        "episode_count": 10
+      },
+      {
+        "season_number": 4,
+        "name": "Temporada 4",
+        "episode_count": 20
+      },
+      {
+        "season_number": 5,
+        "name": "Temporada 5",
+        "episode_count": 20
+      },
+      {
+        "season_number": 6,
+        "name": "Temporada 6",
+        "episode_count": 20
+      }
+    ],
+    "poster": "https://image.tmdb.org/t/p/w500/m8iQ4ZObxGbSu0cs8xTOVTeZ9QX.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/13kblIK8DnxMurcRDkeyy2sGR7v.jpg",
+    "synopsis": "Narra el ascenso del legendario guerrero Ragnar Lothbrok. La trama sigue su evolución desde un humilde granjero escandinavo hasta convertirse en un poderoso rey vikingo tras desafiar a los líderes locales y explorar exitosamente tierras desconocidas hacia el oeste."
+  },
+  {
+    "id": 1793731912957,
+    "tmdb_id": 2734,
+    "title": "La Ley y el Orden: Unidad de Víctimas Especiales",
+    "type": "serie",
+    "rating": 8,
+    "year": 1999,
+    "duration": null,
+    "episodes": 602,
+    "seasons": 28,
+    "seasons_detail": [
+      {
+        "season_number": 1,
+        "name": "Temporada 1",
+        "episode_count": 22
+      },
+      {
+        "season_number": 2,
+        "name": "Temporada 2",
+        "episode_count": 21
+      },
+      {
+        "season_number": 3,
+        "name": "Temporada 3",
+        "episode_count": 23
+      },
+      {
+        "season_number": 4,
+        "name": "Temporada 4",
+        "episode_count": 25
+      },
+      {
+        "season_number": 5,
+        "name": "Temporada 5",
+        "episode_count": 25
+      },
+      {
+        "season_number": 6,
+        "name": "Temporada 6",
+        "episode_count": 23
+      },
+      {
+        "season_number": 7,
+        "name": "Temporada 7",
+        "episode_count": 22
+      },
+      {
+        "season_number": 8,
+        "name": "Temporada 8",
+        "episode_count": 22
+      },
+      {
+        "season_number": 9,
+        "name": "Temporada 9",
+        "episode_count": 19
+      },
+      {
+        "season_number": 10,
+        "name": "Temporada 10",
+        "episode_count": 22
+      },
+      {
+        "season_number": 11,
+        "name": "Temporada 11",
+        "episode_count": 24
+      },
+      {
+        "season_number": 12,
+        "name": "Temporada 12",
+        "episode_count": 24
+      },
+      {
+        "season_number": 13,
+        "name": "Temporada 13",
+        "episode_count": 23
+      },
+      {
+        "season_number": 14,
+        "name": "Temporada 14",
+        "episode_count": 24
+      },
+      {
+        "season_number": 15,
+        "name": "Temporada 15",
+        "episode_count": 24
+      },
+      {
+        "season_number": 16,
+        "name": "Temporada 16",
+        "episode_count": 23
+      },
+      {
+        "season_number": 17,
+        "name": "Temporada 17",
+        "episode_count": 23
+      },
+      {
+        "season_number": 18,
+        "name": "Temporada 18",
+        "episode_count": 21
+      },
+      {
+        "season_number": 19,
+        "name": "Temporada 19",
+        "episode_count": 24
+      },
+      {
+        "season_number": 20,
+        "name": "Temporada 20",
+        "episode_count": 24
+      },
+      {
+        "season_number": 21,
+        "name": "Temporada 21",
+        "episode_count": 20
+      },
+      {
+        "season_number": 22,
+        "name": "Temporada 22",
+        "episode_count": 16
+      },
+      {
+        "season_number": 23,
+        "name": "Temporada 23",
+        "episode_count": 22
+      },
+      {
+        "season_number": 24,
+        "name": "Temporada 24",
+        "episode_count": 22
+      },
+      {
+        "season_number": 25,
+        "name": "Temporada 25",
+        "episode_count": 13
+      },
+      {
+        "season_number": 26,
+        "name": "Temporada 26",
+        "episode_count": 22
+      },
+      {
+        "season_number": 27,
+        "name": "Temporada 27",
+        "episode_count": 21
+      },
+      {
+        "season_number": 28,
+        "name": "Temporada 28",
+        "episode_count": 8
+      }
+    ],
+    "poster": "https://image.tmdb.org/t/p/w500/2RW2SQQSaCMGwAk5sfvfOisQV4s.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/xhK9YCxNwnE0OB1SWvCY39heHQI.jpg",
+    "synopsis": "Serie surgida a la sombra de \"Law & Order\". Una unidad especial de la policía de Nueva York se dedica a investigar delitos de carácter sexual: violaciones, pedofilia y malos tratos infantiles."
+  },
+  {
+    "id": 1793731885440,
+    "tmdb_id": 1408,
+    "title": "Dr. House",
+    "type": "serie",
+    "rating": 8.6,
+    "year": 2004,
+    "duration": null,
+    "episodes": 176,
+    "seasons": 8,
+    "seasons_detail": [
+      {
+        "season_number": 1,
+        "name": "Temporada 1",
+        "episode_count": 22
+      },
+      {
+        "season_number": 2,
+        "name": "Temporada 2",
+        "episode_count": 24
+      },
+      {
+        "season_number": 3,
+        "name": "Temporada 3",
+        "episode_count": 24
+      },
+      {
+        "season_number": 4,
+        "name": "Temporada 4",
+        "episode_count": 16
+      },
+      {
+        "season_number": 5,
+        "name": "Temporada 5",
+        "episode_count": 24
+      },
+      {
+        "season_number": 6,
+        "name": "Temporada 6",
+        "episode_count": 21
+      },
+      {
+        "season_number": 7,
+        "name": "Temporada 7",
+        "episode_count": 23
+      },
+      {
+        "season_number": 8,
+        "name": "Temporada 8",
+        "episode_count": 22
+      }
+    ],
+    "poster": "https://image.tmdb.org/t/p/w500/8yG2CZwRfZAkIGVLhy8aW1VXTJX.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/r0Q6eeN9L1ORL9QsV0Sg8ZV3vnv.jpg",
+    "synopsis": "El Dr. Gregory House, un genio médico misántropo, poco convencional y adicto a las drogas, lidera un equipo de diagnosticadores en el ficticio Hospital Universitario Princeton-Plainsboro en Nueva Jersey."
+  },
+  {
+    "id": 1793728375676,
+    "tmdb_id": 209867,
+    "title": "Frieren: Más allá del final del viaje",
+    "type": "anime",
+    "rating": 8.8,
+    "year": 2023,
+    "duration": null,
+    "episodes": 38,
+    "seasons": 1,
+    "seasons_detail": [
+      {
+        "season_number": 1,
+        "name": "Temporada 1",
+        "episode_count": 38
+      }
+    ],
+    "poster": "https://image.tmdb.org/t/p/w500/6A8IHWrtMLtadNXnMTjggvVY8cs.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/rBOnrVlck7BIlGeWVlzYiZeg4l2.jpg",
+    "synopsis": "Décadas después de que su grupo derrotara al Rey Demonio, el funeral de un viejo amigo lleva a la hechicera elfa Frieren a embarcarse en un viaje de autodescubrimiento."
+  },
+  {
+    "id": 1793728192778,
+    "tmdb_id": 2316,
+    "title": "La Oficina",
+    "type": "serie",
+    "rating": 8.6,
+    "year": 2005,
+    "duration": null,
+    "episodes": 186,
+    "seasons": 9,
+    "seasons_detail": [
+      {
+        "season_number": 1,
+        "name": "Temporada 1",
+        "episode_count": 6
+      },
+      {
+        "season_number": 2,
+        "name": "Temporada 2",
+        "episode_count": 22
+      },
+      {
+        "season_number": 3,
+        "name": "Temporada 3",
+        "episode_count": 23
+      },
+      {
+        "season_number": 4,
+        "name": "Temporada 4",
+        "episode_count": 14
+      },
+      {
+        "season_number": 5,
+        "name": "Temporada 5",
+        "episode_count": 26
+      },
+      {
+        "season_number": 6,
+        "name": "Temporada 6",
+        "episode_count": 24
+      },
+      {
+        "season_number": 7,
+        "name": "Temporada 7",
+        "episode_count": 24
+      },
+      {
+        "season_number": 8,
+        "name": "Temporada 8",
+        "episode_count": 24
+      },
+      {
+        "season_number": 9,
+        "name": "Temporada 9",
+        "episode_count": 23
+      }
+    ],
+    "poster": "https://image.tmdb.org/t/p/w500/mZMmfkTDiXgdKADBykhEFDp940V.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/9vMzIrMIncPmtalcxh1MOrgcE6C.jpg",
+    "synopsis": "La vida diaria de los empleados de una oficina de una compañía papelera localizada en Scranton, Pensilvania. Corrosivo retrato de los miembros de una empresa. Versión americana de una popular serie británica de la BBC del mismo título."
+  },
+  {
+    "id": 1793727388071,
+    "tmdb_id": 1396,
+    "title": "Breaking Bad",
+    "type": "serie",
+    "rating": 9,
+    "year": 2008,
+    "duration": null,
+    "episodes": 62,
+    "seasons": 5,
+    "seasons_detail": [
+      {
+        "season_number": 1,
+        "name": "Temporada 1",
+        "episode_count": 7
+      },
+      {
+        "season_number": 2,
+        "name": "Temporada 2",
+        "episode_count": 13
+      },
+      {
+        "season_number": 3,
+        "name": "Temporada 3",
+        "episode_count": 13
+      },
+      {
+        "season_number": 4,
+        "name": "Temporada 4",
+        "episode_count": 13
+      },
+      {
+        "season_number": 5,
+        "name": "Temporada 5",
+        "episode_count": 16
+      }
+    ],
+    "poster": "https://image.tmdb.org/t/p/w500/anFx9aTOOYqgS3v7x3R84Kz67ly.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg",
+    "synopsis": "Un profesor de Química de secundaria con cáncer terminal se asocia a un exestudiante para asegurar el futuro de su familia al fabricar y vender metanfetamina."
+  }
+]

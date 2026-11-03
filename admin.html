@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Administración</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .admin-container {
+      max-width: 780px;
+      margin: 2rem auto;
+      padding: 1.5rem;
+      background: var(--bg-card);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .form-group label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+    .form-group input {
+      padding: 0.75rem 1rem;
+      background: #1f232b;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    .form-group input:focus {
+      border-color: var(--accent);
+    }
+    .btn-action {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      font-size: 0.95rem;
+      transition: opacity 0.2s;
+    }
+    .preview-card {
+      margin-top: 1.5rem;
+      padding: 1.2rem;
+      background: #11141a;
+      border-radius: 8px;
+      display: none;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .status-msg {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* Caja de Comprobación FacilitoPlay */
+    .stream-checker-box {
+      margin-top: 1.2rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .checker-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #60a5fa;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .checker-frame-container {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .checker-frame-container iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* Gestor de títulos */
+    .catalog-manager {
+      margin-top: 2.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 1.5rem;
+    }
+    .catalog-manager h3 {
+      font-size: 1.15rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .manage-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      max-height: 400px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .manage-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #11141a;
+      padding: 0.6rem 0.8rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .manage-item-info {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .manage-item-info img {
+      width: 40px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    .manage-item-text h4 {
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
+    }
+    .manage-item-text span {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+    .btn-delete {
+      background: #dc2626;
+      color: #fff;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: background-color 0.2s;
+    }
+    .btn-delete:hover {
+      background: #b91c1c;
+    }
+    .btn-reload {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--text-secondary);
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .btn-reload:hover {
+      color: #fff;
+      border-color: #fff;
+    }
+    .bookmark-box {
+      margin-top: 1rem;
+      background: #182230;
+      border: 1px dashed #3b82f6;
+      padding: 0.8rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <h2>Panel de Administración</h2>
+    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.5rem;">
+      Las credenciales se guardan automáticamente en tu navegador.
+    </p>
+
+    <!-- Configuración de llaves -->
+    <details style="margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;" id="details-keys">
+      <summary style="cursor: pointer; color: var(--accent); font-weight: 600;">Configurar Llaves de Acceso</summary>
+      
+      <div class="form-group" style="margin-top: 1rem;">
+        <label>API Key de TMDB (v3 auth):</label>
+        <input type="text" id="tmdb-key" placeholder="Pega tu llave de TMDB">
+      </div>
+      <div class="form-group">
+        <label>GitHub Personal Access Token (permiso 'repo'):</label>
+        <input type="password" id="gh-token" placeholder="ghp_xxxx">
+      </div>
+      <div class="form-group">
+        <label>Tu Usuario de GitHub / Nombre del Repo:</label>
+        <input type="text" id="gh-repo" value="abellserpens/cine-streamtest1">
+      </div>
+
+      <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+        <button class="btn-action" style="background: #374151;" id="save-keys-btn">Guardar Llaves</button>
+        <button class="btn-action" style="background: #2563eb;" id="btn-create-bookmark">Crear Enlace Permanente (Marcador)</button>
+      </div>
+
+      <div class="bookmark-box" id="bookmark-box">
+        <p style="margin-bottom: 0.5rem; color: #93c5fd;"><strong>¡Enlace creado!</strong> Guarda este enlace directo en tus Marcadores de Chrome:</p>
+        <a id="bookmark-link" href="#" style="color: #60a5fa; font-weight: bold; word-break: break-all;" target="_blank">Mi Acceso Directo con Llaves</a>
+      </div>
+    </details>
+
+    <!-- Analizador de TMDB -->
+    <div class="form-group">
+      <label>Pega la URL completa de TMDB:</label>
+      <input type="url" id="tmdb-url" placeholder="https://www.themoviedb.org/tv/1396-breaking-bad">
+    </div>
+
+    <button class="btn-action" id="fetch-btn">Analizar y Obtener Datos</button>
+
+    <!-- Tarjeta de confirmación y verificador -->
+    <div class="preview-card" id="preview-box">
+      <div class="modal-detail-grid">
+        <img id="prev-img" src="" alt="Poster">
+        <div class="modal-detail-text">
+          <h3 id="prev-title"></h3>
+          <p id="prev-meta" style="color: var(--text-secondary);"></p>
+          <p id="prev-synopsis" style="font-size: 0.85rem;"></p>
+        </div>
+      </div>
+
+      <!-- Checker de FacilitoPlay -->
+      <div class="stream-checker-box">
+        <div class="checker-title">
+          <span>▶ Verificación en Vivo de FacilitoPlay:</span>
+        </div>
+        <p style="font-size: 0.78rem; color: var(--text-secondary);">
+          Comprueba abajo si el reproductor carga con sus servidores y doblaje antes de publicar el título.
+        </p>
+        <div class="checker-frame-container">
+          <iframe id="checker-iframe" src="" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+
+      <button class="btn-action" id="publish-btn" style="background: #10b981; margin-top: 1.2rem;">Confirmar y Publicar en GitHub</button>
+    </div>
+
+    <p class="status-msg" id="status-text"></p>
+
+    <!-- Lista para gestionar y borrar -->
+    <div class="catalog-manager">
+      <h3>
+        Títulos Publicados en tu Web
+        <button class="btn-reload" id="btn-refresh-list">↻ Recargar Lista</button>
+      </h3>
+      <div class="manage-list" id="manage-list">
+        <p style="color: var(--text-secondary); font-size: 0.85rem;">Cargando títulos...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tmdbInput = document.getElementById("tmdb-key");
+    const ghTokenInput = document.getElementById("gh-token");
+    const ghRepoInput = document.getElementById("gh-repo");
+
+    function inicializarLlaves() {
+      if (window.location.hash) {
+        const params = new URLSearchParams(window.location.hash.substring(1));
+        if (params.get("tmdb")) localStorage.setItem("tmdb_key", params.get("tmdb"));
+        if (params.get("gh")) localStorage.setItem("gh_token", params.get("gh"));
+        if (params.get("repo")) localStorage.setItem("gh_repo", params.get("repo"));
+        history.replaceState(null, null, "admin.html");
+      }
+
+      tmdbInput.value = localStorage.getItem("tmdb_key") || "";
+      ghTokenInput.value = localStorage.getItem("gh_token") || "";
+      ghRepoInput.value = localStorage.getItem("gh_repo") || "abellserpens/cine-streamtest1";
+    }
+
+    document.getElementById("save-keys-btn").addEventListener("click", () => {
+      localStorage.setItem("tmdb_key", tmdbInput.value.trim());
+      localStorage.setItem("gh_token", ghTokenInput.value.trim());
+      localStorage.setItem("gh_repo", ghRepoInput.value.trim());
+      alert("Llaves guardadas correctamente en la memoria de este navegador.");
+    });
+
+    document.getElementById("btn-create-bookmark").addEventListener("click", () => {
+      const tmdb = tmdbInput.value.trim();
+      const gh = ghTokenInput.value.trim();
+      const repo = ghRepoInput.value.trim();
+
+      if (!tmdb || !gh) return alert("Escribe primero tu clave de TMDB y tu Token de GitHub.");
+
+      const fullUrl = `${window.location.origin}${window.location.pathname}#tmdb=${encodeURIComponent(tmdb)}&gh=${encodeURIComponent(gh)}&repo=${encodeURIComponent(repo)}`;
+      const bookmarkBox = document.getElementById("bookmark-box");
+      const bookmarkLink = document.getElementById("bookmark-link");
+
+      bookmarkLink.href = fullUrl;
+      bookmarkBox.style.display = "block";
+    });
+
+    inicializarLlaves();
+
+    let currentItemData = null;
+
+    // Obtener URL de FacilitoPlay para testear
+    function obtenerUrlFacilitoPlayTest(type, tmdb_id) {
+      const base = "https://facilitoplay.com/e";
+      if (type === "pelicula") return `${base}/pelicula/${tmdb_id}`;
+      return `${base}/${type}/${tmdb_id}/1/1`; // Carga Temp 1 Ep 1 para series y anime
+    }
+
+    // Analizar datos desde TMDB
+    document.getElementById("fetch-btn").addEventListener("click", async () => {
+      const tmdbKey = tmdbInput.value.trim() || localStorage.getItem("tmdb_key");
+      const urlInput = document.getElementById("tmdb-url").value.trim();
+      const statusText = document.getElementById("status-text");
+
+      if (!tmdbKey) return alert("Por favor escribe tu API Key de TMDB arriba.");
+      if (!urlInput) return alert("Pega una URL válida de TMDB.");
+
+      statusText.style.color = "var(--text-secondary)";
+      statusText.innerText = "Consultando TMDB y verificando reproductor...";
+
+      try {
+        const isMovie = urlInput.includes("/movie/");
+        const isTv = urlInput.includes("/tv/");
+
+        if (!isMovie && !isTv) {
+          throw new Error("La URL no parece ser de una película o serie de themoviedb.org");
+        }
+
+        const match = urlInput.match(/(movie|tv)\/(\d+)/);
+        if (!match) throw new Error("No se pudo extraer el ID numérico de la URL.");
+
+        const endpointType = match[1];
+        const tmdbId = match[2];
+
+        const res = await fetch(`https://api.themoviedb.org/3/${endpointType}/${tmdbId}?api_key=${tmdbKey}&language=es-MX`);
+        if (!res.ok) throw new Error("No se encontró el título en TMDB con ese ID.");
+        const data = await res.json();
+
+        let detectedType = isMovie ? "pelicula" : "serie";
+        if (isTv) {
+          const esJapon = data.origin_country && data.origin_country.includes("JP");
+          const esAnimacion = data.genres && data.genres.some(g => g.id === 16);
+          if (esJapon && esAnimacion) {
+            detectedType = "anime";
+          }
+        }
+
+        const year = (data.release_date || data.first_air_date || "").substring(0, 4);
+        const duration = data.runtime ? `${Math.floor(data.runtime / 60)}h ${data.runtime % 60}m` : null;
+
+        let seasonsDetail = [];
+        if (isTv && data.seasons) {
+          seasonsDetail = data.seasons
+            .filter(s => s.season_number > 0 && s.episode_count > 0)
+            .map(s => ({
+              season_number: s.season_number,
+              name: s.name || `Temporada ${s.season_number}`,
+              episode_count: s.episode_count
+            }));
+        }
+
+        currentItemData = {
+          id: Date.now(),
+          tmdb_id: parseInt(tmdbId),
+          title: data.title || data.name,
+          type: detectedType,
+          rating: parseFloat(data.vote_average.toFixed(1)),
+          year: parseInt(year) || new Date().getFullYear(),
+          duration: duration,
+          episodes: data.number_of_episodes || null,
+          seasons: data.number_of_seasons || 1,
+          seasons_detail: seasonsDetail.length > 0 ? seasonsDetail : null,
+          poster: data.poster_path ? `https://image.tmdb.org/t/p/w500${data.poster_path}` : "https://via.placeholder.com/500x750",
+          backdrop: data.backdrop_path ? `https://image.tmdb.org/t/p/original${data.backdrop_path}` : null,
+          synopsis: data.overview || "Sin sinopsis disponible."
+        };
+
+        // Renderizar tarjeta de vista previa
+        document.getElementById("prev-img").src = currentItemData.poster;
+        document.getElementById("prev-title").innerText = currentItemData.title;
+        document.getElementById("prev-meta").innerText = `${currentItemData.type.toUpperCase()} | ★ ${currentItemData.rating} | ${currentItemData.year}`;
+        document.getElementById("prev-synopsis").innerText = currentItemData.synopsis;
+
+        // Cargar reproductor en el verificador en vivo
+        const checkerIframe = document.getElementById("checker-iframe");
+        checkerIframe.src = obtenerUrlFacilitoPlayTest(currentItemData.type, currentItemData.tmdb_id);
+
+        document.getElementById("preview-box").style.display = "block";
+        statusText.innerText = "Datos obtenidos. Comprueba abajo el reproductor.";
+
+      } catch (err) {
+        statusText.style.color = "#ef4444";
+        statusText.innerText = `Error: ${err.message}`;
+      }
+    });
+
+    // Publicar nuevo título en GitHub
+    document.getElementById("publish-btn").addEventListener("click", async () => {
+      const token = ghTokenInput.value.trim() || localStorage.getItem("gh_token");
+      let repo = ghRepoInput.value.trim() || localStorage.getItem("gh_repo") || "";
+      const statusText = document.getElementById("status-text");
+
+      repo = repo.replace("https://github.com/", "").replace("/", " ").trim().replace(" ", "/");
+
+      if (!token || !repo) return alert("Falta el Token de GitHub o el Nombre del Repositorio.");
+      if (!currentItemData) return;
+
+      statusText.style.color = "var(--text-secondary)";
+      statusText.innerText = "Conectando con GitHub...";
+
+      try {
+        const fileUrl = `https://api.github.com/repos/${repo}/contents/catalogo.json`;
+
+        let actualJson = [];
+        let fileSha = null;
+
+        const getRes = await fetch(fileUrl, {
+          headers: { 
+            "Authorization": `token ${token}`,
+            "Accept": "application/vnd.github.v3+json"
+          }
+        });
+
+        if (getRes.status === 401) throw new Error("Token de GitHub inválido o sin permisos.");
+        
+        if (getRes.ok) {
+          const resData = await getRes.json();
+          fileSha = resData.sha;
+          if (resData.content) {
+            actualJson = JSON.parse(decodeURIComponent(escape(atob(resData.content))));
+          }
+        }
+
+        const yaExiste = actualJson.some(i => i.tmdb_id === currentItemData.tmdb_id && i.type === currentItemData.type);
+        if (yaExiste) throw new Error("Este título ya está en el catálogo.");
+
+        actualJson.unshift(currentItemData);
+
+        const nuevoContenidoBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(actualJson, null, 2))));
+
+        const putRes = await fetch(fileUrl, {
+          method: "PUT",
+          headers: {
+            "Authorization": `token ${token}`,
+            "Content-Type": "application/json",
+            "Accept": "application/vnd.github.v3+json"
+          },
+          body: JSON.stringify({
+            message: `Añadido: ${currentItemData.title}`,
+            content: nuevoContenidoBase64,
+            sha: fileSha
+          })
+        });
+
+        if (!putRes.ok) throw new Error("Error al guardar en GitHub.");
+
+        statusText.style.color = "#10b981";
+        statusText.innerText = `¡"${currentItemData.title}" se publicó correctamente!`;
+        document.getElementById("preview-box").style.display = "none";
+        document.getElementById("checker-iframe").src = "";
+        document.getElementById("tmdb-url").value = "";
+        currentItemData = null;
+
+        cargarTitulosActuales();
+
+      } catch (err) {
+        statusText.style.color = "#ef4444";
+        statusText.innerText = `Error al publicar: ${err.message}`;
+      }
+    });
+
+    async function cargarTitulosActuales() {
+      const manageList = document.getElementById("manage-list");
+      manageList.innerHTML = `<p style="color: var(--text-secondary); font-size: 0.85rem;">Cargando títulos...</p>`;
+
+      try {
+        const res = await fetch(`catalogo.json?t=${Date.now()}`);
+        if (!res.ok) throw new Error("No se pudo leer catalogo.json");
+        
+        const items = await res.json();
+
+        if (items.length === 0) {
+          manageList.innerHTML = `<p style="color: var(--text-secondary); font-size: 0.85rem;">No tienes títulos en el catálogo aún.</p>`;
+          return;
+        }
+
+        manageList.innerHTML = "";
+        items.forEach((item, index) => {
+          const div = document.createElement("div");
+          div.className = "manage-item";
+          div.innerHTML = `
+            <div class="manage-item-info">
+              <img src="${item.poster}" alt="${item.title}">
+              <div class="manage-item-text">
+                <h4>${item.title}</h4>
+                <span>${item.type} • ${item.year}</span>
+              </div>
+            </div>
+            <button class="btn-delete" data-index="${index}">Eliminar</button>
+          `;
+
+          div.querySelector(".btn-delete").addEventListener("click", () => {
+            eliminarTitulo(item.title, index);
+          });
+
+          manageList.appendChild(div);
+        });
+
+      } catch (err) {
+        manageList.innerHTML = `<p style="color: #ef4444; font-size: 0.85rem;">Error al cargar lista: ${err.message}</p>`;
+      }
+    }
+
+    async function eliminarTitulo(titulo, indexABorrar) {
+      const confirmacion = confirm(`¿Estás seguro de que deseas eliminar "${titulo}" del catálogo?`);
+      if (!confirmacion) return;
+
+      const token = ghTokenInput.value.trim() || localStorage.getItem("gh_token");
+      let repo = ghRepoInput.value.trim() || localStorage.getItem("gh_repo") || "";
+      const statusText = document.getElementById("status-text");
+
+      repo = repo.replace("https://github.com/", "").replace("/", " ").trim().replace(" ", "/");
+
+      if (!token) return alert("Para eliminar necesitas tener tu Token de GitHub colocado arriba.");
+
+      statusText.style.color = "var(--text-secondary)";
+      statusText.innerText = `Eliminando "${titulo}" de GitHub...`;
+
+      try {
+        const fileUrl = `https://api.github.com/repos/${repo}/contents/catalogo.json`;
+
+        const getRes = await fetch(fileUrl, {
+          headers: { 
+            "Authorization": `token ${token}`,
+            "Accept": "application/vnd.github.v3+json"
+          }
+        });
+
+        if (!getRes.ok) throw new Error("No se pudo leer catalogo.json.");
+        const resData = await getRes.json();
+        const actualJson = JSON.parse(decodeURIComponent(escape(atob(resData.content))));
+
+        actualJson.splice(indexABorrar, 1);
+
+        const nuevoContenidoBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(actualJson, null, 2))));
+
+        const putRes = await fetch(fileUrl, {
+          method: "PUT",
+          headers: {
+            "Authorization": `token ${token}`,
+            "Content-Type": "application/json",
+            "Accept": "application/vnd.github.v3+json"
+          },
+          body: JSON.stringify({
+            message: `Eliminado: ${titulo}`,
+            content: nuevoContenidoBase64,
+            sha: resData.sha
+          })
+        });
+
+        if (!putRes.ok) throw new Error("Error al guardar cambios en GitHub.");
+
+        statusText.style.color = "#10b981";
+        statusText.innerText = `"${titulo}" ha sido eliminado con éxito.`;
+
+        cargarTitulosActuales();
+
+      } catch (err) {
+        statusText.style.color = "#ef4444";
+        statusText.innerText = `Error al eliminar: ${err.message}`;
+      }
+    }
+
+    document.getElementById("btn-refresh-list").addEventListener("click", cargarTitulosActuales);
+
+    cargarTitulosActuales();
+  </script>
+</body>
+</html>
