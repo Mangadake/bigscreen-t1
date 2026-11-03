@@ -1,5 +1,21 @@
 [
   {
+    "id": 1793744385807,
+    "tmdb_id": 1465063,
+    "title": "La isla olvidada",
+    "type": "pelicula",
+    "rating": 8,
+    "year": 2026,
+    "duration": "1h 49m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/clw1EmN6OA0AtogU6iFCwBZSCp1.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/cNICUho5uiAGkfCAQq1ihyaMla4.jpg",
+    "synopsis": "Jo y Raissa se encuentran varadas en el fantástico mundo de la isla olvidada de Nakali. Descubren que su única forma de volver a casa podría ser a costa de toda una vida de recuerdos y emociones.",
+    "quality": "1080p"
+  },
+  {
     "id": 1793744370751,
     "tmdb_id": 1571955,
     "title": "Colisión",
