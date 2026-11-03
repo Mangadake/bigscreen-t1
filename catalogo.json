@@ -1,5 +1,21 @@
 [
   {
+    "id": 1793744823861,
+    "tmdb_id": 1368337,
+    "title": "La Odisea",
+    "type": "pelicula",
+    "rating": 8,
+    "year": 2026,
+    "duration": "2h 53m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/sRxbUe5FB25Gde0e2FnwwSckpXb.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/iDiTY1wA35YWzTmXLTtqaxtN6tc.jpg",
+    "synopsis": "Odiseo, el legendario rey de Ítaca, emprende un largo y peligroso viaje de regreso a casa tras la guerra de Troya. A lo largo de su travesía, se ve obligado a enfrentarse a los caprichos de los dioses, a monstruos mitológicos y a pruebas que ponen a prueba su astucia y su humanidad hasta el límite.",
+    "quality": "CAM"
+  },
+  {
     "id": 1793744654918,
     "tmdb_id": 354912,
     "title": "Coco",
