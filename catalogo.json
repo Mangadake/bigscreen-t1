@@ -1,5 +1,27 @@
 [
   {
+    "id": 1793744179800,
+    "tmdb_id": 213375,
+    "title": "VisionQuest",
+    "type": "serie",
+    "rating": 8.6,
+    "year": 2026,
+    "duration": null,
+    "episodes": 8,
+    "seasons": 1,
+    "seasons_detail": [
+      {
+        "season_number": 1,
+        "name": "Miniserie",
+        "episode_count": 8
+      }
+    ],
+    "poster": "https://image.tmdb.org/t/p/w500/hXlvDq98VMg3WJWTDzwcPeMk39A.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/58v1KFe3rxvHrYM1hLH5ScpwqNR.jpg",
+    "synopsis": "Una versión reiniciada de Visión se ha estado escondiendo de aquellos que pretenden usarlo como un arma. Mientras permanece oculto, consulta a las personalidades de IA integradas en su programación —incluyendo al infame Ultrón— para comprender su verdadero propósito.",
+    "quality": "1080p"
+  },
+  {
     "id": 1793744048031,
     "tmdb_id": 1507696,
     "title": "Apocalipsis Z: Nuevo mundo",
