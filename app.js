@@ -55,32 +55,13 @@ function alternarFavorito(item, event) {
 }
 
 function actualizarBotonesFavorito(itemId, estaEnFavoritos) {
-  document.querySelectorAll(`.btn-card-fav[data-id="${itemId}"]`).forEach(btn => {
-    btn.classList.toggle("active", estaEnFavoritos);
-    btn.innerHTML = estaEnFavoritos ? "★" : "☆";
-  });
-
-  const heroFavBtn = document.getElementById(`hero-fav-${itemId}`);
+  document.querySelectorAll(`.btn-card-fav[data-id="${itemId}"]`).forEach(btn => { btn.classList.toggle("active", estaEnFavoritos); btn.innerHTML = estaEnFavoritos ? "★" : "☆"; });  const heroFavBtn = document.getElementById(`hero-fav-${itemId}`);
   if (heroFavBtn) {
     heroFavBtn.classList.toggle("active", estaEnFavoritos);
     heroFavBtn.innerHTML = estaEnFavoritos ? "★ En Mi Lista" : "+ Mi Lista";
   }
 
-  const modalFavBtn = document.getElementById(`modal-fav-${itemId}`);
-  if (modalFavBtn) {
-    modalFavBtn.classList.toggle("active", estaEnFavoritos);
-    modalFavBtn.innerHTML = estaEnFavoritos ? "★ En Mi Lista" : "+ Añadir a Mi Lista";
-  }
-}
-
-let currentHeroIndex = 0;
-let heroItems = [];
-let heroTimer = null;
-
-// Cargar catálogo desde catalogo.json
-async function cargarCatalogo() {
-  try {
-    const res = await fetch(`catalogo.json?t=${Date.now()}`);
+  const modalFavBtn = document.getElementById(`modal-fav-${itemId}`); if (modalFavBtn) { modalFavBtn.classList.toggle("active", estaEnFavoritos); modalFavBtn.innerHTML = estaEnFavoritos ? "★ En Mi Lista" : "+ Añadir a Mi Lista"; } }  let currentHeroIndex = 0; let heroItems = []; let heroTimer = null;  // Cargar catálogo desde catalogo.json async function cargarCatalogo() { try { const res = await fetch(`catalogo.json?t=${Date.now()}`);
     if (!res.ok) throw new Error("No se pudo cargar catalogo.json");
     mediaData = await res.json();
 
@@ -100,7 +81,7 @@ async function cargarCatalogo() {
   }
 }
 
-// Slider del Hero Banner (TMDB Style con Insignia de Calidad)
+// Slider del Hero Banner
 function iniciarHeroSlider(items) {
   if (!items || items.length === 0 || !heroBanner) return;
 
@@ -108,8 +89,12 @@ function iniciarHeroSlider(items) {
     const detailLabel = item.episodes ? `${item.episodes} Capítulos` : (item.duration || "");
     const imagenBackdrop = item.backdrop || item.poster;
     const favoritoActivo = esFavorito(item.id);
-    const calidad = item.quality || "HD";
-    const esCam = calidad.toUpperCase() === "CAM";
+    
+    // Solo crea la etiqueta si tiene calidad definida
+    const calidad = item.quality;
+    const badgeCalidad = calidad 
+      ? `<span class="hero-badge-quality ${calidad.toUpperCase() === 'CAM' ? 'cam' : ''}">${calidad}</span>` 
+      : "";
 
     return `
       <div class="hero-slide ${index === 0 ? "active" : ""}" data-index="${index}">
@@ -121,8 +106,7 @@ function iniciarHeroSlider(items) {
           </div>
           <div class="hero-info-box">
             <div class="hero-badges-row">
-              <span class="hero-badge">Destacado • ${item.type}</span>
-              <span class="hero-badge-quality ${esCam ? 'cam' : ''}">${calidad}</span>
+              <span class="hero-badge">Destacado • ${item.type}</span>${badgeCalidad}
             </div>
             <h1 class="hero-title">${item.title}</h1>
             <div class="hero-meta">
@@ -245,7 +229,7 @@ function activarCapaPublicidad(playerContainer) {
   playerContainer.prepend(overlay);
 }
 
-// Renderizado de tarjetas con Tipo + Calidad en el póster
+// Renderizado de tarjetas
 function renderCards(items) {
   catalogGrid.innerHTML = "";
 
@@ -253,23 +237,19 @@ function renderCards(items) {
     const mensajeVacio = (currentCategory === "favoritos")
       ? "No has añadido ningún título a tu lista aún. Haz clic en la estrella de cualquier portada para guardarla aquí."
       : "No hay títulos disponibles.";
-    catalogGrid.innerHTML = `<p class="no-results">${mensajeVacio}</p>`;
-    return;
-  }
-
-  items.forEach(item => {
-    const card = document.createElement("article");
-    card.className = "card";
-    const detailLabel = item.episodes ? `${item.episodes} caps` : (item.duration || "");
+    catalogGrid.innerHTML = `<p class="no-results">${mensajeVacio}</p>`; return; }  items.forEach(item => { const card = document.createElement("article"); card.className = "card"; const detailLabel = item.episodes ? `${item.episodes} caps` : (item.duration || "");
     const favoritoActivo = esFavorito(item.id);
-    const calidad = item.quality || "HD";
-    const esCam = calidad.toUpperCase() === "CAM";
+    
+    // Insignia de calidad solo si existe
+    const calidad = item.quality;
+    const badgeCalidad = calidad 
+      ? `<span class="badge-quality ${calidad.toUpperCase() === 'CAM' ? 'cam' : ''}">${calidad}</span>` 
+      : "";
 
     card.innerHTML = `
       <div class="poster-wrapper">
         <div class="badge-group">
-          <span class="badge">${item.type}</span>
-          <span class="badge-quality ${esCam ? 'cam' : ''}">${calidad}</span>
+          <span class="badge">${item.type}</span>${badgeCalidad}
         </div>
         <button class="btn-card-fav ${favoritoActivo ? "active" : ""}" data-id="${item.id}" title="Añadir a Mi Lista">
           ${favoritoActivo ? "★" : "☆"}
@@ -328,14 +308,17 @@ filterButtons.forEach(btn => {
   });
 });
 
-// Modal con la calidad visible
+// Modal del reproductor
 async function openModal(item) {
   const detailLabel = item.episodes ? `${item.episodes} Capítulos` : (item.duration || "");
   const esSerieOAnime = (item.type === "serie" || item.type === "anime");
   const tmdbKey = localStorage.getItem("tmdb_key");
   const favoritoActivo = esFavorito(item.id);
-  const calidad = item.quality || "HD";
-  const esCam = calidad.toUpperCase() === "CAM";
+
+  const calidad = item.quality;
+  const badgeCalidad = calidad 
+    ? `<span class="modal-quality-badge ${calidad.toUpperCase() === 'CAM' ? 'cam' : ''}">${calidad}</span>` 
+    : "";
 
   let episodesHtml = "";
   let seasonsData = [];
@@ -365,7 +348,7 @@ async function openModal(item) {
 
     let seasonOptions = seasonsData.map(s => `
       <option value="${s.season_number}" data-count="${s.episode_count}">
-        ${s.name || `Temporada ${s.season_number}`} (${s.episode_count} eps)
+        ${s.name \vert{}\vert{} `Temporada ${s.season_number}`} (${s.episode_count} eps)
       </option>
     `).join("");
 
@@ -389,89 +372,5 @@ async function openModal(item) {
         <h2>${item.title}</h2>
         <div class="modal-meta-row">
           <span class="modal-meta-data">
-            <strong>${item.type.toUpperCase()}</strong>
-            <span class="modal-quality-badge ${esCam ? 'cam' : ''}">${calidad}</span>
-            • ★ ${item.rating} • ${item.year} ${detailLabel ? `• ${detailLabel}` : ""}
-          </span>
-          <button class="modal-btn-fav ${favoritoActivo ? "active" : ""}" id="modal-fav-${item.id}">
-            ${favoritoActivo ? "★ En Mi Lista" : "+ Añadir a Mi Lista"}
-          </button>
-        </div>
-        <p class="modal-synopsis">${item.synopsis}</p>
-      </div>
-    </div>
-
-    <div class="player-container" id="player-container">
-      <iframe
-        id="player-iframe"
-        src="${initialVideoUrl}"
-        title="Reproductor - ${item.title}"
-        allow="autoplay; fullscreen; picture-in-picture"
-        allowfullscreen>
-      </iframe>
-    </div>
-
-    ${episodesHtml}
-  `;
-
-  document.getElementById(`modal-fav-${item.id}`).addEventListener("click", () => {
-    alternarFavorito(item, null);
-  });
-
-  const playerContainer = document.getElementById("player-container");
-  activarCapaPublicidad(playerContainer);
-
-  if (esSerieOAnime) {
-    const seasonSelector = document.getElementById("season-selector");
-    const grid = document.getElementById("episodes-grid");
-    const iframe = document.getElementById("player-iframe");
-
-    function renderEpisodesGrid(seasonNum, epCount) {
-      grid.innerHTML = "";
-      for (let i = 1; i <= epCount; i++) {
-        const btn = document.createElement("button");
-        btn.className = `ep-btn ${i === 1 ? "active" : ""}`;
-        btn.innerText = i;
-
-        btn.addEventListener("click", () => {
-          document.querySelectorAll(".ep-btn").forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          iframe.src = obtenerUrlFacilitoPlay(item, seasonNum, i);
-          activarCapaPublicidad(playerContainer);
-        });
-
-        grid.appendChild(btn);
-      }
-    }
-
-    const firstOption = seasonSelector.options[0];
-    const initialEpCount = parseInt(firstOption.dataset.count) || 12;
-    renderEpisodesGrid(parseInt(firstOption.value), initialEpCount);
-
-    seasonSelector.addEventListener("change", () => {
-      const selectedOption = seasonSelector.options[seasonSelector.selectedIndex];
-      const sNum = parseInt(selectedOption.value);
-      const eCount = parseInt(selectedOption.dataset.count);
-
-      renderEpisodesGrid(sNum, eCount);
-      iframe.src = obtenerUrlFacilitoPlay(item, sNum, 1);
-      activarCapaPublicidad(playerContainer);
-    });
-  }
-
-  modalOverlay.style.display = "flex";
-  modalOverlay.classList.add("active");
-}
-
-function closeModal() {
-  modalOverlay.style.display = "none";
-  modalOverlay.classList.remove("active");
-  modalBody.innerHTML = "";
-}
-
-closeModalBtn.addEventListener("click", closeModal);
-modalOverlay.addEventListener("click", (e) => {
-  if (e.target === modalOverlay) closeModal();
-});
-
-cargarCatalogo();
+            <strong>${item.type.toUpperCase()}</strong>${badgeCalidad}
+            • ★ ${
