@@ -1,5 +1,20 @@
 [
   {
+    "id": 1793737591719,
+    "tmdb_id": 569094,
+    "title": "Spider-Man: A través del Spider-Verso",
+    "type": "pelicula",
+    "rating": 8.3,
+    "year": 2023,
+    "duration": "2h 20m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/rXhgHQmtjTIQOEDU8E2TbUFMjWM.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/kVd3a9YeLGkoeR50jGEXM6EqseS.jpg",
+    "synopsis": "Después de reunirse con Gwen Stacy, Miles Morales, el amigable Spider-Man del vecindario de tiempo completo de Brooklyn, es catapultado a través del Multiverso, donde se encuentra con un equipo de Spider-People encargado de proteger su existencia. Pero cuando los héroes chocan sobre cómo manejar una nueva amenaza, Miles se enfrenta a las otras arañas y debe redefinir lo que significa ser un héroe para poder salvar a las personas que más ama."
+  },
+  {
     "id": 1793737571537,
     "tmdb_id": 429617,
     "title": "Spider-Man: Lejos de casa",
