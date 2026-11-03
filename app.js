@@ -100,7 +100,7 @@ async function cargarCatalogo() {
   }
 }
 
-// Slider del Hero Banner (TMDB Style)
+// Slider del Hero Banner (TMDB Style con Insignia de Calidad)
 function iniciarHeroSlider(items) {
   if (!items || items.length === 0 || !heroBanner) return;
 
@@ -108,6 +108,8 @@ function iniciarHeroSlider(items) {
     const detailLabel = item.episodes ? `${item.episodes} Capítulos` : (item.duration || "");
     const imagenBackdrop = item.backdrop || item.poster;
     const favoritoActivo = esFavorito(item.id);
+    const calidad = item.quality || "HD";
+    const esCam = calidad.toUpperCase() === "CAM";
 
     return `
       <div class="hero-slide ${index === 0 ? "active" : ""}" data-index="${index}">
@@ -118,7 +120,10 @@ function iniciarHeroSlider(items) {
             <img src="${item.poster}" alt="${item.title}">
           </div>
           <div class="hero-info-box">
-            <span class="hero-badge">Destacado • ${item.type}</span>
+            <div class="hero-badges-row">
+              <span class="hero-badge">Destacado • ${item.type}</span>
+              <span class="hero-badge-quality ${esCam ? 'cam' : ''}">${calidad}</span>
+            </div>
             <h1 class="hero-title">${item.title}</h1>
             <div class="hero-meta">
               <span class="rating">★ ${item.rating}</span>
@@ -206,7 +211,6 @@ window.alternarFavoritoPorId = function(itemId) {
   if (item) alternarFavorito(item, null);
 };
 
-// Generar URL para FacilitoPlay
 function obtenerUrlFacilitoPlay(item, season = 1, episode = 1) {
   const base = "https://facilitoplay.com/e";
   const { type, tmdb_id } = item;
@@ -217,7 +221,6 @@ function obtenerUrlFacilitoPlay(item, season = 1, episode = 1) {
   return "";
 }
 
-// Reactivar capa de publicidad
 function activarCapaPublicidad(playerContainer) {
   if (!ACTIVAR_PUBLICIDAD || !playerContainer) return;
 
@@ -242,7 +245,7 @@ function activarCapaPublicidad(playerContainer) {
   playerContainer.prepend(overlay);
 }
 
-// Tarjetas con botón de favoritos centrado
+// Renderizado de tarjetas con Tipo + Calidad en el póster
 function renderCards(items) {
   catalogGrid.innerHTML = "";
 
@@ -259,10 +262,15 @@ function renderCards(items) {
     card.className = "card";
     const detailLabel = item.episodes ? `${item.episodes} caps` : (item.duration || "");
     const favoritoActivo = esFavorito(item.id);
+    const calidad = item.quality || "HD";
+    const esCam = calidad.toUpperCase() === "CAM";
 
     card.innerHTML = `
       <div class="poster-wrapper">
-        <span class="badge">${item.type}</span>
+        <div class="badge-group">
+          <span class="badge">${item.type}</span>
+          <span class="badge-quality ${esCam ? 'cam' : ''}">${calidad}</span>
+        </div>
         <button class="btn-card-fav ${favoritoActivo ? "active" : ""}" data-id="${item.id}" title="Añadir a Mi Lista">
           ${favoritoActivo ? "★" : "☆"}
         </button>
@@ -320,12 +328,14 @@ filterButtons.forEach(btn => {
   });
 });
 
-// Modal con la 'X' separada y el botón de lista ordenado
+// Modal con la calidad visible
 async function openModal(item) {
   const detailLabel = item.episodes ? `${item.episodes} Capítulos` : (item.duration || "");
   const esSerieOAnime = (item.type === "serie" || item.type === "anime");
   const tmdbKey = localStorage.getItem("tmdb_key");
   const favoritoActivo = esFavorito(item.id);
+  const calidad = item.quality || "HD";
+  const esCam = calidad.toUpperCase() === "CAM";
 
   let episodesHtml = "";
   let seasonsData = [];
@@ -379,7 +389,9 @@ async function openModal(item) {
         <h2>${item.title}</h2>
         <div class="modal-meta-row">
           <span class="modal-meta-data">
-            <strong>${item.type.toUpperCase()}</strong> • ★ ${item.rating} • ${item.year} ${detailLabel ? `• ${detailLabel}` : ""}
+            <strong>${item.type.toUpperCase()}</strong>
+            <span class="modal-quality-badge ${esCam ? 'cam' : ''}">${calidad}</span>
+            • ★ ${item.rating} • ${item.year} ${detailLabel ? `• ${detailLabel}` : ""}
           </span>
           <button class="modal-btn-fav ${favoritoActivo ? "active" : ""}" id="modal-fav-${item.id}">
             ${favoritoActivo ? "★ En Mi Lista" : "+ Añadir a Mi Lista"}
