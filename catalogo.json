@@ -1,5 +1,21 @@
 [
   {
+    "id": 1793743195998,
+    "tmdb_id": 1375441,
+    "title": "Primetime",
+    "type": "pelicula",
+    "rating": 6.8,
+    "year": 2026,
+    "duration": "1h 50m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/lmrulvLbmaejTix1YaMxo1oGhH1.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/4E5RVsSUG1A4Adwbqupu5w6kofZ.jpg",
+    "synopsis": "En 2006, el presentador Chris Hansen de NBC se propuso hacer historia en la televisión con el programa To Catch a Predator, convirtiendo una investigación encubierta de horario estelar en uno de los fenómenos culturales más controvertidos de la década.",
+    "quality": "CAM"
+  },
+  {
     "id": 1793743109083,
     "tmdb_id": 289517,
     "title": "Un trabajo maldito",
