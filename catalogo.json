@@ -1,5 +1,20 @@
 [
   {
+    "id": 1793737610770,
+    "tmdb_id": 1930,
+    "title": "El sorprendente Hombre Araña",
+    "type": "pelicula",
+    "rating": 6.8,
+    "year": 2012,
+    "duration": "2h 16m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/9MsCANWyLJmz2MAEqiy9vKMpyc8.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/sxskOU71CO8LaNX2LOtjYFUtKv7.jpg",
+    "synopsis": "Peter Parker es un estudiante que fue abandonado por sus padres cuando era niño, quedando a cargo de su tío Ben y su tía May. Cuando Peter descubre un misterioso maletín perteneciente a su padre, comienza la búsqueda para entender la desaparición de sus padres, que lo lleva directamente al laboratorio en Oscorp del Dr. Curt Connors , ex compañero de trabajo de su padre."
+  },
+  {
     "id": 1793737601997,
     "tmdb_id": 559,
     "title": "El hombre araña 3",
