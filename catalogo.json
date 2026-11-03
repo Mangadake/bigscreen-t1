@@ -1,5 +1,21 @@
 [
   {
+    "id": 1793743735690,
+    "tmdb_id": 1400940,
+    "title": "Clayface",
+    "type": "pelicula",
+    "rating": 7.4,
+    "year": 2026,
+    "duration": "1h 49m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/avCm6vJzdIz9SCIZJ2CuBupGWDQ.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/xSDoxv4pHvs4xZjvTb0Iqg1A6ro.jpg",
+    "synopsis": "Para mantener su relevancia como actor de películas clase B, Matt Hagen se inyecta una sustancia solo para descubrir que puede remodelar su rostro y su forma.",
+    "quality": "CAM"
+  },
+  {
     "id": 1793743467122,
     "tmdb_id": 1384216,
     "title": "La guerra de los últimos",
