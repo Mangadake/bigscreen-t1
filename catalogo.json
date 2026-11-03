@@ -1,5 +1,21 @@
 [
   {
+    "id": 1793744917142,
+    "tmdb_id": 1813355,
+    "title": "Una historia de Derry",
+    "type": "pelicula",
+    "rating": 6.8,
+    "year": 2026,
+    "duration": "0h 30m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/jmhkSZYcSMVw8IWiNROyWaD3Sal.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/z26LxXDMmAIzKr06FPDudCJyvsM.jpg",
+    "synopsis": "Siglos antes de la aparición del payaso Pennywise en Derry, tres chicos nativos americanos encuentran un aterrador espíritu ancestral en el bosque.",
+    "quality": "720p"
+  },
+  {
     "id": 1793744823861,
     "tmdb_id": 1368337,
     "title": "La Odisea",
