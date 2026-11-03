@@ -1,5 +1,21 @@
 [
   {
+    "id": 1793744202592,
+    "tmdb_id": 791523,
+    "title": "Wildwood: El bosque salvaje",
+    "type": "pelicula",
+    "rating": 8.5,
+    "year": 2026,
+    "duration": "2h 12m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/3AxfnEViGaVspgifEag5au5bVJc.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/sl5NJ1vtyhP9Vr88bB4blULsJYp.jpg",
+    "synopsis": "Después de que su hermano bebé es secuestrado por una parvada de cuervos, la decidida adolescente Prue McKeel y su compañero Curtis Mehlberg inician una desesperada misión de rescate hacia el Bosque Impasable, un bosque encantado oculto justo más allá de Portland, Oregón.",
+    "quality": "CAM"
+  },
+  {
     "id": 1793744179800,
     "tmdb_id": 213375,
     "title": "VisionQuest",
