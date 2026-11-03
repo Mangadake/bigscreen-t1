@@ -1,5 +1,20 @@
 [
   {
+    "id": 1793737571537,
+    "tmdb_id": 429617,
+    "title": "Spider-Man: Lejos de casa",
+    "type": "pelicula",
+    "rating": 7.4,
+    "year": 2019,
+    "duration": "2h 9m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/x4Ldcddhk8jzn3nqeODA8lHNw9M.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/wqBW5ltBJu0gs26yCc8shQQV82d.jpg",
+    "synopsis": "Peter Parker decide irse junto a MJ, Ned y el resto de sus amigos a pasar unas vacaciones a Europa. Sin embargo, el plan de Parker por dejar de lado sus superpoderes durante unas semanas se ven truncados cuando Nick Fury contacta con él para solicitarle ayuda para frenar el ataque de unas criaturas elementales que están causando el caos en el continente. En ese momento, Parker vuelve a ponerse el traje de Spider-Man para cumplir con su labor."
+  },
+  {
     "id": 1793737554813,
     "tmdb_id": 324857,
     "title": "Spider-Man: Un nuevo universo",
