@@ -1,5 +1,21 @@
 [
   {
+    "id": 1793742687652,
+    "tmdb_id": 1423191,
+    "title": "Resident Evil: Noche cero",
+    "type": "pelicula",
+    "rating": 7.4,
+    "year": 2026,
+    "duration": "1h 35m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/ntmaNFJ7O60n45E1E6HZlXeSV5e.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/3icyRAqgakNcQn6aDVz9libFmBA.jpg",
+    "synopsis": "Un desafortunado mensajero, encargado de entregar un paquete a un hospital remoto, se ve atrapado en medio de un brote y debe luchar contra hordas de criaturas mutantes para sobrevivir.",
+    "quality": "CAM"
+  },
+  {
     "id": 1793737635365,
     "tmdb_id": 102382,
     "title": "El sorprendente Hombre Araña 2: La amenaza de Electro",
