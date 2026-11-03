@@ -1,5 +1,27 @@
 [
   {
+    "id": 1793744453608,
+    "tmdb_id": 292741,
+    "title": "Nocturno",
+    "type": "serie",
+    "rating": 7.6,
+    "year": 2026,
+    "duration": null,
+    "episodes": 10,
+    "seasons": 1,
+    "seasons_detail": [
+      {
+        "season_number": 1,
+        "name": "Temporada 1",
+        "episode_count": 10
+      }
+    ],
+    "poster": "https://image.tmdb.org/t/p/w500/iyZbDfI9fdHXT92H475wM0d6kRm.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/614k6C9doThoMe6GyH0nTnGgLXt.jpg",
+    "synopsis": "Cuando una víctima del asesino serial Jurek Walter aparece viva, el detective Jonah Lynn corre contra el tiempo para encontrar a una persona desaparecida, mientras su protegida, Saga Bauer, se infiltra para obtener respuestas del asesino.",
+    "quality": "1080p"
+  },
+  {
     "id": 1793744385807,
     "tmdb_id": 1465063,
     "title": "La isla olvidada",
