@@ -1,5 +1,20 @@
 [
   {
+    "id": 1793737623550,
+    "tmdb_id": 558,
+    "title": "El hombre araña 2",
+    "type": "pelicula",
+    "rating": 7.3,
+    "year": 2004,
+    "duration": "2h 7m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/9vAx9vN27TpRv98fREN4aXIdhbp.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/6al048Lat3eLVQOuKtc9h6Tu94d.jpg",
+    "synopsis": "Peter Parker se ve acosado por problemas en su fallida vida personal mientras lucha contra un brillante científico llamado Doctor Otto Octavius."
+  },
+  {
     "id": 1793737610770,
     "tmdb_id": 1930,
     "title": "El sorprendente Hombre Araña",
