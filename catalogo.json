@@ -1,5 +1,20 @@
 [
   {
+    "id": 1793737635365,
+    "tmdb_id": 102382,
+    "title": "El sorprendente Hombre Araña 2: La amenaza de Electro",
+    "type": "pelicula",
+    "rating": 6.6,
+    "year": 2014,
+    "duration": "2h 22m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/5SXqjWJqtBTzeWJvWAB8rw74tvi.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/k0hlAzTryCYX1O1LyC6P8tAa8s0.jpg",
+    "synopsis": "Ser el Hombre Araña es genial. Para Peter Parker, no hay mejor sensación que columpiarse entre rascacielos, ser el héroe y pasar el tiempo con Gwen. Pero ser el Hombre Araña no es gratuito: solo él puede proteger a sus conciudadanos de Nueva York de los temibles villanos que amenazan a la ciudad. Con el surgimiento de Electro, Peter debe enfrentar a un enemigo mucho más poderoso que él. Y como su antiguo amigo, Harry Osborn, regresa, Peter se da cuenta de que todos sus enemigos tienen algo en común: Oscorp."
+  },
+  {
     "id": 1793737623550,
     "tmdb_id": 558,
     "title": "El hombre araña 2",
