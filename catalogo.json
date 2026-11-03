@@ -1,5 +1,20 @@
 [
   {
+    "id": 1793737462998,
+    "tmdb_id": 557,
+    "title": "El hombre araña",
+    "type": "pelicula",
+    "rating": 7.4,
+    "year": 2002,
+    "duration": "2h 1m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/8eTbNzpjK9VJGu1g60j268MmXzm.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/zQ8AxTPiCiS5nnwXpwTBPBHSaa5.jpg",
+    "synopsis": "Cuando es mordido por una araña genéticamente modificada, un estudiante de secundaria nerd, tímido y torpe, adquiere habilidades parecidas a las de una araña que eventualmente debe usar para luchar contra el mal como un superhéroe después de que la tragedia cae sobre su familia."
+  },
+  {
     "id": 1793734264424,
     "tmdb_id": 969681,
     "title": "Spider-Man: Un nuevo día",
