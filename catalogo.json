@@ -1,5 +1,21 @@
 [
   {
+    "id": 1793743467122,
+    "tmdb_id": 1384216,
+    "title": "La guerra de los últimos",
+    "type": "pelicula",
+    "rating": 7.2,
+    "year": 2026,
+    "duration": "1h 59m",
+    "episodes": null,
+    "seasons": 1,
+    "seasons_detail": null,
+    "poster": "https://image.tmdb.org/t/p/w500/flipeYd0sa4y4kpIc7Pn59JeBIj.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/3k7GzxOdLZkN3eZsuhLi2eRzkXO.jpg",
+    "synopsis": "Tras la devastación mundial causada por una pandemia, un hombre vive una existencia solitaria en un hangar de aviones en Colorado con su perro y un hosco pistolero con quien ha entablado amistad. Cuando escucha una misteriosa transmisión por radio mientras vuela su viejo Cessna, comienza una búsqueda para descubrir el origen del sonido.",
+    "quality": "1080p"
+  },
+  {
     "id": 1793743195998,
     "tmdb_id": 1375441,
     "title": "Primetime",
