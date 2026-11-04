@@ -522,9 +522,9 @@
     let currentItemData = null;
 
     function obtenerUrlFacilitoPlayTest(type, tmdb_id) {
-      const base = "https://facilitoplay.com/e";
-      if (type === "pelicula") return `${base}/pelicula/${tmdb_id}`;
-      return `${base}/${type}/${tmdb_id}/1/1`;
+      const base = "https://unlimplay.com/f/embed";
+      if (type === "pelicula") return `${base}/movie/${tmdb_id}`;
+      return `${base}/tv/${tmdb_id}/1/1`;
     }
 
     async function cargarExplorador(categoria, query = "") {
