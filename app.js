@@ -239,13 +239,11 @@ window.alternarFavoritoPorId = function(itemId) {
 };
 
 function obtenerUrlFacilitoPlay(item, season = 1, episode = 1) {
-  const base = "https://facilitoplay.com/e";
+  const base = "https://unlimplay.com/f/embed";
   const { type, tmdb_id } = item;
 
-  if (type === "pelicula") return `${base}/pelicula/${tmdb_id}`;
-  if (type === "serie") return `${base}/serie/${tmdb_id}/${season}/${episode}`;
-  if (type === "anime") return `${base}/anime/${tmdb_id}/${season}/${episode}`;
-  return "";
+  if (type === "pelicula") return `${base}/movie/${tmdb_id}`;
+  return `${base}/tv/${tmdb_id}/${season}/${episode}`;
 }
 
 function activarCapaPublicidad(playerContainer) {
