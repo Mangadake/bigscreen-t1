@@ -15,7 +15,26 @@ const heroBanner = document.getElementById("hero-banner");
 let mediaData = [];
 let currentCategory = "all";
 
-// Mapeo unificado para clases de color
+// Normalización con ACENTO y colores
+function normalizarTipoTexto(type) {
+  if (!type) return "PELÍCULA";
+  const t = type.toLowerCase().trim();
+  if (t === "pelicula") return "PELÍCULA";
+  if (t === "serie") return "SERIE";
+  if (t === "anime") return "ANIME";
+  return type.toUpperCase();
+}
+
+function obtenerClaseTipoBadge(type) {
+  if (!type) return "badge-pelicula";
+  const t = type.toLowerCase().trim();
+  if (t === "pelicula") return "badge-pelicula";
+  if (t === "serie") return "badge-serie";
+  if (t === "anime") return "badge-anime";
+  return "badge-pelicula";
+}
+
+// Mapeo unificado para clases de calidad
 function obtenerClaseCalidad(calidad) {
   if (!calidad) return "";
   const c = calidad.toUpperCase().trim();
@@ -26,7 +45,6 @@ function obtenerClaseCalidad(calidad) {
   return "";
 }
 
-// Normalización de texto visual
 function normalizarTextoCalidad(calidad) {
   if (!calidad) return "";
   const c = calidad.toUpperCase().trim();
@@ -114,7 +132,7 @@ async function cargarCatalogo() {
       heroBanner.style.display = "none";
     }
 
-    renderCards(mediaData);
+    renderContent();
   } catch (error) {
     if (heroBanner) heroBanner.style.display = "none";
     catalogGrid.innerHTML = `<p class="no-results">Error al cargar el catálogo o catálogo vacío.</p>`;
@@ -122,7 +140,7 @@ async function cargarCatalogo() {
   }
 }
 
-// Slider del Hero Banner
+// Hero Slider
 function iniciarHeroSlider(items) {
   if (!items || items.length === 0 || !heroBanner) return;
 
@@ -138,6 +156,8 @@ function iniciarHeroSlider(items) {
       ? `<span class="hero-badge-quality ${claseColor}">${textoCalidad}</span>` 
       : "";
 
+    const tipoTexto = normalizarTipoTexto(item.type);
+
     return `
       <div class="hero-slide ${index === 0 ? "active" : ""}" data-index="${index}">
         <div class="hero-backdrop-bg" style="background-image: url('${imagenBackdrop}');"></div>
@@ -148,7 +168,7 @@ function iniciarHeroSlider(items) {
           </div>
           <div class="hero-info-box">
             <div class="hero-badges-row">
-              <span class="hero-badge">Destacado • ${item.type}</span>
+              <span class="hero-badge">Destacado • ${tipoTexto}</span>
               ${badgeCalidad}
             </div>
             <h1 class="hero-title">${item.title}</h1>
@@ -238,7 +258,7 @@ window.alternarFavoritoPorId = function(itemId) {
   if (item) alternarFavorito(item, null);
 };
 
-// Generador de enlaces para Unlimplay
+// Generador de enlaces Unlimplay
 function obtenerUrlFacilitoPlay(item, season = 1, episode = 1) {
   const base = "https://unlimplay.com/f/embed";
   const { type, tmdb_id } = item;
@@ -247,7 +267,7 @@ function obtenerUrlFacilitoPlay(item, season = 1, episode = 1) {
   return `${base}/tv/${tmdb_id}/${season}/${episode}`;
 }
 
-// Cortina de carga con marca BigScreen
+// Cortina de carga BigScreen
 function mostrarCortinaCarga(playerContainer, segundos = 3.5) {
   if (!playerContainer) return;
 
@@ -278,7 +298,7 @@ function mostrarCortinaCarga(playerContainer, segundos = 3.5) {
   }, segundos * 1000);
 }
 
-// Publicidad interactiva y activación de cortina
+// Capa de anuncio
 function activarCapaPublicidad(playerContainer) {
   if (!playerContainer) return;
 
@@ -309,81 +329,138 @@ function activarCapaPublicidad(playerContainer) {
   playerContainer.prepend(overlay);
 }
 
-// Renderizado de tarjetas en la grilla
-function renderCards(items) {
-  catalogGrid.innerHTML = "";
+// Generador de Tarjeta individual
+function crearElementoCard(item) {
+  const card = document.createElement("article");
+  card.className = "card";
+  const detailLabel = item.episodes ? `${item.episodes} caps` : (item.duration || "");
+  const favoritoActivo = esFavorito(item.id);
+  
+  const calidad = item.quality;
+  const textoCalidad = normalizarTextoCalidad(calidad);
+  const claseColor = obtenerClaseCalidad(calidad);
+  const badgeCalidad = calidad 
+    ? `<span class="badge-quality ${claseColor}">${textoCalidad}</span>` 
+    : "";
 
-  if (!items || items.length === 0) {
-    const mensajeVacio = (currentCategory === "favoritos")
-      ? "No has añadido ningún título a tu lista aún. Haz clic en la estrella de cualquier portada para guardarla aquí."
-      : "No hay títulos disponibles.";
-    catalogGrid.innerHTML = `<p class="no-results">${mensajeVacio}</p>`;
+  const tipoTexto = normalizarTipoTexto(item.type);
+  const claseTipo = obtenerClaseTipoBadge(item.type);
+
+  card.innerHTML = `
+    <div class="poster-wrapper">
+      <div class="badge-group">
+        <span class="badge-type ${claseTipo}">${tipoTexto}</span>
+        ${badgeCalidad}
+      </div>
+      <button class="btn-card-fav ${favoritoActivo ? "active" : ""}" data-id="${item.id}" title="Añadir a Mi Lista">
+        ${favoritoActivo ? "★" : "☆"}
+      </button>
+      <img src="${item.poster}" alt="${item.title}" loading="lazy">
+    </div>
+    <div class="card-info">
+      <h3 class="card-title">${item.title}</h3>
+      <div class="card-meta">
+        <span class="rating">★ ${item.rating}</span>
+        <span>${detailLabel}</span>
+        <span>${item.year}</span>
+      </div>
+    </div>
+  `;
+
+  card.querySelector(".btn-card-fav").addEventListener("click", (e) => {
+    alternarFavorito(item, e);
+  });
+
+  card.addEventListener("click", () => openModal(item));
+  return card;
+}
+
+// RENDERIZADO PRINCIPAL CON SEPARACIÓN EN "TODOS"
+function renderContent() {
+  catalogGrid.innerHTML = "";
+  const query = searchInput.value.toLowerCase().trim();
+  const favs = obtenerFavoritos();
+
+  // MODO 1: BÚSQUEDA ACTIVA O CATEGORÍA FILTRADA ESPECÍFICA
+  if (query || currentCategory !== "all") {
+    const filtrados = mediaData.filter(item => {
+      let coincideCat = false;
+      if (currentCategory === "all") coincideCat = true;
+      else if (currentCategory === "favoritos") coincideCat = favs.includes(item.id);
+      else coincideCat = (item.type === currentCategory);
+
+      return coincideCat && item.title.toLowerCase().includes(query);
+    });
+
+    if (filtrados.length === 0) {
+      catalogGrid.innerHTML = `<p class="no-results">No se encontraron títulos que coincidan con la búsqueda.</p>`;
+      return;
+    }
+
+    filtrados.forEach(item => catalogGrid.appendChild(crearElementoCard(item)));
     return;
   }
 
-  items.forEach(item => {
-    const card = document.createElement("article");
-    card.className = "card";
-    const detailLabel = item.episodes ? `${item.episodes} caps` : (item.duration || "");
-    const favoritoActivo = esFavorito(item.id);
-    
-    const calidad = item.quality;
-    const textoCalidad = normalizarTextoCalidad(calidad);
-    const claseColor = obtenerClaseCalidad(calidad);
-    const badgeCalidad = calidad 
-      ? `<span class="badge-quality ${claseColor}">${textoCalidad}</span>` 
-      : "";
+  // MODO 2: PESTAÑA "TODOS" -> SEPARADO POR PELÍCULAS, SERIES Y ANIME
+  const peliculas = mediaData.filter(i => i.type === "pelicula");
+  const series = mediaData.filter(i => i.type === "serie");
+  const animes = mediaData.filter(i => i.type === "anime");
 
-    card.innerHTML = `
-      <div class="poster-wrapper">
-        <div class="badge-group">
-          <span class="badge">${item.type}</span>
-          ${badgeCalidad}
+  if (mediaData.length === 0) {
+    catalogGrid.innerHTML = `<p class="no-results">El catálogo está vacío.</p>`;
+    return;
+  }
+
+  // Helper para armar secciones
+  function crearSeccion(titulo, icono, lista) {
+    if (!lista || lista.length === 0) return null;
+
+    const section = document.createElement("section");
+    section.className = "catalog-section";
+
+    section.innerHTML = `
+      <div class="section-header">
+        <div class="section-title-box">
+          <span class="section-icon">${icono}</span>
+          <h2>${titulo}</h2>
+          <span class="section-count">${lista.length} títulos</span>
         </div>
-        <button class="btn-card-fav ${favoritoActivo ? "active" : ""}" data-id="${item.id}" title="Añadir a Mi Lista">
-          ${favoritoActivo ? "★" : "☆"}
-        </button>
-        <img src="${item.poster}" alt="${item.title}" loading="lazy">
       </div>
-      <div class="card-info">
-        <h3 class="card-title">${item.title}</h3>
-        <div class="card-meta">
-          <span class="rating">★ ${item.rating}</span>
-          <span>${detailLabel}</span>
-          <span>${item.year}</span>
-        </div>
-      </div>
+      <div class="catalog-grid" style="margin-top: 0;"></div>
     `;
 
-    card.querySelector(".btn-card-fav").addEventListener("click", (e) => {
-      alternarFavorito(item, e);
-    });
+    const subGrid = section.querySelector(".catalog-grid");
+    lista.forEach(item => subGrid.appendChild(crearElementoCard(item)));
+    return section;
+  }
 
-    card.addEventListener("click", () => openModal(item));
-    catalogGrid.appendChild(card);
-  });
+  const secPelis = crearSeccion("Películas", "🎬", peliculas);
+  const secSeries = crearSeccion("Series de TV", "📺", series);
+  const secAnime = crearSeccion("Anime", "⛩️", animes);
+
+  // Reemplazar la grilla plana por el contenedor con las 3 secciones
+  const contenedorPadre = catalogGrid.parentElement;
+  catalogGrid.style.display = "none";
+
+  // Remover secciones anteriores si existen
+  contenedorPadre.querySelectorAll(".catalog-section").forEach(s => s.remove());
+
+  if (secPelis) contenedorPadre.appendChild(secPelis);
+  if (secSeries) contenedorPadre.appendChild(secSeries);
+  if (secAnime) contenedorPadre.appendChild(secAnime);
 }
 
 function aplicarFiltros() {
   const query = searchInput.value.toLowerCase().trim();
-  const favs = obtenerFavoritos();
+  const contenedorPadre = catalogGrid.parentElement;
 
-  const resultados = mediaData.filter(item => {
-    let coincideCategoria = false;
+  if (query || currentCategory !== "all") {
+    // Quitar secciones y mostrar grilla normal
+    contenedorPadre.querySelectorAll(".catalog-section").forEach(s => s.remove());
+    catalogGrid.style.display = "grid";
+  }
 
-    if (currentCategory === "all") {
-      coincideCategoria = true;
-    } else if (currentCategory === "favoritos") {
-      coincideCategoria = favs.includes(item.id);
-    } else {
-      coincideCategoria = (item.type === currentCategory);
-    }
-
-    const coincideTexto = item.title.toLowerCase().includes(query);
-    return coincideCategoria && coincideTexto;
-  });
-
-  renderCards(resultados);
+  renderContent();
 }
 
 searchInput.addEventListener("input", aplicarFiltros);
@@ -410,6 +487,9 @@ async function openModal(item) {
   const badgeCalidad = calidad 
     ? `<span class="modal-quality-badge ${claseColor}">${textoCalidad}</span>` 
     : "";
+
+  const tipoTexto = normalizarTipoTexto(item.type);
+  const claseTipo = obtenerClaseTipoBadge(item.type);
 
   let episodesHtml = "";
   let seasonsData = [];
@@ -463,7 +543,7 @@ async function openModal(item) {
         <h2>${item.title}</h2>
         <div class="modal-meta-row">
           <span class="modal-meta-data">
-            <strong>${item.type.toUpperCase()}</strong>
+            <span class="badge-type ${claseTipo}">${tipoTexto}</span>
             ${badgeCalidad}
             • ★ ${item.rating} • ${item.year} ${detailLabel ? `• ${detailLabel}` : ""}
           </span>
