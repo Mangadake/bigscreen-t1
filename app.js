@@ -15,7 +15,7 @@ const heroBanner = document.getElementById("hero-banner");
 let mediaData = [];
 let currentCategory = "all";
 
-// Normalización con ACENTO y colores
+// Normalización de etiquetas con acento y colores
 function normalizarTipoTexto(type) {
   if (!type) return "PELÍCULA";
   const t = type.toLowerCase().trim();
@@ -34,7 +34,7 @@ function obtenerClaseTipoBadge(type) {
   return "badge-pelicula";
 }
 
-// Mapeo unificado para clases de calidad
+// Clases y textos de calidad
 function obtenerClaseCalidad(calidad) {
   if (!calidad) return "";
   const c = calidad.toUpperCase().trim();
@@ -258,57 +258,26 @@ window.alternarFavoritoPorId = function(itemId) {
   if (item) alternarFavorito(item, null);
 };
 
-// Generador de enlaces Unlimplay
+// Generador de rutas oficial de FacilitoPlay con personalización de colores
 function obtenerUrlFacilitoPlay(item, season = 1, episode = 1) {
-  const base = "https://unlimplay.com/f/embed";
+  const base = "https://facilitoplay.com/e";
+  const params = "?color=e50914&fondo=0b0d11";
   const { type, tmdb_id } = item;
 
-  if (type === "pelicula") return `${base}/movie/${tmdb_id}`;
-  return `${base}/tv/${tmdb_id}/${season}/${episode}`;
+  if (type === "pelicula") return `${base}/pelicula/${tmdb_id}${params}`;
+  if (type === "serie") return `${base}/serie/${tmdb_id}/${season}/${episode}${params}`;
+  if (type === "anime") return `${base}/anime/${tmdb_id}/${season}/${episode}${params}`;
+  return "";
 }
 
-// Cortina de carga BigScreen
-function mostrarCortinaCarga(playerContainer, segundos = 3.5) {
-  if (!playerContainer) return;
-
-  const previa = playerContainer.querySelector(".stream-loader-mask");
-  if (previa) previa.remove();
-
-  const cortina = document.createElement("div");
-  cortina.className = "stream-loader-mask";
-  cortina.innerHTML = `
-    <div class="loader-brand">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="3" width="20" height="14" rx="3" />
-        <polygon points="10 8 15 10 10 12 10 8" fill="currentColor" stroke="none" />
-        <path d="M8 21h8" />
-        <path d="M12 17v4" />
-      </svg>
-      <span class="text-white">BIG</span><span class="text-accent">SCREEN</span>
-    </div>
-    <div class="stream-spinner"></div>
-    <span class="stream-loader-text">Conectando con el servidor seguro...</span>
-  `;
-
-  playerContainer.appendChild(cortina);
-
-  setTimeout(() => {
-    cortina.classList.add("hidden");
-    setTimeout(() => cortina.remove(), 500);
-  }, segundos * 1000);
-}
-
-// Capa de anuncio
+// Capa de publicidad
 function activarCapaPublicidad(playerContainer) {
   if (!playerContainer) return;
 
   const capaPrevia = playerContainer.querySelector(".player-ad-overlay");
   if (capaPrevia) capaPrevia.remove();
 
-  if (!ACTIVAR_PUBLICIDAD) {
-    mostrarCortinaCarga(playerContainer, 3.5);
-    return;
-  }
+  if (!ACTIVAR_PUBLICIDAD) return;
 
   const overlay = document.createElement("div");
   overlay.className = "player-ad-overlay";
@@ -323,13 +292,12 @@ function activarCapaPublicidad(playerContainer) {
     window.open(LINK_PUBLICIDAD, "_blank");
     overlay.style.opacity = "0";
     setTimeout(() => overlay.remove(), 250);
-    mostrarCortinaCarga(playerContainer, 3.5);
   });
 
   playerContainer.prepend(overlay);
 }
 
-// Generador de Tarjeta individual
+// Crear elemento card
 function crearElementoCard(item) {
   const card = document.createElement("article");
   card.className = "card";
@@ -375,13 +343,12 @@ function crearElementoCard(item) {
   return card;
 }
 
-// RENDERIZADO PRINCIPAL CON SEPARACIÓN EN "TODOS"
+// Renderizado por secciones en "Todos"
 function renderContent() {
   catalogGrid.innerHTML = "";
   const query = searchInput.value.toLowerCase().trim();
   const favs = obtenerFavoritos();
 
-  // MODO 1: BÚSQUEDA ACTIVA O CATEGORÍA FILTRADA ESPECÍFICA
   if (query || currentCategory !== "all") {
     const filtrados = mediaData.filter(item => {
       let coincideCat = false;
@@ -401,7 +368,6 @@ function renderContent() {
     return;
   }
 
-  // MODO 2: PESTAÑA "TODOS" -> SEPARADO POR PELÍCULAS, SERIES Y ANIME
   const peliculas = mediaData.filter(i => i.type === "pelicula");
   const series = mediaData.filter(i => i.type === "serie");
   const animes = mediaData.filter(i => i.type === "anime");
@@ -411,7 +377,6 @@ function renderContent() {
     return;
   }
 
-  // Helper para armar secciones
   function crearSeccion(titulo, icono, lista) {
     if (!lista || lista.length === 0) return null;
 
@@ -438,11 +403,8 @@ function renderContent() {
   const secSeries = crearSeccion("Series de TV", "📺", series);
   const secAnime = crearSeccion("Anime", "⛩️", animes);
 
-  // Reemplazar la grilla plana por el contenedor con las 3 secciones
   const contenedorPadre = catalogGrid.parentElement;
   catalogGrid.style.display = "none";
-
-  // Remover secciones anteriores si existen
   contenedorPadre.querySelectorAll(".catalog-section").forEach(s => s.remove());
 
   if (secPelis) contenedorPadre.appendChild(secPelis);
@@ -455,7 +417,6 @@ function aplicarFiltros() {
   const contenedorPadre = catalogGrid.parentElement;
 
   if (query || currentCategory !== "all") {
-    // Quitar secciones y mostrar grilla normal
     contenedorPadre.querySelectorAll(".catalog-section").forEach(s => s.remove());
     catalogGrid.style.display = "grid";
   }
@@ -618,6 +579,9 @@ async function openModal(item) {
 }
 
 function closeModal() {
+  const iframe = document.getElementById("player-iframe");
+  if (iframe) iframe.src = ""; // Cortar conexión al instante
+
   modalOverlay.style.display = "none";
   modalOverlay.classList.remove("active");
   modalBody.innerHTML = "";
