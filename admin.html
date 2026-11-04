@@ -124,7 +124,7 @@
     }
     .btn-bookmark:hover { background: #0369a1; }
 
-    /* LAYOUT WIDESCREEN A DOS COLUMNAS */
+    /* WORKSPACE 2 COLUMNAS */
     .dashboard-grid {
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
@@ -364,6 +364,27 @@
       outline: none;
     }
 
+    .preview-player-wrapper {
+      margin-bottom: 1rem;
+    }
+
+    .btn-test-stream {
+      background: var(--card-inner);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 0.6rem;
+      transition: all 0.2s;
+    }
+    .btn-test-stream:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
     .player-test-container {
       position: relative;
       width: 100%;
@@ -371,7 +392,7 @@
       background: #000;
       border-radius: 6px;
       overflow: hidden;
-      margin-bottom: 1rem;
+      display: none;
     }
     .player-test-container iframe { width: 100%; height: 100%; border: 0; }
 
@@ -557,7 +578,6 @@
 <body>
 
   <div class="admin-wrapper">
-    <!-- HEADER -->
     <header class="admin-header">
       <div class="admin-title">
         <h1>⚙️ BigScreen Studio</h1>
@@ -568,7 +588,6 @@
       </div>
     </header>
 
-    <!-- PANEL CREDENCIALES -->
     <section class="config-panel" id="config-panel">
       <div class="config-group">
         <label>GitHub Personal Access Token (PAT):</label>
@@ -597,9 +616,8 @@
       </div>
     </section>
 
-    <!-- WORKSPACE 2 COLUMNAS -->
     <main class="dashboard-grid">
-      <!-- COLUMNA IZQUIERDA: DESCUBRIR Y PUBLICAR -->
+      <!-- COLUMNA IZQUIERDA -->
       <section>
         <div class="panel-card">
           <div class="panel-card-header">
@@ -617,11 +635,8 @@
             <button class="btn-primary" id="btn-tmdb-search">Buscar</button>
           </div>
 
-          <div class="tmdb-results-grid" id="tmdb-grid">
-            <!-- Portadas dinámicas -->
-          </div>
+          <div class="tmdb-results-grid" id="tmdb-grid"></div>
 
-          <!-- PAGINACIÓN -->
           <div class="pagination-bar">
             <span id="page-indicator">Cargando páginas...</span>
             <div class="pagination-btns">
@@ -630,7 +645,6 @@
             </div>
           </div>
 
-          <!-- IMPORTACIÓN MANUAL -->
           <div class="manual-box">
             <p>O importa cualquier URL directamente de TMDb:</p>
             <div class="search-row" style="margin-bottom: 0;">
@@ -640,7 +654,7 @@
           </div>
         </div>
 
-        <!-- FICHA DE INSPECCIÓN Y PUBLICACIÓN -->
+        <!-- FICHA DE PUBLICACIÓN -->
         <div class="panel-card preview-box" id="preview-box">
           <h2 class="panel-card-title" style="margin-bottom: 1rem;">📺 Inspección y Publicación</h2>
           
@@ -676,11 +690,12 @@
             </div>
           </div>
 
-          <div class="form-group" style="margin-bottom: 0.6rem;">
-            <label>Comprobación en Vivo del Reproductor:</label>
-          </div>
-          <div class="player-test-container">
-            <iframe id="prev-player-iframe" src="" allowfullscreen></iframe>
+          <!-- REPRODUCTOR BAJO DEMANDA -->
+          <div class="preview-player-wrapper">
+            <button class="btn-test-stream" id="btn-load-stream-preview">▶ Cargar vista previa del reproductor</button>
+            <div class="player-test-container" id="player-test-container">
+              <iframe id="prev-player-iframe" src="" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
+            </div>
           </div>
 
           <button class="btn-primary" id="btn-publish" style="width: 100%; padding: 0.9rem; font-size: 1rem;">
@@ -689,7 +704,7 @@
         </div>
       </section>
 
-      <!-- COLUMNA DERECHA: GESTIÓN DE TÍTULOS PUBLICADOS -->
+      <!-- COLUMNA DERECHA -->
       <section>
         <div class="panel-card">
           <div class="published-header-bar">
@@ -709,9 +724,7 @@
 
           <input type="text" class="pub-search" id="pub-search-input" placeholder="🔍 Filtrar título al instante por nombre...">
 
-          <div class="published-scroll-area" id="published-list">
-            <!-- Lista interactiva de títulos -->
-          </div>
+          <div class="published-scroll-area" id="published-list"></div>
         </div>
       </section>
     </main>
@@ -720,7 +733,6 @@
   <div class="status-toast" id="toast">Acción completada con éxito</div>
 
   <script>
-    // ESTADO GLOBAL
     let publishedCatalog = [];
     let currentCatalogSha = null;
     let inspectingItem = null;
@@ -740,7 +752,6 @@
     const publishedCounter = document.getElementById("published-counter");
     const toast = document.getElementById("toast");
 
-    // SANITIZACIÓN ROBUSTA DE PARÁMETROS GITHUB
     function obtenerCredencialesLimpias() {
       let owner = (localStorage.getItem("gh_owner") || "Mangadake").trim();
       let repo = (localStorage.getItem("gh_repo") || "bigscreen-T1").trim();
@@ -760,7 +771,6 @@
       return { owner, repo, token, path };
     }
 
-    // CARGAR DESDE HASH O LOCALSTORAGE
     function cargarCredenciales() {
       if (window.location.hash && window.location.hash.length > 5) {
         try {
@@ -773,7 +783,7 @@
           if (dec.tmdb_key) localStorage.setItem("tmdb_key", dec.tmdb_key);
           showToast("¡Credenciales cargadas desde tu Marcador!");
         } catch (e) {
-          console.error("No se pudo descifrar el hash:", e);
+          console.error("Error al descifrar hash:", e);
         }
       }
 
@@ -808,12 +818,11 @@
       document.getElementById("gh-owner").value = rawOwner;
       document.getElementById("gh-repo").value = rawRepo;
 
-      showToast("Configuración guardada en este navegador");
+      showToast("Configuración guardada");
       cargarExploradorTMDb();
       cargarCatalogoRemoto();
     });
 
-    // BOTÓN MARCADOR DE ACCESO DIRECTO
     document.getElementById("btn-create-bookmark").addEventListener("click", () => {
       const token = document.getElementById("gh-token").value.trim();
       const owner = document.getElementById("gh-owner").value.trim();
@@ -834,7 +843,7 @@
       window.location.hash = hash;
       navigator.clipboard.writeText(bookmarkUrl);
 
-      alert("¡Enlace generado y copiado a tu portapapeles!\n\n1. Ya se aplicó a tu barra de direcciones.\n2. Presiona 'Ctrl + D' ahora mismo para guardarlo en tus Marcadores.\n3. Cada vez que abras ese marcador entrarás directo con todo cargado.");
+      alert("¡Enlace generado y copiado a tu portapapeles!\n\nPresiona 'Ctrl + D' para guardarlo en Marcadores.");
       showToast("Enlace de acceso copiado");
     });
 
@@ -848,7 +857,6 @@
       setTimeout(() => { toast.style.display = "none"; }, 3500);
     }
 
-    // EXPLORADOR TMDB CON 24 TÍTULOS Y CONTEO TOTAL DE PÁGINAS
     async function cargarExploradorTMDb() {
       const tmdbKey = localStorage.getItem("tmdb_key");
       if (!tmdbKey) {
@@ -892,7 +900,6 @@
         const combinados = [...(data1.results || []), ...(data2.results || [])];
         const results = combinados.filter(item => item.poster_path).slice(0, 24);
 
-        // Cálculo exacto del total de páginas (TMDb limita su API a 500 páginas de origen)
         const totalTmdbPages = Math.min(data1.total_pages || 1, 500);
         totalAvailablePages = Math.max(1, Math.ceil(totalTmdbPages / 2));
 
@@ -972,7 +979,7 @@
       }
     });
 
-    // INSPECCIÓN Y DETALLES
+    // Inspección de título (sin autoejecutar el iframe)
     window.prepararInspeccion = async function(type, tmdbId) {
       const tmdbKey = localStorage.getItem("tmdb_key");
       const isMovie = (type === "pelicula");
@@ -1023,10 +1030,12 @@
         document.getElementById("prev-type-select").value = type;
         document.getElementById("prev-quality-select").value = "1080p";
 
-        const embedUrl = isMovie 
-          ? `https://unlimplay.com/f/embed/movie/${tmdbId}`
-          : `https://unlimplay.com/f/embed/tv/${tmdbId}/1/1`;
-        document.getElementById("prev-player-iframe").src = embedUrl;
+        // Reiniciar reproductor de prueba sin disparar peticiones
+        const container = document.getElementById("player-test-container");
+        const iframe = document.getElementById("prev-player-iframe");
+        container.style.display = "none";
+        iframe.src = "";
+        document.getElementById("btn-load-stream-preview").style.display = "inline-block";
 
         previewBox.classList.add("open");
         previewBox.scrollIntoView({ behavior: 'smooth' });
@@ -1037,14 +1046,33 @@
       }
     };
 
-    // PUBLICAR EN GITHUB
+    // Botón para cargar reproductor sólo si se solicita
+    document.getElementById("btn-load-stream-preview").addEventListener("click", () => {
+      if (!inspectingItem) return;
+      const { type, tmdb_id } = inspectingItem;
+      const base = "https://facilitoplay.com/e";
+      const params = "?color=e50914&fondo=0b0d11";
+      
+      let embedUrl = "";
+      if (type === "pelicula") embedUrl = `${base}/pelicula/${tmdb_id}${params}`;
+      else if (type === "serie") embedUrl = `${base}/serie/${tmdb_id}/1/1${params}`;
+      else if (type === "anime") embedUrl = `${base}/anime/${tmdb_id}/1/1${params}`;
+
+      const container = document.getElementById("player-test-container");
+      const iframe = document.getElementById("prev-player-iframe");
+      
+      iframe.src = embedUrl;
+      container.style.display = "block";
+      document.getElementById("btn-load-stream-preview").style.display = "none";
+    });
+
+    // Publicar en GitHub
     document.getElementById("btn-publish").addEventListener("click", async () => {
       if (!inspectingItem) return;
 
       const { owner, repo, token, path } = obtenerCredencialesLimpias();
-
       if (!token) {
-        alert("Por favor abre 'Configuración de Acceso' y guarda tu GitHub Personal Access Token.");
+        alert("Abre 'Configuración de Acceso' y guarda tu GitHub Personal Access Token.");
         return;
       }
 
@@ -1089,7 +1117,6 @@
       }
     });
 
-    // IMPORTACIÓN MANUAL
     document.getElementById("btn-manual-fetch").addEventListener("click", () => {
       const url = document.getElementById("manual-url").value.trim();
       const match = url.match(/themoviedb\.org\/(movie|tv)\/(\d+)/);
@@ -1102,7 +1129,6 @@
       prepararInspeccion(type, id);
     });
 
-    // CARGAR CATÁLOGO PUBLICADO DESDE GITHUB
     async function cargarCatalogoRemoto() {
       const { owner, repo, token, path } = obtenerCredencialesLimpias();
       const headers = token ? { "Authorization": `token ${token}` } : {};
@@ -1123,7 +1149,6 @@
       }
     }
 
-    // BÚSQUEDA INSTANTÁNEA EN CATÁLOGO PUBLICADO
     function renderPublishedList() {
       const q = pubSearchInput.value.toLowerCase().trim();
 
