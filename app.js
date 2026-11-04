@@ -238,6 +238,7 @@ window.alternarFavoritoPorId = function(itemId) {
   if (item) alternarFavorito(item, null);
 };
 
+// Generador de enlaces para Unlimplay
 function obtenerUrlFacilitoPlay(item, season = 1, episode = 1) {
   const base = "https://unlimplay.com/f/embed";
   const { type, tmdb_id } = item;
@@ -246,18 +247,55 @@ function obtenerUrlFacilitoPlay(item, season = 1, episode = 1) {
   return `${base}/tv/${tmdb_id}/${season}/${episode}`;
 }
 
+// Cortina de carga con marca BigScreen
+function mostrarCortinaCarga(playerContainer, segundos = 3.5) {
+  if (!playerContainer) return;
+
+  const previa = playerContainer.querySelector(".stream-loader-mask");
+  if (previa) previa.remove();
+
+  const cortina = document.createElement("div");
+  cortina.className = "stream-loader-mask";
+  cortina.innerHTML = `
+    <div class="loader-brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="3" />
+        <polygon points="10 8 15 10 10 12 10 8" fill="currentColor" stroke="none" />
+        <path d="M8 21h8" />
+        <path d="M12 17v4" />
+      </svg>
+      <span class="text-white">BIG</span><span class="text-accent">SCREEN</span>
+    </div>
+    <div class="stream-spinner"></div>
+    <span class="stream-loader-text">Conectando con el servidor seguro...</span>
+  `;
+
+  playerContainer.appendChild(cortina);
+
+  setTimeout(() => {
+    cortina.classList.add("hidden");
+    setTimeout(() => cortina.remove(), 500);
+  }, segundos * 1000);
+}
+
+// Publicidad interactiva y activación de cortina
 function activarCapaPublicidad(playerContainer) {
-  if (!ACTIVAR_PUBLICIDAD || !playerContainer) return;
+  if (!playerContainer) return;
 
   const capaPrevia = playerContainer.querySelector(".player-ad-overlay");
   if (capaPrevia) capaPrevia.remove();
+
+  if (!ACTIVAR_PUBLICIDAD) {
+    mostrarCortinaCarga(playerContainer, 3.5);
+    return;
+  }
 
   const overlay = document.createElement("div");
   overlay.className = "player-ad-overlay";
   overlay.innerHTML = `
     <span class="ad-badge">Anuncio Patrocinado</span>
     <div class="ad-play-btn">▶</div>
-    <div class="ad-text">Haz clic aquí para reproducir en HD</div>
+    <div class="ad-text">Haz clic aquí para reproducir</div>
     <div class="ad-subtext">El reproductor se activará inmediatamente</div>
   `;
 
@@ -265,12 +303,13 @@ function activarCapaPublicidad(playerContainer) {
     window.open(LINK_PUBLICIDAD, "_blank");
     overlay.style.opacity = "0";
     setTimeout(() => overlay.remove(), 250);
+    mostrarCortinaCarga(playerContainer, 3.5);
   });
 
   playerContainer.prepend(overlay);
 }
 
-// Renderizado de tarjetas con etiquetas de colores
+// Renderizado de tarjetas en la grilla
 function renderCards(items) {
   catalogGrid.innerHTML = "";
 
