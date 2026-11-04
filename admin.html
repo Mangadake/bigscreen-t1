@@ -3,963 +3,1148 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel de Administración - StreamLab</title>
-  <link rel="stylesheet" href="style.css?v=3">
+  <title>BigScreen - Panel de Administración</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
   <style>
-    .admin-container {
-      max-width: 820px;
-      margin: 2rem auto;
-      padding: 1.5rem;
-      background: var(--bg-card);
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+    :root {
+      --bg: #0b0d12;
+      --card: #151821;
+      --card-inner: #1c202c;
+      --border: rgba(255, 255, 255, 0.08);
+      --accent: #e50914;
+      --accent-hover: #b80710;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --blue: #2563eb;
+      --purple: #9333ea;
+      --green: #059669;
+      --orange: #d97706;
     }
-    .form-group {
-      margin-bottom: 1.2rem;
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 1.5rem 2rem;
+    }
+
+    .admin-wrapper {
+      max-width: 1750px;
+      margin: 0 auto;
+    }
+
+    /* TOP BAR */
+    .admin-header {
       display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-    .form-group label {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-      font-weight: 600;
-    }
-    .form-group input, .form-group select {
-      padding: 0.75rem 1rem;
-      background: #1f232b;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 6px;
-      color: #fff;
-      font-size: 0.95rem;
-      outline: none;
-    }
-    .form-group input:focus, .form-group select:focus {
-      border-color: var(--accent);
-    }
-    .btn-action {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      padding: 0.8rem 1.5rem;
-      border-radius: 6px;
-      font-weight: 700;
-      cursor: pointer;
-      width: 100%;
-      font-size: 0.95rem;
-      transition: opacity 0.2s, background-color 0.2s;
-    }
-    .btn-action:hover {
-      background: #b80710;
-    }
-    .preview-card {
-      margin-top: 1.5rem;
-      padding: 1.2rem;
-      background: #11141a;
-      border-radius: 8px;
-      display: none;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    .status-msg {
-      margin-top: 1rem;
-      font-size: 0.9rem;
-      text-align: center;
-      font-weight: 600;
-    }
-    .catalog-explorer {
-      margin: 1.8rem 0;
-      padding: 1.2rem;
-      background: #11141a;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    .explorer-header {
-      display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
       flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .admin-title h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .admin-title p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    .btn-config {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .btn-config:hover { background: rgba(255, 255, 255, 0.15); }
+
+    /* MODAL CONFIG ACCESO */
+    .config-panel {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .config-panel.open { display: grid; }
+    .config-group label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.3rem; font-weight: 700; text-transform: uppercase; }
+    .config-group input { width: 100%; background: var(--card-inner); border: 1px solid var(--border); border-radius: 6px; padding: 0.55rem 0.8rem; color: #fff; font-size: 0.85rem; outline: none; }
+    .config-group input:focus { border-color: var(--accent); }
+
+    /* LAYOUT WIDESCREEN A DOS COLUMNAS */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media (max-width: 1200px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+    }
+
+    .panel-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.4rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .panel-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    .panel-card-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
       gap: 0.5rem;
     }
-    .explorer-header h3 {
-      font-size: 1.05rem;
-      color: #fff;
-    }
-    .explorer-tabs {
+
+    /* EXPLORADOR TMDB */
+    .tmdb-nav-pills {
       display: flex;
       gap: 0.4rem;
       flex-wrap: wrap;
     }
-    .tab-btn {
-      background: #1f232b;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: var(--text-secondary);
-      padding: 0.35rem 0.75rem;
-      border-radius: 4px;
-      font-size: 0.8rem;
+
+    .pill-btn {
+      background: var(--card-inner);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.4rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;
     }
-    .tab-btn:hover, .tab-btn.active {
+
+    .pill-btn:hover, .pill-btn.active {
       background: var(--accent);
       color: #fff;
       border-color: var(--accent);
     }
-    .explorer-search-row {
+
+    .search-row {
       display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
+      gap: 0.6rem;
+      margin-bottom: 1.2rem;
     }
-    .explorer-search-row input {
+
+    .search-row input {
       flex: 1;
-      padding: 0.6rem 0.9rem;
-      background: #1f232b;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: var(--card-inner);
+      border: 1px solid var(--border);
       border-radius: 6px;
+      padding: 0.65rem 1rem;
       color: #fff;
       font-size: 0.9rem;
       outline: none;
     }
-    .explorer-search-row button {
-      padding: 0.6rem 1.2rem;
-      background: #374151;
-      border: none;
+    .search-row input:focus { border-color: var(--accent); }
+
+    .btn-primary {
+      background: var(--accent);
       color: #fff;
-      font-size: 0.85rem;
-      font-weight: 600;
+      border: none;
+      padding: 0.65rem 1.4rem;
       border-radius: 6px;
+      font-weight: 700;
       cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
     }
-    .explorer-search-row button:hover {
-      background: #4b5563;
-    }
-    .explorer-results {
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    .tmdb-results-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 0.8rem;
-      max-height: 380px;
-      overflow-y: auto;
-      padding-right: 4px;
+      gap: 0.9rem;
+      min-height: 280px;
     }
-    .explorer-item {
-      background: #181b22;
+
+    .tmdb-item-card {
+      background: var(--card-inner);
+      border: 1px solid var(--border);
       border-radius: 6px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      position: relative;
+      transition: transform 0.2s, border-color 0.2s;
     }
-    .explorer-item img {
-      width: 100%;
+    .tmdb-item-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .tmdb-item-poster {
       aspect-ratio: 2 / 3;
-      object-fit: cover;
+      width: 100%;
+      background: #000;
     }
-    .explorer-item-info {
+    .tmdb-item-poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .tmdb-item-info {
       padding: 0.5rem;
       display: flex;
       flex-direction: column;
       flex-grow: 1;
       justify-content: space-between;
+      gap: 0.4rem;
     }
-    .explorer-item-title {
+
+    .tmdb-item-title {
       font-size: 0.78rem;
-      font-weight: 600;
-      white-space: nowrap;
+      font-weight: 700;
+      line-height: 1.2;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
       overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 0.3rem;
     }
-    .explorer-item-meta {
+
+    .tmdb-item-meta {
       font-size: 0.7rem;
-      color: var(--text-secondary);
-      margin-bottom: 0.5rem;
+      color: var(--text-muted);
     }
+
     .btn-inspect {
-      background: #2563eb;
+      background: var(--blue);
       color: #fff;
       border: none;
-      padding: 0.35rem 0.5rem;
+      padding: 0.35rem 0;
       border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: center;
-      transition: background-color 0.2s;
-    }
-    .btn-inspect:hover {
-      background: #1d4ed8;
-    }
-    .stream-checker-box {
-      margin-top: 1.2rem;
-      padding-top: 1.2rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .checker-title {
-      font-size: 0.9rem;
+      font-size: 0.72rem;
       font-weight: 700;
-      color: #60a5fa;
-      margin-bottom: 0.5rem;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+      transition: background 0.2s;
     }
-    .checker-frame-container {
+    .btn-inspect:hover { background: #1d4ed8; }
+
+    /* CONTROLES DE PAGINACIÓN */
+    .pagination-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1.2rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .pagination-btns {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .page-btn {
+      background: var(--card-inner);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 0.35rem 0.85rem;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .page-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.15); }
+    .page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* ENTRADA MANUAL POR URL */
+    .manual-box {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .manual-box p { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+
+    /* FICHA DE INSPECCIÓN Y PUBLICACIÓN */
+    .preview-box {
+      background: var(--card-inner);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.2rem;
+      display: none;
+    }
+
+    .preview-box.open { display: block; }
+
+    .preview-layout {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .preview-poster {
+      border-radius: 6px;
+      overflow: hidden;
+      aspect-ratio: 2 / 3;
+      background: #000;
+    }
+    .preview-poster img { width: 100%; height: 100%; object-fit: cover; }
+
+    .preview-details h3 { font-size: 1.3rem; margin-bottom: 0.4rem; }
+    .preview-details .meta { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.6rem; }
+    .preview-details p { font-size: 0.82rem; color: #d1d5db; line-height: 1.45; max-height: 80px; overflow-y: auto; margin-bottom: 0.8rem; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-group label { display: block; font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 0.3rem; }
+    .form-group select, .form-group input {
+      width: 100%;
+      background: #11141b;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.5rem;
+      color: #fff;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    .player-test-container {
+      position: relative;
       width: 100%;
       aspect-ratio: 16 / 9;
       background: #000;
       border-radius: 6px;
       overflow: hidden;
-      margin-top: 0.5rem;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-    .checker-frame-container iframe {
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
-    .catalog-manager {
-      margin-top: 2.5rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding-top: 1.5rem;
-    }
-    .catalog-manager h3 {
-      font-size: 1.15rem;
       margin-bottom: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
-    .manage-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-      max-height: 480px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-    .manage-item {
+    .player-test-container iframe { width: 100%; height: 100%; border: 0; }
+
+    /* GESTIÓN DE CATÁLOGO PUBLICADO (COLUMNA DERECHA) */
+    .published-header-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #11141a;
-      padding: 0.7rem 0.9rem;
-      border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      gap: 0.8rem;
+      margin-bottom: 0.8rem;
     }
-    .manage-item-info {
+
+    .badge-count {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    .filter-pills-row {
       display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      flex: 1;
+      gap: 0.4rem;
+      margin-bottom: 0.8rem;
     }
-    .manage-item-info img {
-      width: 42px;
-      height: 62px;
-      object-fit: cover;
+
+    .pub-pill {
+      background: var(--card-inner);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.3rem 0.75rem;
       border-radius: 4px;
-      flex-shrink: 0;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
     }
-    .manage-item-text {
+    .pub-pill.active {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    .pub-search {
+      width: 100%;
+      background: var(--card-inner);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.6rem 0.9rem;
+      color: #fff;
+      font-size: 0.85rem;
+      outline: none;
+      margin-bottom: 1rem;
+    }
+    .pub-search:focus { border-color: var(--accent); }
+
+    .published-scroll-area {
+      height: calc(100vh - 270px);
+      min-height: 550px;
+      overflow-y: auto;
+      padding-right: 0.4rem;
       display: flex;
       flex-direction: column;
-      gap: 0.3rem;
-      flex: 1;
+      gap: 0.65rem;
     }
-    .manage-item-text h4 {
-      font-size: 0.9rem;
+
+    .published-item {
+      background: var(--card-inner);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.6rem;
+      display: grid;
+      grid-template-columns: 50px 1fr auto;
+      gap: 0.8rem;
+      align-items: center;
+      transition: border-color 0.2s;
+    }
+    .published-item:hover { border-color: rgba(255, 255, 255, 0.2); }
+
+    .pub-thumb {
+      width: 50px;
+      aspect-ratio: 2 / 3;
+      border-radius: 4px;
+      object-fit: cover;
+      background: #000;
+    }
+
+    .pub-info {
+      overflow: hidden;
+    }
+
+    .pub-title-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .pub-title {
+      font-size: 0.85rem;
+      font-weight: 700;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 380px;
     }
-    .manage-item-text span {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      text-transform: uppercase;
-    }
-    .manage-quality-row {
+
+    .pub-meta {
+      font-size: 0.72rem;
+      color: var(--text-muted);
       display: flex;
       align-items: center;
       gap: 0.4rem;
-      margin-top: 0.2rem;
     }
-    .manage-quality-row select {
-      background: #1f232b;
-      border: 1px solid rgba(255, 255, 255, 0.18);
+
+    .type-tag {
+      font-size: 0.62rem;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 3px;
+      text-transform: uppercase;
       color: #fff;
-      font-size: 0.75rem;
-      padding: 0.2rem 0.5rem;
+    }
+    .type-tag.pelicula { background: var(--accent); }
+    .type-tag.serie { background: var(--blue); }
+    .type-tag.anime { background: var(--purple); }
+
+    .pub-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .pub-quality-select {
+      background: #11141b;
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 0.35rem 0.5rem;
       border-radius: 4px;
+      font-size: 0.75rem;
       outline: none;
     }
-    .btn-save-inline {
-      background: #2563eb;
+
+    .btn-save-row {
+      background: var(--blue);
       color: #fff;
       border: none;
-      padding: 0.2rem 0.6rem;
+      padding: 0.35rem 0.65rem;
       border-radius: 4px;
       font-size: 0.72rem;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
-      transition: background-color 0.2s;
     }
-    .btn-save-inline:hover {
-      background: #1d4ed8;
-    }
-    .btn-delete {
-      background: #dc2626;
-      color: #fff;
-      border: none;
-      padding: 0.4rem 0.8rem;
+    .btn-save-row:hover { background: #1d4ed8; }
+
+    .btn-del-row {
+      background: rgba(229, 9, 20, 0.15);
+      border: 1px solid rgba(229, 9, 20, 0.3);
+      color: #ff6b6b;
+      padding: 0.35rem 0.65rem;
       border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
       cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: 600;
-      flex-shrink: 0;
-      transition: background-color 0.2s;
+      transition: all 0.2s;
     }
-    .btn-delete:hover {
-      background: #b91c1c;
-    }
-    .btn-reload {
-      background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: var(--text-secondary);
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.8rem;
-    }
-    .btn-reload:hover {
+    .btn-del-row:hover {
+      background: var(--accent);
       color: #fff;
-      border-color: #fff;
     }
-    .bookmark-box {
-      margin-top: 1rem;
-      background: #182230;
-      border: 1px dashed #3b82f6;
-      padding: 0.8rem;
+
+    .status-toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #10b981;
+      color: #fff;
+      padding: 0.8rem 1.4rem;
       border-radius: 6px;
-      font-size: 0.85rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
       display: none;
+      z-index: 1000;
     }
   </style>
 </head>
 <body>
-  <div class="admin-container">
-    <h2>Panel de Administración</h2>
-    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.5rem;">
-      Las credenciales se guardan automáticamente en tu navegador.
-    </p>
 
-    <!-- Configuración de llaves -->
-    <details style="margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;" id="details-keys">
-      <summary style="cursor: pointer; color: var(--accent); font-weight: 600;">Configurar Llaves de Acceso</summary>
-      
-      <div class="form-group" style="margin-top: 1rem;">
-        <label>API Key de TMDB (v3 auth):</label>
-        <input type="text" id="tmdb-key" placeholder="Pega tu llave de TMDB">
+  <div class="admin-wrapper">
+    <!-- HEADER -->
+    <header class="admin-header">
+      <div class="admin-title">
+        <h1>⚙️ BigScreen Studio</h1>
+        <p>Centro de Control y Publicación Directa en GitHub Pages</p>
       </div>
-      <div class="form-group">
-        <label>GitHub Personal Access Token (permiso 'repo'):</label>
-        <input type="password" id="gh-token" placeholder="ghp_xxxx">
+      <div>
+        <button class="btn-config" id="btn-toggle-config">🔑 Configuración de Acceso</button>
       </div>
-      <div class="form-group">
-        <label>Tu Usuario de GitHub / Nombre del Repo:</label>
-        <input type="text" id="gh-repo" value="Mangadake/bigscreen-T1">
-      </div>
+    </header>
 
-      <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
-        <button class="btn-action" style="background: #374151;" id="save-keys-btn">Guardar Llaves</button>
-        <button class="btn-action" style="background: #2563eb;" id="btn-create-bookmark">Crear Enlace Permanente (Marcador)</button>
+    <!-- PANEL CREDENCIALES (DESPLEGABLE) -->
+    <section class="config-panel" id="config-panel">
+      <div class="config-group">
+        <label>GitHub Personal Access Token (PAT):</label>
+        <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx">
       </div>
-
-      <div class="bookmark-box" id="bookmark-box">
-        <p style="margin-bottom: 0.5rem; color: #93c5fd;"><strong>¡Enlace creado!</strong> Guarda este enlace directo en tus Marcadores de Chrome:</p>
-        <a id="bookmark-link" href="#" style="color: #60a5fa; font-weight: bold; word-break: break-all;" target="_blank">Mi Acceso Directo con Llaves</a>
+      <div class="config-group">
+        <label>Usuario / Dueño del Repo:</label>
+        <input type="text" id="gh-owner" value="Mangadake">
       </div>
-    </details>
+      <div class="config-group">
+        <label>Nombre del Repositorio:</label>
+        <input type="text" id="gh-repo" value="bigscreen-T1">
+      </div>
+      <div class="config-group">
+        <label>Ruta del Catálogo:</label>
+        <input type="text" id="gh-path" value="catalogo.json">
+      </div>
+      <div class="config-group">
+        <label>TMDb API Key (v3):</label>
+        <input type="text" id="tmdb-key" placeholder="Pega tu API Key de TMDB">
+      </div>
+      <div style="display: flex; align-items: flex-end;">
+        <button class="btn-primary" id="btn-save-credentials" style="width: 100%;">Guardar Llaves</button>
+      </div>
+    </section>
 
-    <!-- EXPLORADOR DE TÍTULOS -->
-    <div class="catalog-explorer">
-      <div class="explorer-header">
-        <h3>Explorar y Descubrir Contenido</h3>
-        <div class="explorer-tabs">
-          <button class="tab-btn active" data-type="trending">Tendencias</button>
-          <button class="tab-btn" data-type="popular_movies">Películas Populares</button>
-          <button class="tab-btn" data-type="popular_series">Series Populares</button>
-          <button class="tab-btn" data-type="anime">Anime</button>
+    <!-- WORKSPACE 2 COLUMNAS (1440p) -->
+    <main class="dashboard-grid">
+      <!-- COLUMNA IZQUIERDA: DESCUBRIR Y PUBLICAR -->
+      <section>
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <h2 class="panel-card-title">🔍 Explorador de Contenido TMDb</h2>
+            <div class="tmdb-nav-pills">
+              <button class="pill-btn active" data-type="trending">Tendencias</button>
+              <button class="pill-btn" data-type="movies">Películas</button>
+              <button class="pill-btn" data-type="tv">Series</button>
+              <button class="pill-btn" data-type="anime">Anime</button>
+            </div>
+          </div>
+
+          <div class="search-row">
+            <input type="text" id="tmdb-search-input" placeholder="Buscar por título (ej: Batman, Dune, Shingeki)...">
+            <button class="btn-primary" id="btn-tmdb-search">Buscar</button>
+          </div>
+
+          <div class="tmdb-results-grid" id="tmdb-grid">
+            <!-- Portadas dinámicas -->
+          </div>
+
+          <!-- PAGINACIÓN ILIMITADA -->
+          <div class="pagination-bar">
+            <span id="page-indicator">Página 1</span>
+            <div class="pagination-btns">
+              <button class="page-btn" id="btn-page-prev" disabled>◀ Anterior</button>
+              <button class="page-btn" id="btn-page-next">Siguiente ▶</button>
+            </div>
+          </div>
+
+          <!-- IMPORTACIÓN MANUAL -->
+          <div class="manual-box">
+            <p>O importa cualquier URL directamente de TMDb:</p>
+            <div class="search-row" style="margin-bottom: 0;">
+              <input type="text" id="manual-url" placeholder="https://www.themoviedb.org/movie/114...">
+              <button class="btn-primary" id="btn-manual-fetch">Analizar</button>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="explorer-search-row">
-        <input type="text" id="explorer-search-input" placeholder="Buscar título por nombre (ej: Batman, One Piece)...">
-        <button id="btn-search-tmdb">Buscar</button>
-      </div>
+        <!-- FICHA DE INSPECCIÓN Y PUBLICACIÓN -->
+        <div class="panel-card preview-box" id="preview-box">
+          <h2 class="panel-card-title" style="margin-bottom: 1rem;">📺 Inspección y Publicación</h2>
+          
+          <div class="preview-layout">
+            <div class="preview-poster">
+              <img id="prev-poster" src="" alt="Poster">
+            </div>
+            <div class="preview-details">
+              <h3 id="prev-title">Título</h3>
+              <div class="meta" id="prev-meta">Tipo • Año • Rating</div>
+              <p id="prev-synopsis">Sinopsis...</p>
 
-      <div class="explorer-results" id="explorer-results">
-        <p style="color: var(--text-secondary); font-size: 0.85rem; grid-column: 1 / -1; text-align: center; padding: 1.5rem;">
-          Cargando títulos sugeridos...
-        </p>
-      </div>
-    </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Tipo de Contenido:</label>
+                  <select id="prev-type-select">
+                    <option value="pelicula">PELÍCULA</option>
+                    <option value="serie">SERIE</option>
+                    <option value="anime">ANIME</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Calidad del Video:</label>
+                  <select id="prev-quality-select">
+                    <option value="">Ninguna (Normal)</option>
+                    <option value="CAM">CAM (Naranja)</option>
+                    <option value="720p">720p (Azul)</option>
+                    <option value="1080p" selected>1080p (Verde)</option>
+                    <option value="4K">4K (Púrpura)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
 
-    <!-- IMPORTAR POR URL MANUAL -->
-    <div class="form-group">
-      <label>O pega la URL completa de TMDB manualmente:</label>
-      <input type="url" id="tmdb-url" placeholder="https://www.themoviedb.org/tv/1396-breaking-bad">
-    </div>
+          <div class="form-group" style="margin-bottom: 0.6rem;">
+            <label>Comprobación en Vivo del Reproductor:</label>
+          </div>
+          <div class="player-test-container">
+            <iframe id="prev-player-iframe" src="" allowfullscreen></iframe>
+          </div>
 
-    <button class="btn-action" id="fetch-btn">Analizar y Obtener Datos</button>
-
-    <!-- PREVIEW Y PUBLICACIÓN -->
-    <div class="preview-card" id="preview-box">
-      <div class="modal-detail-grid">
-        <img id="prev-img" src="" alt="Poster">
-        <div class="modal-detail-text">
-          <h3 id="prev-title"></h3>
-          <p id="prev-meta" style="color: var(--text-secondary);"></p>
-          <p id="prev-synopsis" style="font-size: 0.85rem;"></p>
+          <button class="btn-primary" id="btn-publish" style="width: 100%; padding: 0.9rem; font-size: 1rem;">
+            🚀 Publicar en el Catálogo de BigScreen
+          </button>
         </div>
-      </div>
+      </section>
 
-      <!-- Selector de Calidad -->
-      <div class="form-group" style="margin-top: 1rem;">
-        <label for="prev-quality" style="color: #60a5fa;">Etiqueta de Calidad (Opcional):</label>
-        <select id="prev-quality">
-          <option value="" selected>Ninguna (No mostrar etiqueta)</option>
-          <option value="CAM">CAM (Naranja)</option>
-          <option value="720p">720p (Azul Celeste)</option>
-          <option value="1080p">1080p (Verde)</option>
-          <option value="4K">4K (Púrpura)</option>
-        </select>
-      </div>
+      <!-- COLUMNA DERECHA: GESTIÓN DE TÍTULOS PUBLICADOS -->
+      <section>
+        <div class="panel-card">
+          <div class="published-header-bar">
+            <h2 class="panel-card-title">
+              📚 Títulos Publicados
+              <span class="badge-count" id="published-counter">0 títulos</span>
+            </h2>
+            <button class="btn-config" id="btn-refresh-catalog" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">🔄 Refrescar</button>
+          </div>
 
-      <div class="stream-checker-box">
-        <div class="checker-title">
-          <span>▶ Verificación en Vivo de FacilitoPlay:</span>
+          <div class="filter-pills-row">
+            <button class="pub-pill active" data-filter="all">Todos</button>
+            <button class="pub-pill" data-filter="pelicula">Películas</button>
+            <button class="pub-pill" data-filter="serie">Series</button>
+            <button class="pub-pill" data-filter="anime">Anime</button>
+          </div>
+
+          <input type="text" class="pub-search" id="pub-search-input" placeholder="🔍 Filtrar título al instante por nombre...">
+
+          <div class="published-scroll-area" id="published-list">
+            <!-- Lista interactiva de títulos -->
+          </div>
         </div>
-        <p style="font-size: 0.78rem; color: var(--text-secondary);">
-          Comprueba abajo si el reproductor arranca con audio o subtítulos antes de publicar.
-        </p>
-        <div class="checker-frame-container">
-          <iframe id="checker-iframe" src="" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-        </div>
-      </div>
-
-      <button class="btn-action" id="publish-btn" style="background: #10b981; margin-top: 1.2rem;">Confirmar y Publicar en GitHub</button>
-    </div>
-
-    <p class="status-msg" id="status-text"></p>
-
-    <!-- GESTOR Y EDITOR DE CALIDAD -->
-    <div class="catalog-manager">
-      <h3>
-        Títulos Publicados en tu Web
-        <button class="btn-reload" id="btn-refresh-list">↻ Recargar Lista</button>
-      </h3>
-      <div class="manage-list" id="manage-list">
-        <p style="color: var(--text-secondary); font-size: 0.85rem;">Cargando títulos...</p>
-      </div>
-    </div>
+      </section>
+    </main>
   </div>
 
+  <div class="status-toast" id="toast">Acción completada con éxito</div>
+
   <script>
-    const tmdbInput = document.getElementById("tmdb-key");
-    const ghTokenInput = document.getElementById("gh-token");
-    const ghRepoInput = document.getElementById("gh-repo");
-    const explorerResults = document.getElementById("explorer-results");
-    const explorerSearchInput = document.getElementById("explorer-search-input");
-    const prevQualitySelect = document.getElementById("prev-quality");
+    // ESTADO GLOBAL
+    let publishedCatalog = [];
+    let currentCatalogSha = null;
+    let inspectingItem = null;
+    let currentTmdbPage = 1;
+    let currentTmdbCategory = 'trending';
+    let currentPublishedFilter = 'all';
 
-    function inicializarLlaves() {
-      if (window.location.hash) {
-        const params = new URLSearchParams(window.location.hash.substring(1));
-        if (params.get("tmdb")) localStorage.setItem("tmdb_key", params.get("tmdb"));
-        if (params.get("gh")) localStorage.setItem("gh_token", params.get("gh"));
-        if (params.get("repo")) localStorage.setItem("gh_repo", params.get("repo"));
-        history.replaceState(null, null, "admin.html");
-      }
+    // ELEMENTOS DEL DOM
+    const tmdbGrid = document.getElementById("tmdb-grid");
+    const tmdbSearchInput = document.getElementById("tmdb-search-input");
+    const pageIndicator = document.getElementById("page-indicator");
+    const btnPagePrev = document.getElementById("btn-page-prev");
+    const btnPageNext = document.getElementById("btn-page-next");
+    const previewBox = document.getElementById("preview-box");
+    const publishedList = document.getElementById("published-list");
+    const pubSearchInput = document.getElementById("pub-search-input");
+    const publishedCounter = document.getElementById("published-counter");
+    const toast = document.getElementById("toast");
 
-      const savedTmdb = localStorage.getItem("tmdb_key") || "";
-      const savedGh = localStorage.getItem("gh_token") || "";
-      const savedRepo = localStorage.getItem("gh_repo") || "Mangadake/bigscreen-T1";
-
-      tmdbInput.value = savedTmdb;
-      ghTokenInput.value = savedGh;
-      ghRepoInput.value = savedRepo;
-
-      if (!savedTmdb || !savedGh) {
-        document.getElementById("details-keys").open = true;
-      }
+    // CREDENCIALES
+    function cargarCredenciales() {
+      document.getElementById("gh-token").value = localStorage.getItem("gh_token") || "";
+      document.getElementById("gh-owner").value = localStorage.getItem("gh_owner") || "Mangadake";
+      document.getElementById("gh-repo").value = localStorage.getItem("gh_repo") || "bigscreen-T1";
+      document.getElementById("gh-path").value = localStorage.getItem("gh_path") || "catalogo.json";
+      document.getElementById("tmdb-key").value = localStorage.getItem("tmdb_key") || "";
     }
 
-    document.getElementById("save-keys-btn").addEventListener("click", () => {
-      localStorage.setItem("tmdb_key", tmdbInput.value.trim());
-      localStorage.setItem("gh_token", ghTokenInput.value.trim());
-      localStorage.setItem("gh_repo", ghRepoInput.value.trim());
-      alert("Llaves guardadas correctamente.");
-      cargarExplorador("trending");
-      cargarTitulosActuales();
+    document.getElementById("btn-save-credentials").addEventListener("click", () => {
+      localStorage.setItem("gh_token", document.getElementById("gh-token").value.trim());
+      localStorage.setItem("gh_owner", document.getElementById("gh-owner").value.trim());
+      localStorage.setItem("gh_repo", document.getElementById("gh-repo").value.trim());
+      localStorage.setItem("gh_path", document.getElementById("gh-path").value.trim());
+      localStorage.setItem("tmdb_key", document.getElementById("tmdb-key").value.trim());
+      showToast("Configuración guardada correctamente");
+      cargarExploradorTMDb();
+      cargarCatalogoRemoto();
     });
 
-    document.getElementById("btn-create-bookmark").addEventListener("click", () => {
-      const tmdb = tmdbInput.value.trim();
-      const gh = ghTokenInput.value.trim();
-      const repo = ghRepoInput.value.trim();
-
-      if (!tmdb || !gh) return alert("Escribe primero tu clave de TMDB y tu Token de GitHub.");
-
-      const fullUrl = `${window.location.origin}${window.location.pathname}#tmdb=${encodeURIComponent(tmdb)}&gh=${encodeURIComponent(gh)}&repo=${encodeURIComponent(repo)}`;
-      const bookmarkBox = document.getElementById("bookmark-box");
-      const bookmarkLink = document.getElementById("bookmark-link");
-
-      bookmarkLink.href = fullUrl;
-      bookmarkBox.style.display = "block";
+    document.getElementById("btn-toggle-config").addEventListener("click", () => {
+      document.getElementById("config-panel").classList.toggle("open");
     });
 
-    inicializarLlaves();
-
-    let currentItemData = null;
-
-    function obtenerUrlFacilitoPlayTest(type, tmdb_id) {
-      const base = "https://unlimplay.com/f/embed";
-      if (type === "pelicula") return `${base}/movie/${tmdb_id}`;
-      return `${base}/tv/${tmdb_id}/1/1`;
+    function showToast(msg) {
+      toast.innerText = msg;
+      toast.style.display = "block";
+      setTimeout(() => { toast.style.display = "none"; }, 3500);
     }
 
-    async function cargarExplorador(categoria, query = "") {
-      const tmdbKey = tmdbInput.value.trim() || localStorage.getItem("tmdb_key");
+    // EXPLORADOR TMDB CON PAGINACIÓN
+    async function cargarExploradorTMDb() {
+      const tmdbKey = localStorage.getItem("tmdb_key");
       if (!tmdbKey) {
-        explorerResults.innerHTML = `<p style="color: #f59e0b; font-size: 0.9rem; grid-column: 1 / -1; text-align: center; padding: 1.5rem;">⚠️ Despliega arriba "Configurar Llaves de Acceso" y guarda tu API Key de TMDB para activar el explorador.</p>`;
+        tmdbGrid.innerHTML = `<p style="grid-column: 1/-1; color: var(--text-muted); padding: 2rem; text-align: center;">Configura tu TMDb API Key arriba para explorar contenidos.</p>`;
         return;
       }
 
-      explorerResults.innerHTML = `<p style="color: var(--text-secondary); font-size: 0.85rem; grid-column: 1 / -1; text-align: center; padding: 1.5rem;">Buscando en TMDB...</p>`;
+      tmdbGrid.innerHTML = `<p style="grid-column: 1/-1; color: var(--text-muted); padding: 2rem; text-align: center;">Consultando TMDb...</p>`;
 
-      let endpoint = "";
+      let url = "";
+      const query = tmdbSearchInput.value.trim();
+
       if (query) {
-        endpoint = `https://api.themoviedb.org/3/search/multi?api_key=${tmdbKey}&language=es-MX&query=${encodeURIComponent(query)}&page=1`;
-      } else if (categoria === "trending") {
-        endpoint = `https://api.themoviedb.org/3/trending/all/week?api_key=${tmdbKey}&language=es-MX`;
-      } else if (categoria === "popular_movies") {
-        endpoint = `https://api.themoviedb.org/3/movie/popular?api_key=${tmdbKey}&language=es-MX&page=1`;
-      } else if (categoria === "popular_series") {
-        endpoint = `https://api.themoviedb.org/3/tv/popular?api_key=${tmdbKey}&language=es-MX&page=1`;
-      } else if (categoria === "anime") {
-        endpoint = `https://api.themoviedb.org/3/discover/tv?api_key=${tmdbKey}&language=es-MX&sort_by=popularity.desc&with_genres=16&with_origin_country=JP&page=1`;
+        url = `https://api.themoviedb.org/3/search/multi?api_key=${tmdbKey}&language=es-MX&query=${encodeURIComponent(query)}&page=${currentTmdbPage}`;
+      } else {
+        if (currentTmdbCategory === 'trending') {
+          url = `https://api.themoviedb.org/3/trending/all/week?api_key=${tmdbKey}&language=es-MX&page=${currentTmdbPage}`;
+        } else if (currentTmdbCategory === 'movies') {
+          url = `https://api.themoviedb.org/3/movie/popular?api_key=${tmdbKey}&language=es-MX&page=${currentTmdbPage}`;
+        } else if (currentTmdbCategory === 'tv') {
+          url = `https://api.themoviedb.org/3/tv/popular?api_key=${tmdbKey}&language=es-MX&page=${currentTmdbPage}`;
+        } else if (currentTmdbCategory === 'anime') {
+          url = `https://api.themoviedb.org/3/discover/tv?api_key=${tmdbKey}&language=es-MX&with_genres=16&page=${currentTmdbPage}`;
+        }
       }
 
       try {
-        const res = await fetch(endpoint);
-        if (!res.ok) throw new Error("Llave de TMDB inválida o error en el servidor.");
+        const res = await fetch(url);
         const data = await res.json();
-        const items = (data.results || []).filter(i => (i.media_type === "movie" || i.media_type === "tv" || !i.media_type) && i.poster_path);
+        const results = (data.results || []).filter(item => item.poster_path);
 
-        if (items.length === 0) {
-          explorerResults.innerHTML = `<p style="color: var(--text-secondary); font-size: 0.85rem; grid-column: 1 / -1; text-align: center; padding: 1.5rem;">No se encontraron resultados.</p>`;
+        pageIndicator.innerText = `Página ${data.page || 1} de ${data.total_pages || 1}`;
+        btnPagePrev.disabled = currentTmdbPage <= 1;
+        btnPageNext.disabled = currentTmdbPage >= (data.total_pages || 1);
+
+        if (results.length === 0) {
+          tmdbGrid.innerHTML = `<p style="grid-column: 1/-1; color: var(--text-muted); padding: 2rem; text-align: center;">No se encontraron resultados.</p>`;
           return;
         }
 
-        explorerResults.innerHTML = "";
-        items.forEach(item => {
-          const isMovie = item.title !== undefined || item.media_type === "movie";
-          const title = item.title || item.name;
-          const mediaType = isMovie ? "movie" : "tv";
-          const year = (item.release_date || item.first_air_date || "").substring(0, 4);
-          const poster = `https://image.tmdb.org/t/p/w200${item.poster_path}`;
+        tmdbGrid.innerHTML = results.map(item => {
+          const title = item.title || item.name || "Sin título";
+          const date = item.release_date || item.first_air_date || "";
+          const year = date ? date.substring(0, 4) : "N/A";
+          const isMovie = item.media_type === "movie" || (!item.media_type && currentTmdbCategory === 'movies');
+          const type = isMovie ? "pelicula" : (currentTmdbCategory === 'anime' ? "anime" : "serie");
+          const poster = `https://image.tmdb.org/t/p/w342${item.poster_path}`;
 
-          const card = document.createElement("div");
-          card.className = "explorer-item";
-          card.innerHTML = `
-            <img src="${poster}" alt="${title}" loading="lazy">
-            <div class="explorer-item-info">
-              <div>
-                <div class="explorer-item-title" title="${title}">${title}</div>
-                <div class="explorer-item-meta">${mediaType.toUpperCase()} • ${year || "N/A"}</div>
+          return `
+            <div class="tmdb-item-card">
+              <div class="tmdb-item-poster">
+                <img src="${poster}" alt="${title}" loading="lazy">
               </div>
-              <button class="btn-inspect" data-type="${mediaType}" data-id="${item.id}">Inspeccionar</button>
+              <div class="tmdb-item-info">
+                <div>
+                  <div class="tmdb-item-title" title="${title}">${title}</div>
+                  <div class="tmdb-item-meta">${type.toUpperCase()} • ${year}</div>
+                </div>
+                <button class="btn-inspect" onclick="prepararInspeccion('${type}', ${item.id})">Inspeccionar</button>
+              </div>
             </div>
           `;
-
-          card.querySelector(".btn-inspect").addEventListener("click", () => {
-            inspeccionarPorId(mediaType, item.id);
-          });
-
-          explorerResults.appendChild(card);
-        });
+        }).join("");
 
       } catch (err) {
-        explorerResults.innerHTML = `<p style="color: #ef4444; font-size: 0.85rem; grid-column: 1 / -1; text-align: center; padding: 1.5rem;">Error: ${err.message}</p>`;
+        console.error(err);
+        tmdbGrid.innerHTML = `<p style="grid-column: 1/-1; color: var(--accent); padding: 2rem; text-align: center;">Error al conectar con TMDb.</p>`;
       }
     }
 
-    document.querySelectorAll(".tab-btn").forEach(btn => {
+    // Pestañas de categoría
+    document.querySelectorAll(".pill-btn").forEach(btn => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".pill-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
-        explorerSearchInput.value = "";
-        cargarExplorador(btn.dataset.type);
+        currentTmdbCategory = btn.dataset.type;
+        currentTmdbPage = 1;
+        tmdbSearchInput.value = "";
+        cargarExploradorTMDb();
       });
     });
 
-    document.getElementById("btn-search-tmdb").addEventListener("click", () => {
-      const q = explorerSearchInput.value.trim();
-      if (!q) return;
-      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-      cargarExplorador(null, q);
+    document.getElementById("btn-tmdb-search").addEventListener("click", () => {
+      currentTmdbPage = 1;
+      cargarExploradorTMDb();
     });
 
-    explorerSearchInput.addEventListener("keydown", (e) => {
+    tmdbSearchInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
-        document.getElementById("btn-search-tmdb").click();
+        currentTmdbPage = 1;
+        cargarExploradorTMDb();
       }
     });
 
-    async function inspeccionarPorId(endpointType, tmdbId) {
-      const tmdbKey = tmdbInput.value.trim() || localStorage.getItem("tmdb_key");
-      const statusText = document.getElementById("status-text");
+    btnPagePrev.addEventListener("click", () => {
+      if (currentTmdbPage > 1) {
+        currentTmdbPage--;
+        cargarExploradorTMDb();
+      }
+    });
 
-      statusText.style.color = "var(--text-secondary)";
-      statusText.innerText = "Cargando ficha y reproductor de prueba...";
-      document.getElementById("tmdb-url").value = `https://www.themoviedb.org/${endpointType}/${tmdbId}`;
+    btnPageNext.addEventListener("click", () => {
+      currentTmdbPage++;
+      cargarExploradorTMDb();
+    });
+
+    // INSPECCIÓN Y CARGA DE DETALLES
+    window.prepararInspeccion = async function(type, tmdbId) {
+      const tmdbKey = localStorage.getItem("tmdb_key");
+      const isMovie = (type === "pelicula");
+      const endpoint = isMovie ? "movie" : "tv";
 
       try {
-        const res = await fetch(`https://api.themoviedb.org/3/${endpointType}/${tmdbId}?api_key=${tmdbKey}&language=es-MX`);
-        if (!res.ok) throw new Error("No se pudo obtener información del título.");
+        const res = await fetch(`https://api.themoviedb.org/3/${endpoint}/${tmdbId}?api_key=${tmdbKey}&language=es-MX`);
         const data = await res.json();
 
-        let detectedType = (endpointType === "movie") ? "pelicula" : "serie";
-        if (endpointType === "tv") {
-          const esJapon = data.origin_country && data.origin_country.includes("JP");
-          const esAnimacion = data.genres && data.genres.some(g => g.id === 16);
-          if (esJapon && esAnimacion) detectedType = "anime";
-        }
-
-        const year = (data.release_date || data.first_air_date || "").substring(0, 4);
-        const duration = data.runtime ? `${Math.floor(data.runtime / 60)}h ${data.runtime % 60}m` : null;
+        const title = data.title || data.name;
+        const date = data.release_date || data.first_air_date || "";
+        const year = date ? parseInt(date.substring(0, 4)) : new Date().getFullYear();
+        const duration = isMovie ? (data.runtime ? `${data.runtime} min` : "120 min") : null;
+        const episodes = !isMovie ? (data.number_of_episodes || 12) : null;
+        const rating = data.vote_average ? parseFloat(data.vote_average.toFixed(1)) : 8.0;
 
         let seasonsDetail = [];
-        if (endpointType === "tv" && data.seasons) {
+        if (!isMovie && Array.isArray(data.seasons)) {
           seasonsDetail = data.seasons
             .filter(s => s.season_number > 0 && s.episode_count > 0)
             .map(s => ({
               season_number: s.season_number,
-              name: s.name || `Temporada ${s.season_number}`,
+              name: s.name,
               episode_count: s.episode_count
             }));
         }
 
-        prevQualitySelect.value = "";
-
-        currentItemData = {
+        inspectingItem = {
           id: Date.now(),
-          tmdb_id: parseInt(tmdbId),
-          title: data.title || data.name,
-          type: detectedType,
-          rating: parseFloat(data.vote_average.toFixed(1)),
-          year: parseInt(year) || new Date().getFullYear(),
+          tmdb_id: tmdbId,
+          type: type,
+          title: title,
+          year: year,
           duration: duration,
-          episodes: data.number_of_episodes || null,
-          seasons: data.number_of_seasons || 1,
-          seasons_detail: seasonsDetail.length > 0 ? seasonsDetail : null,
-          poster: data.poster_path ? `https://image.tmdb.org/t/p/w500${data.poster_path}` : "https://via.placeholder.com/500x750",
-          backdrop: data.backdrop_path ? `https://image.tmdb.org/t/p/original${data.backdrop_path}` : null,
-          synopsis: data.overview || "Sin sinopsis disponible.",
-          quality: null
+          episodes: episodes,
+          rating: rating,
+          synopsis: data.overview || "Sin descripción disponible.",
+          poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
+          backdrop: `https://image.tmdb.org/t/p/original${data.backdrop_path || data.poster_path}`,
+          quality: "1080p",
+          seasons_detail: seasonsDetail
         };
 
-        document.getElementById("prev-img").src = currentItemData.poster;
-        document.getElementById("prev-title").innerText = currentItemData.title;
-        document.getElementById("prev-meta").innerText = `${currentItemData.type.toUpperCase()} | ★ ${currentItemData.rating} | ${currentItemData.year}`;
-        document.getElementById("prev-synopsis").innerText = currentItemData.synopsis;
+        // Pintar en el DOM
+        document.getElementById("prev-poster").src = inspectingItem.poster;
+        document.getElementById("prev-title").innerText = inspectingItem.title;
+        document.getElementById("prev-meta").innerText = `${type.toUpperCase()} • ${year} • ★ ${rating}`;
+        document.getElementById("prev-synopsis").innerText = inspectingItem.synopsis;
+        document.getElementById("prev-type-select").value = type;
+        document.getElementById("prev-quality-select").value = "1080p";
 
-        const checkerIframe = document.getElementById("checker-iframe");
-        checkerIframe.src = obtenerUrlFacilitoPlayTest(currentItemData.type, currentItemData.tmdb_id);
+        // Reproductor de prueba (Unlimplay)
+        const embedUrl = isMovie 
+          ? `https://unlimplay.com/f/embed/movie/${tmdbId}`
+          : `https://unlimplay.com/f/embed/tv/${tmdbId}/1/1`;
+        document.getElementById("prev-player-iframe").src = embedUrl;
 
-        document.getElementById("preview-box").style.display = "block";
-        document.getElementById("preview-box").scrollIntoView({ behavior: "smooth" });
-        statusText.innerText = "Datos cargados. Revisa el reproductor de FacilitoPlay antes de confirmar.";
+        previewBox.classList.add("open");
+        previewBox.scrollIntoView({ behavior: 'smooth' });
 
       } catch (err) {
-        statusText.style.color = "#ef4444";
-        statusText.innerText = `Error: ${err.message}`;
+        console.error(err);
+        alert("Error al cargar la ficha del título.");
+      }
+    };
+
+    // PUBLICAR EN GITHUB
+    document.getElementById("btn-publish").addEventListener("click", async () => {
+      if (!inspectingItem) return;
+
+      const ghToken = localStorage.getItem("gh_token");
+      const ghOwner = localStorage.getItem("gh_owner");
+      const ghRepo = localStorage.getItem("gh_repo");
+      const ghPath = localStorage.getItem("gh_path");
+
+      if (!ghToken) {
+        alert("Por favor abre 'Configuración de Acceso' y guarda tu GitHub Personal Access Token.");
+        return;
+      }
+
+      inspectingItem.type = document.getElementById("prev-type-select").value;
+      inspectingItem.quality = document.getElementById("prev-quality-select").value;
+
+      // Evitar duplicados por TMDB ID
+      const yaExiste = publishedCatalog.some(i => i.tmdb_id === inspectingItem.tmdb_id);
+      if (yaExiste) {
+        alert("Este título ya se encuentra en tu catálogo.");
+        return;
+      }
+
+      // Añadir al inicio
+      const nuevoCatalogo = [inspectingItem, ...publishedCatalog];
+
+      try {
+        const url = `https://api.github.com/repos/${ghOwner}/${ghRepo}/contents/${ghPath}`;
+        const bodyData = {
+          message: `Publicar "${inspectingItem.title}" [BigScreen Studio]`,
+          content: btoa(unescape(encodeURIComponent(JSON.stringify(nuevoCatalogo, null, 2)))),
+          sha: currentCatalogSha
+        };
+
+        const res = await fetch(url, {
+          method: "PUT",
+          headers: {
+            "Authorization": `token ${ghToken}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(bodyData)
+        });
+
+        if (!res.ok) throw new Error("Error en GitHub API al guardar");
+
+        showToast(`"${inspectingItem.title}" publicado con éxito`);
+        previewBox.classList.remove("open");
+        inspectingItem = null;
+        cargarCatalogoRemoto();
+
+      } catch (err) {
+        console.error(err);
+        alert("Hubo un fallo al subir el cambio a GitHub. Revisa tus credenciales.");
+      }
+    });
+
+    // IMPORTACIÓN MANUAL
+    document.getElementById("btn-manual-fetch").addEventListener("click", () => {
+      const url = document.getElementById("manual-url").value.trim();
+      const match = url.match(/themoviedb\.org\/(movie|tv)\/(\d+)/);
+      if (!match) {
+        alert("Ingresa una URL válida de TMDb, ej: https://www.themoviedb.org/movie/550");
+        return;
+      }
+      const type = (match[1] === "movie") ? "pelicula" : "serie";
+      const id = parseInt(match[2]);
+      prepararInspeccion(type, id);
+    });
+
+    // CARGAR CATÁLOGO PUBLICADO DESDE GITHUB
+    async function cargarCatalogoRemoto() {
+      const ghOwner = localStorage.getItem("gh_owner") || "Mangadake";
+      const ghRepo = localStorage.getItem("gh_repo") || "bigscreen-T1";
+      const ghPath = localStorage.getItem("gh_path") || "catalogo.json";
+      const ghToken = localStorage.getItem("gh_token");
+
+      const headers = ghToken ? { "Authorization": `token ${ghToken}` } : {};
+
+      try {
+        const res = await fetch(`https://api.github.com/repos/${ghOwner}/${ghRepo}/contents/${ghPath}?t=${Date.now()}`, { headers });
+        if (!res.ok) throw new Error("No se pudo leer catalogo.json");
+
+        const data = await res.json();
+        currentCatalogSha = data.sha;
+        const decoded = decodeURIComponent(escape(atob(data.content)));
+        publishedCatalog = JSON.parse(decoded);
+
+        renderPublishedList();
+      } catch (err) {
+        console.error(err);
+        publishedList.innerHTML = `<p style="color: var(--text-muted); text-align: center; padding: 2rem;">No se pudo conectar con el catálogo en GitHub.</p>`;
       }
     }
 
-    document.getElementById("fetch-btn").addEventListener("click", () => {
-      const urlInput = document.getElementById("tmdb-url").value.trim();
-      if (!urlInput) return alert("Pega una URL válida de TMDB.");
+    // RENDERIZADO Y BÚSQUEDA INSTANTÁNEA EN CATÁLOGO PUBLICADO
+    function renderPublishedList() {
+      const q = pubSearchInput.value.toLowerCase().trim();
 
-      const isMovie = urlInput.includes("/movie/");
-      const isTv = urlInput.includes("/tv/");
-      if (!isMovie && !isTv) return alert("La URL debe ser de themoviedb.org (/movie/ o /tv/)");
+      const itemsFiltrados = publishedCatalog.filter(item => {
+        const coincideTipo = (currentPublishedFilter === 'all') || (item.type === currentPublishedFilter);
+        const coincideTexto = item.title.toLowerCase().includes(q);
+        return coincideTipo && coincideTexto;
+      });
 
-      const match = urlInput.match(/(movie|tv)\/(\d+)/);
-      if (!match) return alert("No se pudo extraer el ID numérico de la URL.");
+      publishedCounter.innerText = `${publishedCatalog.length} títulos`;
 
-      inspeccionarPorId(match[1], match[2]);
-    });
-
-    document.getElementById("publish-btn").addEventListener("click", async () => {
-      const token = ghTokenInput.value.trim() || localStorage.getItem("gh_token");
-      let repo = ghRepoInput.value.trim() || localStorage.getItem("gh_repo") || "";
-      const statusText = document.getElementById("status-text");
-
-      repo = repo.replace("https://github.com/", "").replace("/", " ").trim().replace(" ", "/");
-
-      if (!token || !repo) return alert("Falta el Token de GitHub o el Nombre del Repositorio.");
-      if (!currentItemData) return;
-
-      const valCalidad = prevQualitySelect.value.trim();
-      currentItemData.quality = valCalidad ? valCalidad : null;
-
-      statusText.style.color = "var(--text-secondary)";
-      statusText.innerText = "Conectando con GitHub...";
-
-      try {
-        const fileUrl = `https://api.github.com/repos/${repo}/contents/catalogo.json`;
-        let actualJson = [];
-        let fileSha = null;
-
-        const getRes = await fetch(fileUrl, {
-          headers: { 
-            "Authorization": `token ${token}`,
-            "Accept": "application/vnd.github.v3+json"
-          }
-        });
-
-        if (getRes.status === 401) throw new Error("Token de GitHub inválido o sin permisos.");
-        
-        if (getRes.ok) {
-          const resData = await getRes.json();
-          fileSha = resData.sha;
-          if (resData.content) {
-            actualJson = JSON.parse(decodeURIComponent(escape(atob(resData.content))));
-          }
-        }
-
-        const yaExiste = actualJson.some(i => i.tmdb_id === currentItemData.tmdb_id && i.type === currentItemData.type);
-        if (yaExiste) throw new Error("Este título ya está en el catálogo.");
-
-        actualJson.unshift(currentItemData);
-
-        const nuevoContenidoBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(actualJson, null, 2))));
-
-        const putRes = await fetch(fileUrl, {
-          method: "PUT",
-          headers: {
-            "Authorization": `token ${token}`,
-            "Content-Type": "application/json",
-            "Accept": "application/vnd.github.v3+json"
-          },
-          body: JSON.stringify({
-            message: `Añadido: ${currentItemData.title} ${currentItemData.quality ? `(${currentItemData.quality})` : ''}`,
-            content: nuevoContenidoBase64,
-            sha: fileSha
-          })
-        });
-
-        if (!putRes.ok) throw new Error("Error al guardar en GitHub.");
-
-        statusText.style.color = "#10b981";
-        statusText.innerText = `¡"${currentItemData.title}" se publicó correctamente!`;
-        document.getElementById("preview-box").style.display = "none";
-        document.getElementById("checker-iframe").src = "";
-        document.getElementById("tmdb-url").value = "";
-        currentItemData = null;
-
-        cargarTitulosActuales();
-
-      } catch (err) {
-        statusText.style.color = "#ef4444";
-        statusText.innerText = `Error al publicar: ${err.message}`;
+      if (itemsFiltrados.length === 0) {
+        publishedList.innerHTML = `<p style="color: var(--text-muted); text-align: center; padding: 2rem;">No hay títulos que coincidan con la búsqueda.</p>`;
+        return;
       }
-    });
 
-    async function cargarTitulosActuales() {
-      const manageList = document.getElementById("manage-list");
-      manageList.innerHTML = `<p style="color: var(--text-secondary); font-size: 0.85rem;">Cargando títulos...</p>`;
-
-      try {
-        const res = await fetch(`catalogo.json?t=${Date.now()}`);
-        if (!res.ok) throw new Error("No se pudo leer catalogo.json");
-        
-        const items = await res.json();
-
-        if (items.length === 0) {
-          manageList.innerHTML = `<p style="color: var(--text-secondary); font-size: 0.85rem;">No tienes títulos en el catálogo aún.</p>`;
-          return;
-        }
-
-        manageList.innerHTML = "";
-        items.forEach((item, index) => {
-          const div = document.createElement("div");
-          div.className = "manage-item";
-          
-          let currentQ = (item.quality || "").trim().toUpperCase();
-          if (currentQ === "HD") currentQ = "720p";
-          if (currentQ === "FHD") currentQ = "1080p";
-          if (currentQ === "UHD") currentQ = "4K";
-
-          div.innerHTML = `
-            <div class="manage-item-info">
-              <img src="${item.poster}" alt="${item.title}">
-              <div class="manage-item-text">
-                <h4 title="${item.title}">${item.title}</h4>
-                <span>${item.type} • ${item.year}</span>
-                <div class="manage-quality-row">
-                  <select id="edit-quality-${index}">
-                    <option value="" ${currentQ === '' ? 'selected' : ''}>Sin etiqueta</option>
-                    <option value="CAM" ${currentQ === 'CAM' ? 'selected' : ''}>CAM</option>
-                    <option value="720p" ${currentQ === '720P' || currentQ === '720p' ? 'selected' : ''}>720p</option>
-                    <option value="1080p" ${currentQ === '1080P' || currentQ === '1080p' ? 'selected' : ''}>1080p</option>
-                    <option value="4K" ${currentQ === '4K' || currentQ === '4k' ? 'selected' : ''}>4K</option>
-                  </select>
-                  <button class="btn-save-inline" id="btn-save-q-${index}">Guardar</button>
-                </div>
+      publishedList.innerHTML = itemsFiltrados.map(item => {
+        const qualityVal = item.quality || "";
+        return `
+          <div class="published-item">
+            <img class="pub-thumb" src="${item.poster}" alt="${item.title}" loading="lazy">
+            <div class="pub-info">
+              <div class="pub-title-row">
+                <span class="type-tag ${item.type}">${item.type === 'pelicula' ? 'PELÍCULA' : item.type.toUpperCase()}</span>
+                <span class="pub-title" title="${item.title}">${item.title}</span>
+              </div>
+              <div class="pub-meta">
+                <span>★ ${item.rating}</span>
+                <span>• ${item.year}</span>
               </div>
             </div>
-            <button class="btn-delete" data-index="${index}">Eliminar</button>
-          `;
-
-          div.querySelector(`#btn-save-q-${index}`).addEventListener("click", () => {
-            const nuevaCalidad = div.querySelector(`#edit-quality-${index}`).value;
-            actualizarCalidadDeTitulo(item.title, index, nuevaCalidad);
-          });
-
-          div.querySelector(".btn-delete").addEventListener("click", () => {
-            eliminarTitulo(item.title, index);
-          });
-
-          manageList.appendChild(div);
-        });
-
-      } catch (err) {
-        manageList.innerHTML = `<p style="color: #ef4444; font-size: 0.85rem;">Error al cargar lista: ${err.message}</p>`;
-      }
+            <div class="pub-actions">
+              <select class="pub-quality-select" id="pub-q-${item.id}">
+                <option value="" ${qualityVal === "" ? "selected" : ""}>Ninguna</option>
+                <option value="CAM" ${qualityVal === "CAM" ? "selected" : ""}>CAM</option>
+                <option value="720p" ${qualityVal === "720p" ? "selected" : ""}>720p</option>
+                <option value="1080p" ${qualityVal === "1080p" ? "selected" : ""}>1080p</option>
+                <option value="4K" ${qualityVal === "4K" ? "selected" : ""}>4K</option>
+              </select>
+              <button class="btn-save-row" onclick="actualizarCalidadItem(${item.id})">Guardar</button>
+              <button class="btn-del-row" onclick="eliminarItem(${item.id})">Eliminar</button>
+            </div>
+          </div>
+        `;
+      }).join("");
     }
 
-    async function actualizarCalidadDeTitulo(titulo, index, nuevaCalidad) {
-      const token = ghTokenInput.value.trim() || localStorage.getItem("gh_token");
-      let repo = ghRepoInput.value.trim() || localStorage.getItem("gh_repo") || "";
-      const statusText = document.getElementById("status-text");
+    // Buscador instantáneo al escribir
+    pubSearchInput.addEventListener("input", renderPublishedList);
 
-      repo = repo.replace("https://github.com/", "").replace("/", " ").trim().replace(" ", "/");
+    // Filtros por píldoras en publicados
+    document.querySelectorAll(".pub-pill").forEach(pill => {
+      pill.addEventListener("click", () => {
+        document.querySelectorAll(".pub-pill").forEach(p => p.classList.remove("active"));
+        pill.classList.add("active");
+        currentPublishedFilter = pill.dataset.filter;
+        renderPublishedList();
+      });
+    });
 
-      if (!token) return alert("Falta el Token de GitHub para autorizar el cambio.");
+    // Guardar calidad modificada
+    window.actualizarCalidadItem = async function(id) {
+      const select = document.getElementById(`pub-q-${id}`);
+      const nuevaCalidad = select.value;
 
-      statusText.style.color = "var(--text-secondary)";
-      statusText.innerText = `Actualizando calidad de "${titulo}" en GitHub...`;
+      const item = publishedCatalog.find(i => i.id === id);
+      if (!item) return;
+
+      item.quality = nuevaCalidad;
+      await guardarCatalogoGithub(`Actualizar calidad de "${item.title}" a ${nuevaCalidad || 'normal'}`);
+    };
+
+    // Eliminar título
+    window.eliminarItem = async function(id) {
+      const item = publishedCatalog.find(i => i.id === id);
+      if (!item) return;
+
+      if (!confirm(`¿Estás seguro de eliminar "${item.title}" de tu web?`)) return;
+
+      publishedCatalog = publishedCatalog.filter(i => i.id !== id);
+      await guardarCatalogoGithub(`Eliminar "${item.title}" [BigScreen Studio]`);
+    };
+
+    // Guardar array en GitHub
+    async function guardarCatalogoGithub(commitMsg) {
+      const ghToken = localStorage.getItem("gh_token");
+      const ghOwner = localStorage.getItem("gh_owner");
+      const ghRepo = localStorage.getItem("gh_repo");
+      const ghPath = localStorage.getItem("gh_path");
 
       try {
-        const fileUrl = `https://api.github.com/repos/${repo}/contents/catalogo.json`;
+        const url = `https://api.github.com/repos/${ghOwner}/${ghRepo}/contents/${ghPath}`;
+        const bodyData = {
+          message: commitMsg,
+          content: btoa(unescape(encodeURIComponent(JSON.stringify(publishedCatalog, null, 2)))),
+          sha: currentCatalogSha
+        };
 
-        const getRes = await fetch(fileUrl, {
-          headers: { 
-            "Authorization": `token ${token}`,
-            "Accept": "application/vnd.github.v3+json"
-          }
-        });
-
-        if (!getRes.ok) throw new Error("No se pudo conectar con catalogo.json.");
-        const resData = await getRes.json();
-        const actualJson = JSON.parse(decodeURIComponent(escape(atob(resData.content))));
-
-        actualJson[index].quality = nuevaCalidad ? nuevaCalidad : null;
-
-        const nuevoContenidoBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(actualJson, null, 2))));
-
-        const putRes = await fetch(fileUrl, {
+        const res = await fetch(url, {
           method: "PUT",
           headers: {
-            "Authorization": `token ${token}`,
-            "Content-Type": "application/json",
-            "Accept": "application/vnd.github.v3+json"
+            "Authorization": `token ${ghToken}`,
+            "Content-Type": "application/json"
           },
-          body: JSON.stringify({
-            message: `Actualizada calidad: ${titulo} -> ${nuevaCalidad || 'Ninguna'}`,
-            content: nuevoContenidoBase64,
-            sha: resData.sha
-          })
+          body: JSON.stringify(bodyData)
         });
 
-        if (!putRes.ok) throw new Error("Error al guardar cambios en GitHub.");
+        if (!res.ok) throw new Error("Fallo al guardar en GitHub");
 
-        statusText.style.color = "#10b981";
-        statusText.innerText = `Etiqueta de "${titulo}" actualizada a "${nuevaCalidad || 'Sin etiqueta'}".`;
-
-        cargarTitulosActuales();
-
+        showToast("Cambio guardado en el repositorio");
+        cargarCatalogoRemoto();
       } catch (err) {
-        statusText.style.color = "#ef4444";
-        statusText.innerText = `Error: ${err.message}`;
+        console.error(err);
+        alert("Error al sincronizar con GitHub.");
       }
     }
 
-    async function eliminarTitulo(titulo, indexABorrar) {
-      const confirmacion = confirm(`¿Estás seguro de que deseas eliminar "${titulo}" del catálogo?`);
-      if (!confirmacion) return;
+    document.getElementById("btn-refresh-catalog").addEventListener("click", cargarCatalogoRemoto);
 
-      const token = ghTokenInput.value.trim() || localStorage.getItem("gh_token");
-      let repo = ghRepoInput.value.trim() || localStorage.getItem("gh_repo") || "";
-      const statusText = document.getElementById("status-text");
-
-      repo = repo.replace("https://github.com/", "").replace("/", " ").trim().replace(" ", "/");
-
-      if (!token) return alert("Falta el Token de GitHub para autorizar la eliminación.");
-
-      statusText.style.color = "var(--text-secondary)";
-      statusText.innerText = `Eliminando "${titulo}" de GitHub...`;
-
-      try {
-        const fileUrl = `https://api.github.com/repos/${repo}/contents/catalogo.json`;
-
-        const getRes = await fetch(fileUrl, {
-          headers: { 
-            "Authorization": `token ${token}`,
-            "Accept": "application/vnd.github.v3+json"
-          }
-        });
-
-        if (!getRes.ok) throw new Error("No se pudo leer catalogo.json.");
-        const resData = await getRes.json();
-        const actualJson = JSON.parse(decodeURIComponent(escape(atob(resData.content))));
-
-        actualJson.splice(indexABorrar, 1);
-
-        const nuevoContenidoBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(actualJson, null, 2))));
-
-        const putRes = await fetch(fileUrl, {
-          method: "PUT",
-          headers: {
-            "Authorization": `token ${token}`,
-            "Content-Type": "application/json",
-            "Accept": "application/vnd.github.v3+json"
-          },
-          body: JSON.stringify({
-            message: `Eliminado: ${titulo}`,
-            content: nuevoContenidoBase64,
-            sha: resData.sha
-          })
-        });
-
-        if (!putRes.ok) throw new Error("Error al guardar cambios en GitHub.");
-
-        statusText.style.color = "#10b981";
-        statusText.innerText = `"${titulo}" ha sido eliminado con éxito.`;
-
-        cargarTitulosActuales();
-
-      } catch (err) {
-        statusText.style.color = "#ef4444";
-        statusText.innerText = `Error al eliminar: ${err.message}`;
-      }
-    }
-
-    document.getElementById("btn-refresh-list").addEventListener("click", cargarTitulosActuales);
-
-    cargarExplorador("trending");
-    cargarTitulosActuales();
+    // INICIO AUTOMÁTICO
+    cargarCredenciales();
+    cargarExploradorTMDb();
+    cargarCatalogoRemoto();
   </script>
 </body>
 </html>
