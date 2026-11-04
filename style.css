@@ -1,10 +1,12 @@
 :root {
-  --bg-primary: #0f1115;
-  --bg-card: #181b22;
+  --bg-primary: #0b0d11;
+  --bg-card: #151821;
   --text-main: #f3f4f6;
   --text-secondary: #9ca3af;
   --accent: #e50914;
   --rating: #f59e0b;
+  --blue-badge: #2563eb;
+  --purple-badge: #9333ea;
 }
 
 * {
@@ -28,7 +30,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 1.1rem 2.5rem;
-  background: rgba(15, 17, 21, 0.95);
+  background: rgba(11, 13, 17, 0.95);
   position: sticky;
   top: 0;
   z-index: 50;
@@ -72,7 +74,7 @@ body {
 .search-box input {
   width: 100%;
   padding: 0.5rem 1rem;
-  background-color: #1f232b;
+  background-color: #191c25;
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 20px;
   color: var(--text-main);
@@ -157,8 +159,8 @@ body {
   position: absolute;
   inset: 0;
   background: 
-    linear-gradient(to right, var(--bg-primary) 35%, rgba(15, 17, 21, 0.85) 60%, rgba(15, 17, 21, 0.25) 90%),
-    linear-gradient(to top, var(--bg-primary) 0%, rgba(15, 17, 21, 0.4) 20%, transparent 60%);
+    linear-gradient(to right, var(--bg-primary) 35%, rgba(11, 13, 17, 0.85) 60%, rgba(11, 13, 17, 0.25) 90%),
+    linear-gradient(to top, var(--bg-primary) 0%, rgba(11, 13, 17, 0.4) 20%, transparent 60%);
   z-index: 2;
 }
 
@@ -166,7 +168,7 @@ body {
   position: relative;
   z-index: 3;
   width: 100%;
-  max-width: 1300px;
+  max-width: 1750px;
   padding: 2.5rem 2rem;
   display: flex;
   align-items: center;
@@ -193,7 +195,7 @@ body {
 
 .hero-info-box {
   flex: 1;
-  max-width: 750px;
+  max-width: 850px;
 }
 
 .hero-badges-row {
@@ -335,13 +337,8 @@ body {
   border-color: var(--accent);
 }
 
-.hero-arrow.prev {
-  left: 1.5rem;
-}
-
-.hero-arrow.next {
-  right: 1.5rem;
-}
+.hero-arrow.prev { left: 1.5rem; }
+.hero-arrow.next { right: 1.5rem; }
 
 .hero-dots {
   position: absolute;
@@ -368,12 +365,51 @@ body {
 }
 
 /* =========================================
-   GRILLA DE CONTENIDO Y TARJETAS
+   CONTENEDOR GLOBAL (ADAPTADO A 2560x1440)
    ========================================= */
 .container {
-  max-width: 1300px;
+  max-width: 1750px;
   margin: 2.5rem auto;
-  padding: 0 1.5rem;
+  padding: 0 2rem;
+}
+
+/* SECCIONES INDEPENDIENTES PARA "TODOS" */
+.catalog-section {
+  margin-bottom: 3.5rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.section-title-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.section-icon {
+  font-size: 1.4rem;
+}
+
+.section-title-box h2 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.section-count {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
 }
 
 .catalog-grid {
@@ -382,6 +418,7 @@ body {
   gap: 1.5rem;
 }
 
+/* TARJETAS DE CONTENIDO */
 .card {
   background: var(--bg-card);
   border-radius: 8px;
@@ -417,21 +454,40 @@ body {
   top: 8px;
   left: 8px;
   display: flex;
-  gap: 4px;
+  gap: 5px;
   z-index: 2;
 }
 
-.badge {
-  background: rgba(0, 0, 0, 0.8);
+/* =========================================
+   ETIQUETAS DE TIPO (COLORES Y ACENTO)
+   ========================================= */
+.badge-type {
   font-size: 0.68rem;
   text-transform: uppercase;
-  font-weight: 700;
-  padding: 3px 6px;
+  font-weight: 800;
+  padding: 3px 7px;
   border-radius: 4px;
+  letter-spacing: 0.5px;
+  color: #fff;
+}
+
+/* 1. PELÍCULA -> Rojo Carmesí */
+.badge-type.badge-pelicula {
+  background: var(--accent) !important;
+}
+
+/* 2. SERIE -> Azul Zafiro */
+.badge-type.badge-serie {
+  background: var(--blue-badge) !important;
+}
+
+/* 3. ANIME -> Púrpura Neón */
+.badge-type.badge-anime {
+  background: var(--purple-badge) !important;
 }
 
 /* =========================================
-   COLORES INDIVIDUALES DE CALIDAD
+   ETIQUETAS DE CALIDAD INDIVIDUALES
    ========================================= */
 .badge-quality {
   color: #fff;
@@ -452,31 +508,16 @@ body {
   background: #374151;
 }
 
-/* 1. CAM -> Naranja */
-.badge-quality.cam, 
-.hero-badge-quality.cam, 
-.modal-quality-badge.cam {
+.badge-quality.cam, .hero-badge-quality.cam, .modal-quality-badge.cam {
   background: #d97706 !important;
 }
-
-/* 2. 720p -> Azul Celeste */
-.badge-quality.p720, 
-.hero-badge-quality.p720, 
-.modal-quality-badge.p720 {
+.badge-quality.p720, .hero-badge-quality.p720, .modal-quality-badge.p720 {
   background: #0284c7 !important;
 }
-
-/* 3. 1080p -> Verde Esmeralda */
-.badge-quality.p1080, 
-.hero-badge-quality.p1080, 
-.modal-quality-badge.p1080 {
+.badge-quality.p1080, .hero-badge-quality.p1080, .modal-quality-badge.p1080 {
   background: #059669 !important;
 }
-
-/* 4. 4K -> Púrpura */
-.badge-quality.p4k, 
-.hero-badge-quality.p4k, 
-.modal-quality-badge.p4k {
+.badge-quality.p4k, .hero-badge-quality.p4k, .modal-quality-badge.p4k {
   background: #7c3aed !important;
 }
 
@@ -790,10 +831,7 @@ body {
   color: var(--accent);
 }
 
-.loader-brand .text-white {
-  color: #ffffff;
-}
-
+.loader-brand .text-white { color: #ffffff; }
 .loader-brand .text-accent {
   color: var(--accent);
   text-shadow: 0 0 12px rgba(229, 9, 20, 0.4);
@@ -816,9 +854,7 @@ body {
 }
 
 @keyframes streamSpin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
 .episodes-section {
@@ -926,21 +962,10 @@ body {
   .hero-overlay {
     background: linear-gradient(to top, var(--bg-primary) 10%, rgba(15, 17, 21, 0.9) 70%);
   }
-  .hero-poster-box {
-    width: 150px;
-  }
-  .hero-title {
-    font-size: 1.7rem;
-  }
-  .hero-meta {
-    justify-content: center;
-  }
-  .hero-actions {
-    justify-content: center;
-  }
-  .hero-arrow {
-    display: none;
-  }
+  .hero-poster-box { width: 150px; }
+  .hero-title { font-size: 1.7rem; }
+  .hero-meta, .hero-actions { justify-content: center; }
+  .hero-arrow { display: none; }
   .hero-dots {
     right: 50%;
     transform: translateX(50%);
@@ -950,12 +975,8 @@ body {
     grid-template-columns: 1fr;
     text-align: center;
   }
-  .modal-detail-text {
-    padding-right: 0;
-  }
-  .modal-meta-row {
-    justify-content: center;
-  }
+  .modal-detail-text { padding-right: 0; }
+  .modal-meta-row { justify-content: center; }
   .modal-detail-grid img {
     max-width: 130px;
     margin: 0 auto;
