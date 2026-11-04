@@ -36,8 +36,26 @@ body {
 }
 
 .logo {
-  font-size: 1.4rem;
-  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: -0.8px;
+  display: inline-flex;
+  align-items: baseline;
+  user-select: none;
+  cursor: pointer;
+}
+
+.logo-text {
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.logo-dot {
+  color: var(--accent);
+  font-size: 1.8rem;
+  line-height: 0;
+  margin-left: 2px;
 }
 
 .logo span {
