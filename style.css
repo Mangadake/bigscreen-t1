@@ -36,30 +36,31 @@ body {
 }
 
 .logo {
-  font-family: 'Inter', sans-serif;
-  font-size: 1.5rem;
-  font-weight: 900;
-  letter-spacing: -0.8px;
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
   user-select: none;
   cursor: pointer;
 }
 
-.logo-text {
+.logo-icon {
+  width: 26px;
+  height: 26px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.logo-white {
   color: #ffffff;
-  text-transform: uppercase;
 }
 
-.logo-dot {
+.logo-accent {
   color: var(--accent);
-  font-size: 1.8rem;
-  line-height: 0;
-  margin-left: 2px;
-}
-
-.logo span {
-  color: var(--accent);
+  text-shadow: 0 0 16px rgba(229, 9, 20, 0.4);
 }
 
 .search-box {
