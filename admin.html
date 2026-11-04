@@ -93,6 +93,37 @@
     .config-group input { width: 100%; background: var(--card-inner); border: 1px solid var(--border); border-radius: 6px; padding: 0.55rem 0.8rem; color: #fff; font-size: 0.85rem; outline: none; }
     .config-group input:focus { border-color: var(--accent); }
 
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.65rem 1.4rem;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    .btn-bookmark {
+      background: #0284c7;
+      color: #fff;
+      border: none;
+      padding: 0.65rem 1rem;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      text-decoration: none;
+    }
+    .btn-bookmark:hover { background: #0369a1; }
+
     /* LAYOUT WIDESCREEN A DOS COLUMNAS */
     .dashboard-grid {
       display: grid;
@@ -172,19 +203,6 @@
       outline: none;
     }
     .search-row input:focus { border-color: var(--accent); }
-
-    .btn-primary {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      padding: 0.65rem 1.4rem;
-      border-radius: 6px;
-      font-weight: 700;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: background 0.2s;
-    }
-    .btn-primary:hover { background: var(--accent-hover); }
 
     .tmdb-results-grid {
       display: grid;
@@ -572,8 +590,10 @@
         <label>TMDb API Key (v3):</label>
         <input type="text" id="tmdb-key" placeholder="Pega tu API Key de TMDB">
       </div>
-      <div style="display: flex; align-items: flex-end;">
-        <button class="btn-primary" id="btn-save-credentials" style="width: 100%;">Guardar Llaves</button>
+      
+      <div style="display: flex; gap: 0.6rem; align-items: flex-end;">
+        <button class="btn-primary" id="btn-save-credentials" style="flex: 1;">Guardar Llaves</button>
+        <button class="btn-bookmark" id="btn-create-bookmark" title="Genera un enlace con tus llaves para guardarlo en favoritos">⭐ Crear Marcador de Acceso</button>
       </div>
     </section>
 
@@ -603,7 +623,7 @@
 
           <!-- PAGINACIÓN -->
           <div class="pagination-bar">
-            <span id="page-indicator">Página 1</span>
+            <span id="page-indicator">Cargando páginas...</span>
             <div class="pagination-btns">
               <button class="page-btn" id="btn-page-prev" disabled>◀ Anterior</button>
               <button class="page-btn" id="btn-page-next">Siguiente ▶</button>
@@ -705,6 +725,7 @@
     let currentCatalogSha = null;
     let inspectingItem = null;
     let currentViewPage = 1;
+    let totalAvailablePages = 1;
     let currentTmdbCategory = 'trending';
     let currentPublishedFilter = 'all';
 
@@ -726,7 +747,6 @@
       const token = (localStorage.getItem("gh_token") || "").trim();
       const path = (localStorage.getItem("gh_path") || "catalogo.json").trim();
 
-      // Si el usuario puso "Mangadake/bigscreen-T1" en repo, extraer solo el repo
       if (repo.includes("/")) {
         const parts = repo.split("/").filter(Boolean);
         if (parts.length >= 2) {
@@ -740,7 +760,23 @@
       return { owner, repo, token, path };
     }
 
+    // CARGAR DESDE HASH O LOCALSTORAGE
     function cargarCredenciales() {
+      if (window.location.hash && window.location.hash.length > 5) {
+        try {
+          const rawHash = window.location.hash.substring(1);
+          const dec = JSON.parse(decodeURIComponent(escape(atob(rawHash))));
+          if (dec.gh_token) localStorage.setItem("gh_token", dec.gh_token);
+          if (dec.gh_owner) localStorage.setItem("gh_owner", dec.gh_owner);
+          if (dec.gh_repo) localStorage.setItem("gh_repo", dec.gh_repo);
+          if (dec.gh_path) localStorage.setItem("gh_path", dec.gh_path);
+          if (dec.tmdb_key) localStorage.setItem("tmdb_key", dec.tmdb_key);
+          showToast("¡Credenciales cargadas desde tu Marcador!");
+        } catch (e) {
+          console.error("No se pudo descifrar el hash:", e);
+        }
+      }
+
       const creds = obtenerCredencialesLimpias();
       document.getElementById("gh-token").value = creds.token;
       document.getElementById("gh-owner").value = creds.owner;
@@ -772,9 +808,34 @@
       document.getElementById("gh-owner").value = rawOwner;
       document.getElementById("gh-repo").value = rawRepo;
 
-      showToast("Configuración guardada y corregida");
+      showToast("Configuración guardada en este navegador");
       cargarExploradorTMDb();
       cargarCatalogoRemoto();
+    });
+
+    // BOTÓN MARCADOR DE ACCESO DIRECTO
+    document.getElementById("btn-create-bookmark").addEventListener("click", () => {
+      const token = document.getElementById("gh-token").value.trim();
+      const owner = document.getElementById("gh-owner").value.trim();
+      const repo = document.getElementById("gh-repo").value.trim();
+      const path = document.getElementById("gh-path").value.trim();
+      const tmdb = document.getElementById("tmdb-key").value.trim();
+
+      if (!token) {
+        alert("Escribe primero tu GitHub Token antes de generar el marcador.");
+        return;
+      }
+
+      const payload = { gh_token: token, gh_owner: owner, gh_repo: repo, gh_path: path, tmdb_key: tmdb };
+      const hash = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+      const currentUrlWithoutHash = window.location.href.split('#')[0];
+      const bookmarkUrl = `${currentUrlWithoutHash}#${hash}`;
+
+      window.location.hash = hash;
+      navigator.clipboard.writeText(bookmarkUrl);
+
+      alert("¡Enlace generado y copiado a tu portapapeles!\n\n1. Ya se aplicó a tu barra de direcciones.\n2. Presiona 'Ctrl + D' ahora mismo para guardarlo en tus Marcadores.\n3. Cada vez que abras ese marcador entrarás directo con todo cargado.");
+      showToast("Enlace de acceso copiado");
     });
 
     document.getElementById("btn-toggle-config").addEventListener("click", () => {
@@ -787,7 +848,7 @@
       setTimeout(() => { toast.style.display = "none"; }, 3500);
     }
 
-    // EXPLORADOR TMDB: COMBINA 2 PÁGINAS PARA LLENAR FILAS COMPLETAS (24 TÍTULOS = 4 FILAS DE 6)
+    // EXPLORADOR TMDB CON 24 TÍTULOS Y CONTEO TOTAL DE PÁGINAS
     async function cargarExploradorTMDb() {
       const tmdbKey = localStorage.getItem("tmdb_key");
       if (!tmdbKey) {
@@ -829,12 +890,15 @@
         const data2 = res2.ok ? await res2.json() : { results: [] };
 
         const combinados = [...(data1.results || []), ...(data2.results || [])];
-        // Filtrar pósters válidos y tomar exactamente 24 títulos (4 filas de 6)
         const results = combinados.filter(item => item.poster_path).slice(0, 24);
 
-        pageIndicator.innerText = `Página ${currentViewPage}`;
-        btnPagePrev.disabled = currentViewPage <= 1;
-        btnPageNext.disabled = results.length < 24;
+        // Cálculo exacto del total de páginas (TMDb limita su API a 500 páginas de origen)
+        const totalTmdbPages = Math.min(data1.total_pages || 1, 500);
+        totalAvailablePages = Math.max(1, Math.ceil(totalTmdbPages / 2));
+
+        pageIndicator.innerText = `Página ${currentViewPage} de ${totalAvailablePages}`;
+        btnPagePrev.disabled = (currentViewPage <= 1);
+        btnPageNext.disabled = (currentViewPage >= totalAvailablePages || results.length === 0);
 
         if (results.length === 0) {
           tmdbGrid.innerHTML = `<p style="grid-column: 1/-1; color: var(--text-muted); padding: 2rem; text-align: center;">No se encontraron resultados.</p>`;
@@ -902,8 +966,10 @@
     });
 
     btnPageNext.addEventListener("click", () => {
-      currentViewPage++;
-      cargarExploradorTMDb();
+      if (currentViewPage < totalAvailablePages) {
+        currentViewPage++;
+        cargarExploradorTMDb();
+      }
     });
 
     // INSPECCIÓN Y DETALLES
