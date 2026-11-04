@@ -76,7 +76,7 @@
 
     .btn-config:hover { background: rgba(255, 255, 255, 0.15); }
 
-    /* MODAL CONFIG ACCESO */
+    /* PANEL CREDENCIALES */
     .config-panel {
       display: none;
       background: var(--card);
@@ -357,7 +357,7 @@
     }
     .player-test-container iframe { width: 100%; height: 100%; border: 0; }
 
-    /* GESTIÓN DE CATÁLOGO PUBLICADO (COLUMNA DERECHA) */
+    /* GESTIÓN DE CATÁLOGO PUBLICADO */
     .published-header-bar {
       display: flex;
       align-items: center;
@@ -439,9 +439,7 @@
       background: #000;
     }
 
-    .pub-info {
-      overflow: hidden;
-    }
+    .pub-info { overflow: hidden; }
 
     .pub-title-row {
       display: flex;
@@ -552,7 +550,7 @@
       </div>
     </header>
 
-    <!-- PANEL CREDENCIALES (DESPLEGABLE) -->
+    <!-- PANEL CREDENCIALES -->
     <section class="config-panel" id="config-panel">
       <div class="config-group">
         <label>GitHub Personal Access Token (PAT):</label>
@@ -579,7 +577,7 @@
       </div>
     </section>
 
-    <!-- WORKSPACE 2 COLUMNAS (1440p) -->
+    <!-- WORKSPACE 2 COLUMNAS -->
     <main class="dashboard-grid">
       <!-- COLUMNA IZQUIERDA: DESCUBRIR Y PUBLICAR -->
       <section>
@@ -603,7 +601,7 @@
             <!-- Portadas dinámicas -->
           </div>
 
-          <!-- PAGINACIÓN ILIMITADA -->
+          <!-- PAGINACIÓN -->
           <div class="pagination-bar">
             <span id="page-indicator">Página 1</span>
             <div class="pagination-btns">
@@ -706,11 +704,10 @@
     let publishedCatalog = [];
     let currentCatalogSha = null;
     let inspectingItem = null;
-    let currentTmdbPage = 1;
+    let currentViewPage = 1;
     let currentTmdbCategory = 'trending';
     let currentPublishedFilter = 'all';
 
-    // ELEMENTOS DEL DOM
     const tmdbGrid = document.getElementById("tmdb-grid");
     const tmdbSearchInput = document.getElementById("tmdb-search-input");
     const pageIndicator = document.getElementById("page-indicator");
@@ -722,22 +719,60 @@
     const publishedCounter = document.getElementById("published-counter");
     const toast = document.getElementById("toast");
 
-    // CREDENCIALES
+    // SANITIZACIÓN ROBUSTA DE PARÁMETROS GITHUB
+    function obtenerCredencialesLimpias() {
+      let owner = (localStorage.getItem("gh_owner") || "Mangadake").trim();
+      let repo = (localStorage.getItem("gh_repo") || "bigscreen-T1").trim();
+      const token = (localStorage.getItem("gh_token") || "").trim();
+      const path = (localStorage.getItem("gh_path") || "catalogo.json").trim();
+
+      // Si el usuario puso "Mangadake/bigscreen-T1" en repo, extraer solo el repo
+      if (repo.includes("/")) {
+        const parts = repo.split("/").filter(Boolean);
+        if (parts.length >= 2) {
+          owner = parts[0];
+          repo = parts[1];
+        } else {
+          repo = parts[0];
+        }
+      }
+
+      return { owner, repo, token, path };
+    }
+
     function cargarCredenciales() {
-      document.getElementById("gh-token").value = localStorage.getItem("gh_token") || "";
-      document.getElementById("gh-owner").value = localStorage.getItem("gh_owner") || "Mangadake";
-      document.getElementById("gh-repo").value = localStorage.getItem("gh_repo") || "bigscreen-T1";
-      document.getElementById("gh-path").value = localStorage.getItem("gh_path") || "catalogo.json";
+      const creds = obtenerCredencialesLimpias();
+      document.getElementById("gh-token").value = creds.token;
+      document.getElementById("gh-owner").value = creds.owner;
+      document.getElementById("gh-repo").value = creds.repo;
+      document.getElementById("gh-path").value = creds.path;
       document.getElementById("tmdb-key").value = localStorage.getItem("tmdb_key") || "";
     }
 
     document.getElementById("btn-save-credentials").addEventListener("click", () => {
+      let rawRepo = document.getElementById("gh-repo").value.trim();
+      let rawOwner = document.getElementById("gh-owner").value.trim();
+
+      if (rawRepo.includes("/")) {
+        const parts = rawRepo.split("/").filter(Boolean);
+        if (parts.length >= 2) {
+          rawOwner = parts[0];
+          rawRepo = parts[1];
+        } else {
+          rawRepo = parts[0];
+        }
+      }
+
       localStorage.setItem("gh_token", document.getElementById("gh-token").value.trim());
-      localStorage.setItem("gh_owner", document.getElementById("gh-owner").value.trim());
-      localStorage.setItem("gh_repo", document.getElementById("gh-repo").value.trim());
+      localStorage.setItem("gh_owner", rawOwner);
+      localStorage.setItem("gh_repo", rawRepo);
       localStorage.setItem("gh_path", document.getElementById("gh-path").value.trim());
       localStorage.setItem("tmdb_key", document.getElementById("tmdb-key").value.trim());
-      showToast("Configuración guardada correctamente");
+
+      document.getElementById("gh-owner").value = rawOwner;
+      document.getElementById("gh-repo").value = rawRepo;
+
+      showToast("Configuración guardada y corregida");
       cargarExploradorTMDb();
       cargarCatalogoRemoto();
     });
@@ -752,7 +787,7 @@
       setTimeout(() => { toast.style.display = "none"; }, 3500);
     }
 
-    // EXPLORADOR TMDB CON PAGINACIÓN
+    // EXPLORADOR TMDB: COMBINA 2 PÁGINAS PARA LLENAR FILAS COMPLETAS (24 TÍTULOS = 4 FILAS DE 6)
     async function cargarExploradorTMDb() {
       const tmdbKey = localStorage.getItem("tmdb_key");
       if (!tmdbKey) {
@@ -762,31 +797,44 @@
 
       tmdbGrid.innerHTML = `<p style="grid-column: 1/-1; color: var(--text-muted); padding: 2rem; text-align: center;">Consultando TMDb...</p>`;
 
-      let url = "";
       const query = tmdbSearchInput.value.trim();
+      const p1 = (currentViewPage * 2) - 1;
+      const p2 = currentViewPage * 2;
 
-      if (query) {
-        url = `https://api.themoviedb.org/3/search/multi?api_key=${tmdbKey}&language=es-MX&query=${encodeURIComponent(query)}&page=${currentTmdbPage}`;
-      } else {
+      function construirUrlTmdb(page) {
+        if (query) {
+          return `https://api.themoviedb.org/3/search/multi?api_key=${tmdbKey}&language=es-MX&query=${encodeURIComponent(query)}&page=${page}`;
+        }
         if (currentTmdbCategory === 'trending') {
-          url = `https://api.themoviedb.org/3/trending/all/week?api_key=${tmdbKey}&language=es-MX&page=${currentTmdbPage}`;
-        } else if (currentTmdbCategory === 'movies') {
-          url = `https://api.themoviedb.org/3/movie/popular?api_key=${tmdbKey}&language=es-MX&page=${currentTmdbPage}`;
-        } else if (currentTmdbCategory === 'tv') {
-          url = `https://api.themoviedb.org/3/tv/popular?api_key=${tmdbKey}&language=es-MX&page=${currentTmdbPage}`;
-        } else if (currentTmdbCategory === 'anime') {
-          url = `https://api.themoviedb.org/3/discover/tv?api_key=${tmdbKey}&language=es-MX&with_genres=16&page=${currentTmdbPage}`;
+          return `https://api.themoviedb.org/3/trending/all/week?api_key=${tmdbKey}&language=es-MX&page=${page}`;
+        }
+        if (currentTmdbCategory === 'movies') {
+          return `https://api.themoviedb.org/3/movie/popular?api_key=${tmdbKey}&language=es-MX&page=${page}`;
+        }
+        if (currentTmdbCategory === 'tv') {
+          return `https://api.themoviedb.org/3/tv/popular?api_key=${tmdbKey}&language=es-MX&page=${page}`;
+        }
+        if (currentTmdbCategory === 'anime') {
+          return `https://api.themoviedb.org/3/discover/tv?api_key=${tmdbKey}&language=es-MX&with_genres=16&page=${page}`;
         }
       }
 
       try {
-        const res = await fetch(url);
-        const data = await res.json();
-        const results = (data.results || []).filter(item => item.poster_path);
+        const [res1, res2] = await Promise.all([
+          fetch(construirUrlTmdb(p1)),
+          fetch(construirUrlTmdb(p2))
+        ]);
 
-        pageIndicator.innerText = `Página ${data.page || 1} de ${data.total_pages || 1}`;
-        btnPagePrev.disabled = currentTmdbPage <= 1;
-        btnPageNext.disabled = currentTmdbPage >= (data.total_pages || 1);
+        const data1 = await res1.json();
+        const data2 = res2.ok ? await res2.json() : { results: [] };
+
+        const combinados = [...(data1.results || []), ...(data2.results || [])];
+        // Filtrar pósters válidos y tomar exactamente 24 títulos (4 filas de 6)
+        const results = combinados.filter(item => item.poster_path).slice(0, 24);
+
+        pageIndicator.innerText = `Página ${currentViewPage}`;
+        btnPagePrev.disabled = currentViewPage <= 1;
+        btnPageNext.disabled = results.length < 24;
 
         if (results.length === 0) {
           tmdbGrid.innerHTML = `<p style="grid-column: 1/-1; color: var(--text-muted); padding: 2rem; text-align: center;">No se encontraron resultados.</p>`;
@@ -809,7 +857,7 @@
               <div class="tmdb-item-info">
                 <div>
                   <div class="tmdb-item-title" title="${title}">${title}</div>
-                  <div class="tmdb-item-meta">${type.toUpperCase()} • ${year}</div>
+                  <div class="tmdb-item-meta">${type === 'pelicula' ? 'PELÍCULA' : type.toUpperCase()} • ${year}</div>
                 </div>
                 <button class="btn-inspect" onclick="prepararInspeccion('${type}', ${item.id})">Inspeccionar</button>
               </div>
@@ -823,43 +871,42 @@
       }
     }
 
-    // Pestañas de categoría
     document.querySelectorAll(".pill-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".pill-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         currentTmdbCategory = btn.dataset.type;
-        currentTmdbPage = 1;
+        currentViewPage = 1;
         tmdbSearchInput.value = "";
         cargarExploradorTMDb();
       });
     });
 
     document.getElementById("btn-tmdb-search").addEventListener("click", () => {
-      currentTmdbPage = 1;
+      currentViewPage = 1;
       cargarExploradorTMDb();
     });
 
     tmdbSearchInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
-        currentTmdbPage = 1;
+        currentViewPage = 1;
         cargarExploradorTMDb();
       }
     });
 
     btnPagePrev.addEventListener("click", () => {
-      if (currentTmdbPage > 1) {
-        currentTmdbPage--;
+      if (currentViewPage > 1) {
+        currentViewPage--;
         cargarExploradorTMDb();
       }
     });
 
     btnPageNext.addEventListener("click", () => {
-      currentTmdbPage++;
+      currentViewPage++;
       cargarExploradorTMDb();
     });
 
-    // INSPECCIÓN Y CARGA DE DETALLES
+    // INSPECCIÓN Y DETALLES
     window.prepararInspeccion = async function(type, tmdbId) {
       const tmdbKey = localStorage.getItem("tmdb_key");
       const isMovie = (type === "pelicula");
@@ -903,15 +950,13 @@
           seasons_detail: seasonsDetail
         };
 
-        // Pintar en el DOM
         document.getElementById("prev-poster").src = inspectingItem.poster;
         document.getElementById("prev-title").innerText = inspectingItem.title;
-        document.getElementById("prev-meta").innerText = `${type.toUpperCase()} • ${year} • ★ ${rating}`;
+        document.getElementById("prev-meta").innerText = `${type === 'pelicula' ? 'PELÍCULA' : type.toUpperCase()} • ${year} • ★ ${rating}`;
         document.getElementById("prev-synopsis").innerText = inspectingItem.synopsis;
         document.getElementById("prev-type-select").value = type;
         document.getElementById("prev-quality-select").value = "1080p";
 
-        // Reproductor de prueba (Unlimplay)
         const embedUrl = isMovie 
           ? `https://unlimplay.com/f/embed/movie/${tmdbId}`
           : `https://unlimplay.com/f/embed/tv/${tmdbId}/1/1`;
@@ -930,12 +975,9 @@
     document.getElementById("btn-publish").addEventListener("click", async () => {
       if (!inspectingItem) return;
 
-      const ghToken = localStorage.getItem("gh_token");
-      const ghOwner = localStorage.getItem("gh_owner");
-      const ghRepo = localStorage.getItem("gh_repo");
-      const ghPath = localStorage.getItem("gh_path");
+      const { owner, repo, token, path } = obtenerCredencialesLimpias();
 
-      if (!ghToken) {
+      if (!token) {
         alert("Por favor abre 'Configuración de Acceso' y guarda tu GitHub Personal Access Token.");
         return;
       }
@@ -943,18 +985,16 @@
       inspectingItem.type = document.getElementById("prev-type-select").value;
       inspectingItem.quality = document.getElementById("prev-quality-select").value;
 
-      // Evitar duplicados por TMDB ID
       const yaExiste = publishedCatalog.some(i => i.tmdb_id === inspectingItem.tmdb_id);
       if (yaExiste) {
         alert("Este título ya se encuentra en tu catálogo.");
         return;
       }
 
-      // Añadir al inicio
       const nuevoCatalogo = [inspectingItem, ...publishedCatalog];
 
       try {
-        const url = `https://api.github.com/repos/${ghOwner}/${ghRepo}/contents/${ghPath}`;
+        const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
         const bodyData = {
           message: `Publicar "${inspectingItem.title}" [BigScreen Studio]`,
           content: btoa(unescape(encodeURIComponent(JSON.stringify(nuevoCatalogo, null, 2)))),
@@ -964,7 +1004,7 @@
         const res = await fetch(url, {
           method: "PUT",
           headers: {
-            "Authorization": `token ${ghToken}`,
+            "Authorization": `token ${token}`,
             "Content-Type": "application/json"
           },
           body: JSON.stringify(bodyData)
@@ -998,16 +1038,12 @@
 
     // CARGAR CATÁLOGO PUBLICADO DESDE GITHUB
     async function cargarCatalogoRemoto() {
-      const ghOwner = localStorage.getItem("gh_owner") || "Mangadake";
-      const ghRepo = localStorage.getItem("gh_repo") || "bigscreen-T1";
-      const ghPath = localStorage.getItem("gh_path") || "catalogo.json";
-      const ghToken = localStorage.getItem("gh_token");
-
-      const headers = ghToken ? { "Authorization": `token ${ghToken}` } : {};
+      const { owner, repo, token, path } = obtenerCredencialesLimpias();
+      const headers = token ? { "Authorization": `token ${token}` } : {};
 
       try {
-        const res = await fetch(`https://api.github.com/repos/${ghOwner}/${ghRepo}/contents/${ghPath}?t=${Date.now()}`, { headers });
-        if (!res.ok) throw new Error("No se pudo leer catalogo.json");
+        const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}?t=${Date.now()}`, { headers });
+        if (!res.ok) throw new Error(`HTTP ${res.status}: No se pudo leer catalogo.json`);
 
         const data = await res.json();
         currentCatalogSha = data.sha;
@@ -1017,11 +1053,11 @@
         renderPublishedList();
       } catch (err) {
         console.error(err);
-        publishedList.innerHTML = `<p style="color: var(--text-muted); text-align: center; padding: 2rem;">No se pudo conectar con el catálogo en GitHub.</p>`;
+        publishedList.innerHTML = `<p style="color: var(--accent); text-align: center; padding: 2rem;">No se pudo conectar con el repositorio (${owner}/${repo}). Revisa 'Configuración de Acceso'.</p>`;
       }
     }
 
-    // RENDERIZADO Y BÚSQUEDA INSTANTÁNEA EN CATÁLOGO PUBLICADO
+    // BÚSQUEDA INSTANTÁNEA EN CATÁLOGO PUBLICADO
     function renderPublishedList() {
       const q = pubSearchInput.value.toLowerCase().trim();
 
@@ -1069,10 +1105,8 @@
       }).join("");
     }
 
-    // Buscador instantáneo al escribir
     pubSearchInput.addEventListener("input", renderPublishedList);
 
-    // Filtros por píldoras en publicados
     document.querySelectorAll(".pub-pill").forEach(pill => {
       pill.addEventListener("click", () => {
         document.querySelectorAll(".pub-pill").forEach(p => p.classList.remove("active"));
@@ -1082,7 +1116,6 @@
       });
     });
 
-    // Guardar calidad modificada
     window.actualizarCalidadItem = async function(id) {
       const select = document.getElementById(`pub-q-${id}`);
       const nuevaCalidad = select.value;
@@ -1094,7 +1127,6 @@
       await guardarCatalogoGithub(`Actualizar calidad de "${item.title}" a ${nuevaCalidad || 'normal'}`);
     };
 
-    // Eliminar título
     window.eliminarItem = async function(id) {
       const item = publishedCatalog.find(i => i.id === id);
       if (!item) return;
@@ -1105,15 +1137,11 @@
       await guardarCatalogoGithub(`Eliminar "${item.title}" [BigScreen Studio]`);
     };
 
-    // Guardar array en GitHub
     async function guardarCatalogoGithub(commitMsg) {
-      const ghToken = localStorage.getItem("gh_token");
-      const ghOwner = localStorage.getItem("gh_owner");
-      const ghRepo = localStorage.getItem("gh_repo");
-      const ghPath = localStorage.getItem("gh_path");
+      const { owner, repo, token, path } = obtenerCredencialesLimpias();
 
       try {
-        const url = `https://api.github.com/repos/${ghOwner}/${ghRepo}/contents/${ghPath}`;
+        const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
         const bodyData = {
           message: commitMsg,
           content: btoa(unescape(encodeURIComponent(JSON.stringify(publishedCatalog, null, 2)))),
@@ -1123,7 +1151,7 @@
         const res = await fetch(url, {
           method: "PUT",
           headers: {
-            "Authorization": `token ${ghToken}`,
+            "Authorization": `token ${token}`,
             "Content-Type": "application/json"
           },
           body: JSON.stringify(bodyData)
@@ -1141,7 +1169,6 @@
 
     document.getElementById("btn-refresh-catalog").addEventListener("click", cargarCatalogoRemoto);
 
-    // INICIO AUTOMÁTICO
     cargarCredenciales();
     cargarExploradorTMDb();
     cargarCatalogoRemoto();
