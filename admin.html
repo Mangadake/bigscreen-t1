@@ -8,24 +8,24 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
   <style>
     :root {
-      --bg: #0b0d12;
-      --card: #151821;
-      --card-inner: #1c202c;
+      --bg: #101114;
+      --card: #181a20;
+      --card-inner: #14161c;
       --border: rgba(255, 255, 255, 0.08);
-      --accent: #e50914;
-      --accent-hover: #b80710;
-      --text: #f3f4f6;
-      --text-muted: #9ca3af;
-      --blue: #2563eb;
-      --purple: #9333ea;
-      --green: #059669;
-      --orange: #d97706;
+      --accent: #f59e0b; /* Ámbar cinemático */
+      --accent-hover: #d97706;
+      --text: #f5f5f7;
+      --text-muted: #9ea3ae;
+      --blue: #38bdf8;
+      --purple: #a855f7;
+      --green: #10b981;
+      --orange: #f59e0b;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--text);
       padding: 1.5rem 2rem;
@@ -56,6 +56,10 @@
       gap: 0.6rem;
     }
 
+    .admin-title h1 span {
+      color: var(--accent);
+    }
+
     .admin-title p {
       font-size: 0.85rem;
       color: var(--text-muted);
@@ -63,7 +67,7 @@
     }
 
     .btn-config {
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--border);
       color: var(--text);
       padding: 0.5rem 1rem;
@@ -74,7 +78,7 @@
       transition: all 0.2s;
     }
 
-    .btn-config:hover { background: rgba(255, 255, 255, 0.15); }
+    .btn-config:hover { background: rgba(255, 255, 255, 0.12); }
 
     /* PANEL CREDENCIALES */
     .config-panel {
@@ -95,11 +99,11 @@
 
     .btn-primary {
       background: var(--accent);
-      color: #fff;
+      color: #101114;
       border: none;
       padding: 0.65rem 1.4rem;
       border-radius: 6px;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
       font-size: 0.9rem;
       transition: background 0.2s;
@@ -107,9 +111,9 @@
     .btn-primary:hover { background: var(--accent-hover); }
 
     .btn-bookmark {
-      background: #0284c7;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
       color: #fff;
-      border: none;
       padding: 0.65rem 1rem;
       border-radius: 6px;
       font-weight: 700;
@@ -120,11 +124,10 @@
       align-items: center;
       justify-content: center;
       gap: 0.4rem;
-      text-decoration: none;
     }
-    .btn-bookmark:hover { background: #0369a1; }
+    .btn-bookmark:hover { background: rgba(255, 255, 255, 0.15); border-color: var(--accent); color: var(--accent); }
 
-    /* WORKSPACE 2 COLUMNAS */
+    /* LAYOUT A 2 COLUMNAS (1440p) */
     .dashboard-grid {
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
@@ -161,7 +164,6 @@
       gap: 0.5rem;
     }
 
-    /* EXPLORADOR TMDB */
     .tmdb-nav-pills {
       display: flex;
       gap: 0.4rem;
@@ -173,7 +175,7 @@
       border: 1px solid var(--border);
       color: var(--text-muted);
       padding: 0.4rem 0.85rem;
-      border-radius: 20px;
+      border-radius: 6px;
       font-size: 0.78rem;
       font-weight: 700;
       cursor: pointer;
@@ -182,7 +184,7 @@
 
     .pill-btn:hover, .pill-btn.active {
       background: var(--accent);
-      color: #fff;
+      color: #101114;
       border-color: var(--accent);
     }
 
@@ -204,6 +206,18 @@
     }
     .search-row input:focus { border-color: var(--accent); }
 
+    .director-badge-alert {
+      display: none;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: var(--accent);
+      padding: 0.5rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
     .tmdb-results-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -222,7 +236,7 @@
     }
     .tmdb-item-card:hover {
       transform: translateY(-3px);
-      border-color: rgba(255, 255, 255, 0.25);
+      border-color: rgba(245, 158, 11, 0.35);
     }
 
     .tmdb-item-poster {
@@ -262,9 +276,9 @@
     }
 
     .btn-inspect {
-      background: var(--blue);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
       color: #fff;
-      border: none;
       padding: 0.35rem 0;
       border-radius: 4px;
       font-size: 0.72rem;
@@ -272,11 +286,11 @@
       cursor: pointer;
       width: 100%;
       text-align: center;
-      transition: background 0.2s;
+      transition: all 0.2s;
     }
-    .btn-inspect:hover { background: #1d4ed8; }
+    .btn-inspect:hover { background: var(--accent); color: #101114; border-color: var(--accent); }
 
-    /* CONTROLES DE PAGINACIÓN */
+    /* PAGINACIÓN */
     .pagination-bar {
       display: flex;
       align-items: center;
@@ -304,10 +318,9 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-    .page-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.15); }
+    .page-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.15); border-color: var(--accent); }
     .page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
-    /* ENTRADA MANUAL POR URL */
     .manual-box {
       margin-top: 1rem;
       padding-top: 1rem;
@@ -315,7 +328,7 @@
     }
     .manual-box p { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
 
-    /* FICHA DE INSPECCIÓN Y PUBLICACIÓN */
+    /* FICHA DE INSPECCIÓN */
     .preview-box {
       background: var(--card-inner);
       border: 1px solid var(--border);
@@ -396,7 +409,7 @@
     }
     .player-test-container iframe { width: 100%; height: 100%; border: 0; }
 
-    /* GESTIÓN DE CATÁLOGO PUBLICADO */
+    /* COLUMNA DERECHA: TÍTULOS PUBLICADOS */
     .published-header-bar {
       display: flex;
       align-items: center;
@@ -405,12 +418,13 @@
     }
 
     .badge-count {
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: var(--accent);
       font-size: 0.75rem;
       font-weight: 800;
       padding: 2px 8px;
-      border-radius: 12px;
+      border-radius: 6px;
     }
 
     .filter-pills-row {
@@ -424,14 +438,15 @@
       border: 1px solid var(--border);
       color: var(--text-muted);
       padding: 0.3rem 0.75rem;
-      border-radius: 4px;
+      border-radius: 6px;
       font-size: 0.75rem;
       font-weight: 700;
       cursor: pointer;
     }
     .pub-pill.active {
-      background: rgba(255, 255, 255, 0.2);
-      color: #fff;
+      background: var(--accent);
+      color: #101114;
+      border-color: var(--accent);
     }
 
     .pub-search {
@@ -468,7 +483,7 @@
       align-items: center;
       transition: border-color 0.2s;
     }
-    .published-item:hover { border-color: rgba(255, 255, 255, 0.2); }
+    .published-item:hover { border-color: rgba(245, 158, 11, 0.3); }
 
     .pub-thumb {
       width: 50px;
@@ -506,14 +521,13 @@
     .type-tag {
       font-size: 0.62rem;
       font-weight: 800;
-      padding: 1px 5px;
-      border-radius: 3px;
+      padding: 1px 6px;
+      border-radius: 4px;
       text-transform: uppercase;
-      color: #fff;
     }
-    .type-tag.pelicula { background: var(--accent); }
-    .type-tag.serie { background: var(--blue); }
-    .type-tag.anime { background: var(--purple); }
+    .type-tag.pelicula { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .type-tag.serie { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); }
+    .type-tag.anime { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.35); }
 
     .pub-actions {
       display: flex;
@@ -532,21 +546,21 @@
     }
 
     .btn-save-row {
-      background: var(--blue);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
       color: #fff;
-      border: none;
       padding: 0.35rem 0.65rem;
       border-radius: 4px;
       font-size: 0.72rem;
       font-weight: 700;
       cursor: pointer;
     }
-    .btn-save-row:hover { background: #1d4ed8; }
+    .btn-save-row:hover { background: var(--accent); color: #101114; border-color: var(--accent); }
 
     .btn-del-row {
-      background: rgba(229, 9, 20, 0.15);
-      border: 1px solid rgba(229, 9, 20, 0.3);
-      color: #ff6b6b;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      color: #fca5a5;
       padding: 0.35rem 0.65rem;
       border-radius: 4px;
       font-size: 0.72rem;
@@ -555,7 +569,7 @@
       transition: all 0.2s;
     }
     .btn-del-row:hover {
-      background: var(--accent);
+      background: #ef4444;
       color: #fff;
     }
 
@@ -563,12 +577,12 @@
       position: fixed;
       bottom: 2rem;
       right: 2rem;
-      background: #10b981;
-      color: #fff;
+      background: var(--accent);
+      color: #101114;
       padding: 0.8rem 1.4rem;
       border-radius: 6px;
       font-size: 0.88rem;
-      font-weight: 700;
+      font-weight: 800;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
       display: none;
       z-index: 1000;
@@ -580,7 +594,7 @@
   <div class="admin-wrapper">
     <header class="admin-header">
       <div class="admin-title">
-        <h1>⚙️ BigScreen Studio</h1>
+        <h1>⚙️ Big<span>Screen</span> Studio</h1>
         <p>Centro de Control y Publicación Directa en GitHub Pages</p>
       </div>
       <div>
@@ -612,7 +626,7 @@
       
       <div style="display: flex; gap: 0.6rem; align-items: flex-end;">
         <button class="btn-primary" id="btn-save-credentials" style="flex: 1;">Guardar Llaves</button>
-        <button class="btn-bookmark" id="btn-create-bookmark" title="Genera un enlace con tus llaves para guardarlo en favoritos">⭐ Crear Marcador de Acceso</button>
+        <button class="btn-bookmark" id="btn-create-bookmark" title="Genera un enlace con tus llaves para guardarlo en favoritos">⭐ Crear Marcador</button>
       </div>
     </section>
 
@@ -631,9 +645,11 @@
           </div>
 
           <div class="search-row">
-            <input type="text" id="tmdb-search-input" placeholder="Buscar por título (ej: Batman, Dune, Shingeki)...">
+            <input type="text" id="tmdb-search-input" placeholder="Buscar título o director (ej: Nolan, Tarantino, Batman)...">
             <button class="btn-primary" id="btn-tmdb-search">Buscar</button>
           </div>
+
+          <div class="director-badge-alert" id="director-banner"></div>
 
           <div class="tmdb-results-grid" id="tmdb-grid"></div>
 
@@ -690,7 +706,6 @@
             </div>
           </div>
 
-          <!-- REPRODUCTOR BAJO DEMANDA -->
           <div class="preview-player-wrapper">
             <button class="btn-test-stream" id="btn-load-stream-preview">▶ Cargar vista previa del reproductor</button>
             <div class="player-test-container" id="player-test-container">
@@ -730,7 +745,7 @@
     </main>
   </div>
 
-  <div class="status-toast" id="toast">Acción completada con éxito</div>
+  <div class="status-toast" id="toast">Acción completada</div>
 
   <script>
     let publishedCatalog = [];
@@ -741,6 +756,9 @@
     let currentTmdbCategory = 'trending';
     let currentPublishedFilter = 'all';
 
+    // Memoria para filmografías completas por director/persona
+    let cachedPersonResults = [];
+
     const tmdbGrid = document.getElementById("tmdb-grid");
     const tmdbSearchInput = document.getElementById("tmdb-search-input");
     const pageIndicator = document.getElementById("page-indicator");
@@ -750,6 +768,7 @@
     const publishedList = document.getElementById("published-list");
     const pubSearchInput = document.getElementById("pub-search-input");
     const publishedCounter = document.getElementById("published-counter");
+    const directorBanner = document.getElementById("director-banner");
     const toast = document.getElementById("toast");
 
     function obtenerCredencialesLimpias() {
@@ -819,6 +838,7 @@
       document.getElementById("gh-repo").value = rawRepo;
 
       showToast("Configuración guardada");
+      cachedPersonResults = [];
       cargarExploradorTMDb();
       cargarCatalogoRemoto();
     });
@@ -857,6 +877,7 @@
       setTimeout(() => { toast.style.display = "none"; }, 3500);
     }
 
+    // EXPLORADOR INTELIGENTE (BÚSQUEDA POR TÍTULO Y POR DIRECTOR/PERSONA)
     async function cargarExploradorTMDb() {
       const tmdbKey = localStorage.getItem("tmdb_key");
       if (!tmdbKey) {
@@ -867,28 +888,93 @@
       tmdbGrid.innerHTML = `<p style="grid-column: 1/-1; color: var(--text-muted); padding: 2rem; text-align: center;">Consultando TMDb...</p>`;
 
       const query = tmdbSearchInput.value.trim();
-      const p1 = (currentViewPage * 2) - 1;
-      const p2 = currentViewPage * 2;
 
-      function construirUrlTmdb(page) {
-        if (query) {
-          return `https://api.themoviedb.org/3/search/multi?api_key=${tmdbKey}&language=es-MX&query=${encodeURIComponent(query)}&page=${page}`;
-        }
-        if (currentTmdbCategory === 'trending') {
-          return `https://api.themoviedb.org/3/trending/all/week?api_key=${tmdbKey}&language=es-MX&page=${page}`;
-        }
-        if (currentTmdbCategory === 'movies') {
-          return `https://api.themoviedb.org/3/movie/popular?api_key=${tmdbKey}&language=es-MX&page=${page}`;
-        }
-        if (currentTmdbCategory === 'tv') {
-          return `https://api.themoviedb.org/3/tv/popular?api_key=${tmdbKey}&language=es-MX&page=${page}`;
-        }
-        if (currentTmdbCategory === 'anime') {
-          return `https://api.themoviedb.org/3/discover/tv?api_key=${tmdbKey}&language=es-MX&with_genres=16&page=${page}`;
-        }
+      // MODO 1: PAGINACIÓN DE FILMOGRAFÍA DE DIRECTOR EN MEMORIA
+      if (cachedPersonResults.length > 0) {
+        const pageSize = 24;
+        totalAvailablePages = Math.max(1, Math.ceil(cachedPersonResults.length / pageSize));
+        const start = (currentViewPage - 1) * pageSize;
+        const pageItems = cachedPersonResults.slice(start, start + pageSize);
+
+        pageIndicator.innerText = `Página ${currentViewPage} de ${totalAvailablePages}`;
+        btnPagePrev.disabled = (currentViewPage <= 1);
+        btnPageNext.disabled = (currentViewPage >= totalAvailablePages);
+
+        renderTarjetasGrid(pageItems);
+        return;
       }
 
+      // MODO 2: BÚSQUEDA NUEVA O NAVEGACIÓN ESTÁNDAR
       try {
+        if (query) {
+          // Primero probamos si coincide con una Persona (Director / Actor)
+          const personRes = await fetch(`https://api.themoviedb.org/3/search/person?api_key=${tmdbKey}&language=es-MX&query=${encodeURIComponent(query)}`);
+          const personData = await personRes.json();
+
+          if (personData.results && personData.results.length > 0) {
+            const firstPerson = personData.results[0];
+            // Si el nombre coincide bastante o la persona tiene popularidad
+            if (firstPerson.known_for_department === 'Directing' || firstPerson.popularity > 5.0) {
+              const creditsRes = await fetch(`https://api.themoviedb.org/3/person/${firstPerson.id}/combined_credits?api_key=${tmdbKey}&language=es-MX`);
+              const creditsData = await creditsRes.json();
+
+              // Unir lo que dirigió (crew) con lo que participó, priorizando dirección
+              const directing = (creditsData.crew || []).filter(c => c.department === 'Directing' && c.poster_path);
+              const other = (creditsData.cast || []).filter(c => c.poster_path);
+
+              // Eliminar duplicados
+              const mapUnique = new Map();
+              directing.forEach(item => mapUnique.set(item.id, item));
+              other.forEach(item => { if (!mapUnique.has(item.id)) mapUnique.set(item.id, item); });
+
+              let fullList = Array.from(mapUnique.values());
+              // Ordenar por popularidad descendente
+              fullList.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
+
+              if (fullList.length > 0) {
+                cachedPersonResults = fullList;
+                currentViewPage = 1;
+                directorBanner.innerHTML = `🎬 Filmografía completa de: <strong>${firstPerson.name}</strong> (${fullList.length} títulos encontrados)`;
+                directorBanner.style.display = 'block';
+
+                const pageSize = 24;
+                totalAvailablePages = Math.ceil(cachedPersonResults.length / pageSize);
+                pageIndicator.innerText = `Página 1 de ${totalAvailablePages}`;
+                btnPagePrev.disabled = true;
+                btnPageNext.disabled = (totalAvailablePages <= 1);
+
+                renderTarjetasGrid(cachedPersonResults.slice(0, 24));
+                return;
+              }
+            }
+          }
+        }
+
+        // Si no fue director o es navegación habitual, ocultamos el banner
+        directorBanner.style.display = 'none';
+        cachedPersonResults = [];
+
+        const p1 = (currentViewPage * 2) - 1;
+        const p2 = currentViewPage * 2;
+
+        function construirUrlTmdb(page) {
+          if (query) {
+            return `https://api.themoviedb.org/3/search/multi?api_key=${tmdbKey}&language=es-MX&query=${encodeURIComponent(query)}&page=${page}`;
+          }
+          if (currentTmdbCategory === 'trending') {
+            return `https://api.themoviedb.org/3/trending/all/week?api_key=${tmdbKey}&language=es-MX&page=${page}`;
+          }
+          if (currentTmdbCategory === 'movies') {
+            return `https://api.themoviedb.org/3/movie/popular?api_key=${tmdbKey}&language=es-MX&page=${page}`;
+          }
+          if (currentTmdbCategory === 'tv') {
+            return `https://api.themoviedb.org/3/tv/popular?api_key=${tmdbKey}&language=es-MX&page=${page}`;
+          }
+          if (currentTmdbCategory === 'anime') {
+            return `https://api.themoviedb.org/3/discover/tv?api_key=${tmdbKey}&language=es-MX&with_genres=16&page=${page}`;
+          }
+        }
+
         const [res1, res2] = await Promise.all([
           fetch(construirUrlTmdb(p1)),
           fetch(construirUrlTmdb(p2))
@@ -912,34 +998,38 @@
           return;
         }
 
-        tmdbGrid.innerHTML = results.map(item => {
-          const title = item.title || item.name || "Sin título";
-          const date = item.release_date || item.first_air_date || "";
-          const year = date ? date.substring(0, 4) : "N/A";
-          const isMovie = item.media_type === "movie" || (!item.media_type && currentTmdbCategory === 'movies');
-          const type = isMovie ? "pelicula" : (currentTmdbCategory === 'anime' ? "anime" : "serie");
-          const poster = `https://image.tmdb.org/t/p/w342${item.poster_path}`;
-
-          return `
-            <div class="tmdb-item-card">
-              <div class="tmdb-item-poster">
-                <img src="${poster}" alt="${title}" loading="lazy">
-              </div>
-              <div class="tmdb-item-info">
-                <div>
-                  <div class="tmdb-item-title" title="${title}">${title}</div>
-                  <div class="tmdb-item-meta">${type === 'pelicula' ? 'PELÍCULA' : type.toUpperCase()} • ${year}</div>
-                </div>
-                <button class="btn-inspect" onclick="prepararInspeccion('${type}', ${item.id})">Inspeccionar</button>
-              </div>
-            </div>
-          `;
-        }).join("");
+        renderTarjetasGrid(results);
 
       } catch (err) {
         console.error(err);
         tmdbGrid.innerHTML = `<p style="grid-column: 1/-1; color: var(--accent); padding: 2rem; text-align: center;">Error al conectar con TMDb.</p>`;
       }
+    }
+
+    function renderTarjetasGrid(items) {
+      tmdbGrid.innerHTML = items.map(item => {
+        const title = item.title || item.name || "Sin título";
+        const date = item.release_date || item.first_air_date || "";
+        const year = date ? date.substring(0, 4) : "N/A";
+        const isMovie = item.media_type === "movie" || (!item.media_type && currentTmdbCategory === 'movies') || (item.title && !item.name);
+        const type = isMovie ? "pelicula" : (currentTmdbCategory === 'anime' ? "anime" : "serie");
+        const poster = `https://image.tmdb.org/t/p/w342${item.poster_path}`;
+
+        return `
+          <div class="tmdb-item-card">
+            <div class="tmdb-item-poster">
+              <img src="${poster}" alt="${title}" loading="lazy">
+            </div>
+            <div class="tmdb-item-info">
+              <div>
+                <div class="tmdb-item-title" title="${title}">${title}</div>
+                <div class="tmdb-item-meta">${type === 'pelicula' ? 'PELÍCULA' : type.toUpperCase()} • ${year}</div>
+              </div>
+              <button class="btn-inspect" onclick="prepararInspeccion('${type}', ${item.id})">Inspeccionar</button>
+            </div>
+          </div>
+        `;
+      }).join("");
     }
 
     document.querySelectorAll(".pill-btn").forEach(btn => {
@@ -948,6 +1038,8 @@
         btn.classList.add("active");
         currentTmdbCategory = btn.dataset.type;
         currentViewPage = 1;
+        cachedPersonResults = [];
+        directorBanner.style.display = 'none';
         tmdbSearchInput.value = "";
         cargarExploradorTMDb();
       });
@@ -955,12 +1047,14 @@
 
     document.getElementById("btn-tmdb-search").addEventListener("click", () => {
       currentViewPage = 1;
+      cachedPersonResults = [];
       cargarExploradorTMDb();
     });
 
     tmdbSearchInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         currentViewPage = 1;
+        cachedPersonResults = [];
         cargarExploradorTMDb();
       }
     });
@@ -979,7 +1073,7 @@
       }
     });
 
-    // Inspección de título (sin autoejecutar el iframe)
+    // INSPECCIÓN Y DETALLES
     window.prepararInspeccion = async function(type, tmdbId) {
       const tmdbKey = localStorage.getItem("tmdb_key");
       const isMovie = (type === "pelicula");
@@ -1030,7 +1124,6 @@
         document.getElementById("prev-type-select").value = type;
         document.getElementById("prev-quality-select").value = "1080p";
 
-        // Reiniciar reproductor de prueba sin disparar peticiones
         const container = document.getElementById("player-test-container");
         const iframe = document.getElementById("prev-player-iframe");
         container.style.display = "none";
@@ -1046,12 +1139,11 @@
       }
     };
 
-    // Botón para cargar reproductor sólo si se solicita
     document.getElementById("btn-load-stream-preview").addEventListener("click", () => {
       if (!inspectingItem) return;
       const { type, tmdb_id } = inspectingItem;
       const base = "https://facilitoplay.com/e";
-      const params = "?color=e50914&fondo=0b0d11";
+      const params = "?color=f59e0b&fondo=101114";
       
       let embedUrl = "";
       if (type === "pelicula") embedUrl = `${base}/pelicula/${tmdb_id}${params}`;
@@ -1066,7 +1158,6 @@
       document.getElementById("btn-load-stream-preview").style.display = "none";
     });
 
-    // Publicar en GitHub
     document.getElementById("btn-publish").addEventListener("click", async () => {
       if (!inspectingItem) return;
 
