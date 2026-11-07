@@ -1,27 +1,5 @@
 [
   {
-    "id": 1793744290413,
-    "tmdb_id": 279246,
-    "title": "La emperatriz divorciada",
-    "type": "serie",
-    "rating": 0,
-    "year": 2026,
-    "duration": null,
-    "episodes": 10,
-    "seasons": 1,
-    "seasons_detail": [
-      {
-        "season_number": 1,
-        "name": "Temporada 1",
-        "episode_count": 10
-      }
-    ],
-    "poster": "https://image.tmdb.org/t/p/w500/7cS90VaWOqQhgmsT0FYXYmIMcRp.jpg",
-    "backdrop": "https://image.tmdb.org/t/p/original/1ptukf8gx19U1HcBv3aRzzlXuyJ.jpg",
-    "synopsis": "Cuando el emperador Sovieshu se enamora de una esclava fugitiva y le pide el divorcio a su esposa, la querida emperatriz Navier, ella lo sorprende con una audaz petición: solo aceptará si le permiten casarse con Heinrey, el príncipe del Reino del Oeste.",
-    "quality": "1080p"
-  },
-  {
     "id": 1793744247132,
     "tmdb_id": 1339713,
     "title": "Obsesión",
