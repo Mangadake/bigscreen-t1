@@ -1,21 +1,5 @@
 [
   {
-    "id": 1793744654918,
-    "tmdb_id": 354912,
-    "title": "Coco",
-    "type": "pelicula",
-    "rating": 8.2,
-    "year": 2017,
-    "duration": "1h 49m",
-    "episodes": null,
-    "seasons": 1,
-    "seasons_detail": null,
-    "poster": "https://image.tmdb.org/t/p/w500/oburjHqzOrTtDLYbLunKLwUHhk1.jpg",
-    "backdrop": "https://image.tmdb.org/t/p/original/g7CHF8gTLGooTbP4GznIGwaqAGL.jpg",
-    "synopsis": "A pesar de la desconcertante prohibición de la generación de música de su familia, Miguel sueña con convertirse en un músico consumado como su ídolo, Ernesto de la Cruz. Desesperado por demostrar su talento, Miguel se encuentra en la deslumbrante y colorida Tierra de los Muertos siguiendo una misteriosa cadena de eventos. En el camino, se encuentra con el encantador y tramposo Héctor. Juntos, realizan un viaje extraordinario para descubrir la historia real detrás de la familia de Miguel.",
-    "quality": "1080p"
-  },
-  {
     "id": 1793744521605,
     "tmdb_id": 1058424,
     "title": "Hope: El primer impacto",
