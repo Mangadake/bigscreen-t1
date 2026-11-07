@@ -1,5 +1,20 @@
 [
   {
+    "id": 1794062228054,
+    "tmdb_id": 603,
+    "type": "pelicula",
+    "title": "Matrix",
+    "year": 1999,
+    "duration": "131 min",
+    "episodes": null,
+    "rating": 8.3,
+    "synopsis": "Un hacker informático aprende de misteriosos rebeldes la verdadera naturaleza de su realidad y su papel en la guerra contra sus controladores.",
+    "poster": "https://image.tmdb.org/t/p/w500/8rT9kG2EYkZpJmYCuTJNnPDEube.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/tlm8UkiQsitc8rSuIAscQDCnP8d.jpg",
+    "quality": "1080p",
+    "seasons_detail": []
+  },
+  {
     "id": 1794059961947,
     "tmdb_id": 1263337,
     "type": "pelicula",
