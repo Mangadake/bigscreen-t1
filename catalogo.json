@@ -1,5 +1,20 @@
 [
   {
+    "id": 1794062242209,
+    "tmdb_id": 604,
+    "type": "pelicula",
+    "title": "Matrix recargado",
+    "year": 2003,
+    "duration": "138 min",
+    "episodes": null,
+    "rating": 7.1,
+    "synopsis": "Neo y sus aliados corren contra el tiempo antes de que las máquinas descubran la ciudad de Zion y la destruyan. Mientras busca la verdad sobre la Matrix, Neo debe salvar a Trinity de un oscuro destino.",
+    "poster": "https://image.tmdb.org/t/p/w500/ljaXjqT9h5i8b8NiN9kCAQl32Cg.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/ihOJcrorpDQtHTzIOrobbOhpJsj.jpg",
+    "quality": "1080p",
+    "seasons_detail": []
+  },
+  {
     "id": 1794062228054,
     "tmdb_id": 603,
     "type": "pelicula",
