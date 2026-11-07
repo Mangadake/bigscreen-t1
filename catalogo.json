@@ -1,5 +1,20 @@
 [
   {
+    "id": 1794059961947,
+    "tmdb_id": 1263337,
+    "type": "pelicula",
+    "title": "El corazón de la bestia",
+    "year": 2026,
+    "duration": "101 min",
+    "episodes": null,
+    "rating": 7.3,
+    "synopsis": "Tras un terrible accidente aéreo, el oficial de las Fuerzas Especiales James Belmont y su perro de combate, Odin, quedan varados en lo profundo de la naturaleza salvaje de Alaska. Juntos, se ven obligados a librar una brutal lucha por la supervivencia contra los elementos.",
+    "poster": "https://image.tmdb.org/t/p/w500/kVDHPDggier9ciMc8Xglinq1jWv.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/kpqsljPQtWqPKJBTAEtoXtQZ9Ko.jpg",
+    "quality": "1080p",
+    "seasons_detail": []
+  },
+  {
     "id": 1793808367198,
     "tmdb_id": 1101412,
     "type": "pelicula",
