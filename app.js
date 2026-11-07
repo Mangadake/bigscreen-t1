@@ -15,7 +15,6 @@ const heroBanner = document.getElementById("hero-banner");
 let mediaData = [];
 let currentCategory = "all";
 
-// Normalización de etiquetas con acento y colores
 function normalizarTipoTexto(type) {
   if (!type) return "PELÍCULA";
   const t = type.toLowerCase().trim();
@@ -34,7 +33,6 @@ function obtenerClaseTipoBadge(type) {
   return "badge-pelicula";
 }
 
-// Clases y textos de calidad
 function obtenerClaseCalidad(calidad) {
   if (!calidad) return "";
   const c = calidad.toUpperCase().trim();
@@ -55,7 +53,6 @@ function normalizarTextoCalidad(calidad) {
   return calidad;
 }
 
-// GESTIÓN DE FAVORITOS
 function obtenerFavoritos() {
   try {
     return JSON.parse(localStorage.getItem("streamlab_user_favorites")) || [];
@@ -117,7 +114,6 @@ let currentHeroIndex = 0;
 let heroItems = [];
 let heroTimer = null;
 
-// Cargar catálogo desde catalogo.json
 async function cargarCatalogo() {
   try {
     const res = await fetch(`catalogo.json?t=${Date.now()}`);
@@ -140,7 +136,6 @@ async function cargarCatalogo() {
   }
 }
 
-// Hero Slider
 function iniciarHeroSlider(items) {
   if (!items || items.length === 0 || !heroBanner) return;
 
@@ -258,19 +253,19 @@ window.alternarFavoritoPorId = function(itemId) {
   if (item) alternarFavorito(item, null);
 };
 
-// Generador de rutas oficial de FacilitoPlay con personalización de colores
-function obtenerUrlFacilitoPlay(item, season = 1, episode = 1) {
-  const base = "https://facilitoplay.com/e";
-  const params = "?color=e50914&fondo=0b0d11";
+// Generador de rutas oficial de MovieMaster API con personalización Ámbar
+function obtenerUrlMovieMaster(item, season = 1, episode = 1) {
+  const base = "https://api.moviemaster.lat/e";
+  const params = "?skin=cine&color=f59e0b";
   const { type, tmdb_id } = item;
 
-  if (type === "pelicula") return `${base}/pelicula/${tmdb_id}${params}`;
-  if (type === "serie") return `${base}/serie/${tmdb_id}/${season}/${episode}${params}`;
-  if (type === "anime") return `${base}/anime/${tmdb_id}/${season}/${episode}${params}`;
-  return "";
+  if (type === "pelicula") {
+    return `${base}/movie/${tmdb_id}${params}`;
+  }
+  // Para series y anime en TMDB:
+  return `${base}/tv/${tmdb_id}/${season}/${episode}${params}`;
 }
 
-// Capa de publicidad
 function activarCapaPublicidad(playerContainer) {
   if (!playerContainer) return;
 
@@ -297,7 +292,6 @@ function activarCapaPublicidad(playerContainer) {
   playerContainer.prepend(overlay);
 }
 
-// Crear elemento card
 function crearElementoCard(item) {
   const card = document.createElement("article");
   card.className = "card";
@@ -343,7 +337,6 @@ function crearElementoCard(item) {
   return card;
 }
 
-// Renderizado por secciones en "Todos"
 function renderContent() {
   catalogGrid.innerHTML = "";
   const query = searchInput.value.toLowerCase().trim();
@@ -435,7 +428,6 @@ filterButtons.forEach(btn => {
   });
 });
 
-// Modal del reproductor
 async function openModal(item) {
   const detailLabel = item.episodes ? `${item.episodes} Capítulos` : (item.duration || "");
   const esSerieOAnime = (item.type === "serie" || item.type === "anime");
@@ -495,7 +487,7 @@ async function openModal(item) {
     `;
   }
 
-  const initialVideoUrl = obtenerUrlFacilitoPlay(item, 1, 1);
+  const initialVideoUrl = obtenerUrlMovieMaster(item, 1, 1);
 
   modalBody.innerHTML = `
     <div class="modal-detail-grid">
@@ -521,7 +513,8 @@ async function openModal(item) {
         id="player-iframe"
         src="${initialVideoUrl}"
         title="Reproductor - ${item.title}"
-        allow="autoplay; fullscreen; picture-in-picture"
+        allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+        referrerpolicy="origin"
         allowfullscreen>
       </iframe>
     </div>
@@ -551,7 +544,7 @@ async function openModal(item) {
         btn.addEventListener("click", () => {
           document.querySelectorAll(".ep-btn").forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
-          iframe.src = obtenerUrlFacilitoPlay(item, seasonNum, i);
+          iframe.src = obtenerUrlMovieMaster(item, seasonNum, i);
           activarCapaPublicidad(playerContainer);
         });
 
@@ -569,7 +562,7 @@ async function openModal(item) {
       const eCount = parseInt(selectedOption.dataset.count);
 
       renderEpisodesGrid(sNum, eCount);
-      iframe.src = obtenerUrlFacilitoPlay(item, sNum, 1);
+      iframe.src = obtenerUrlMovieMaster(item, sNum, 1);
       activarCapaPublicidad(playerContainer);
     });
   }
@@ -580,7 +573,7 @@ async function openModal(item) {
 
 function closeModal() {
   const iframe = document.getElementById("player-iframe");
-  if (iframe) iframe.src = ""; // Cortar conexión al instante
+  if (iframe) iframe.src = "";
 
   modalOverlay.style.display = "none";
   modalOverlay.classList.remove("active");
