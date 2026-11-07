@@ -12,7 +12,7 @@
       --card: #181a20;
       --card-inner: #14161c;
       --border: rgba(255, 255, 255, 0.08);
-      --accent: #f59e0b; /* Ámbar cinemático */
+      --accent: #f59e0b;
       --accent-hover: #d97706;
       --text: #f5f5f7;
       --text-muted: #9ea3ae;
@@ -36,7 +36,6 @@
       margin: 0 auto;
     }
 
-    /* TOP BAR */
     .admin-header {
       display: flex;
       align-items: center;
@@ -80,7 +79,6 @@
 
     .btn-config:hover { background: rgba(255, 255, 255, 0.12); }
 
-    /* PANEL CREDENCIALES */
     .config-panel {
       display: none;
       background: var(--card);
@@ -127,7 +125,6 @@
     }
     .btn-bookmark:hover { background: rgba(255, 255, 255, 0.15); border-color: var(--accent); color: var(--accent); }
 
-    /* LAYOUT A 2 COLUMNAS (1440p) */
     .dashboard-grid {
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
@@ -290,7 +287,6 @@
     }
     .btn-inspect:hover { background: var(--accent); color: #101114; border-color: var(--accent); }
 
-    /* PAGINACIÓN */
     .pagination-bar {
       display: flex;
       align-items: center;
@@ -328,7 +324,6 @@
     }
     .manual-box p { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
 
-    /* FICHA DE INSPECCIÓN */
     .preview-box {
       background: var(--card-inner);
       border: 1px solid var(--border);
@@ -409,7 +404,6 @@
     }
     .player-test-container iframe { width: 100%; height: 100%; border: 0; }
 
-    /* COLUMNA DERECHA: TÍTULOS PUBLICADOS */
     .published-header-bar {
       display: flex;
       align-items: center;
@@ -709,7 +703,7 @@
           <div class="preview-player-wrapper">
             <button class="btn-test-stream" id="btn-load-stream-preview">▶ Cargar vista previa del reproductor</button>
             <div class="player-test-container" id="player-test-container">
-              <iframe id="prev-player-iframe" src="" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
+              <iframe id="prev-player-iframe" src="" allowfullscreen allow="autoplay; fullscreen; picture-in-picture; encrypted-media" referrerpolicy="origin"></iframe>
             </div>
           </div>
 
@@ -755,8 +749,6 @@
     let totalAvailablePages = 1;
     let currentTmdbCategory = 'trending';
     let currentPublishedFilter = 'all';
-
-    // Memoria para filmografías completas por director/persona
     let cachedPersonResults = [];
 
     const tmdbGrid = document.getElementById("tmdb-grid");
@@ -863,7 +855,7 @@
       window.location.hash = hash;
       navigator.clipboard.writeText(bookmarkUrl);
 
-      alert("¡Enlace generado y copiado a tu portapapeles!\n\nPresiona 'Ctrl + D' para guardarlo en Marcadores.");
+      alert("¡Enlace generado y copiado al portapapeles!\n\nPresiona 'Ctrl + D' para guardarlo en Marcadores.");
       showToast("Enlace de acceso copiado");
     });
 
@@ -877,7 +869,6 @@
       setTimeout(() => { toast.style.display = "none"; }, 3500);
     }
 
-    // EXPLORADOR INTELIGENTE (BÚSQUEDA POR TÍTULO Y POR DIRECTOR/PERSONA)
     async function cargarExploradorTMDb() {
       const tmdbKey = localStorage.getItem("tmdb_key");
       if (!tmdbKey) {
@@ -889,7 +880,6 @@
 
       const query = tmdbSearchInput.value.trim();
 
-      // MODO 1: PAGINACIÓN DE FILMOGRAFÍA DE DIRECTOR EN MEMORIA
       if (cachedPersonResults.length > 0) {
         const pageSize = 24;
         totalAvailablePages = Math.max(1, Math.ceil(cachedPersonResults.length / pageSize));
@@ -904,31 +894,25 @@
         return;
       }
 
-      // MODO 2: BÚSQUEDA NUEVA O NAVEGACIÓN ESTÁNDAR
       try {
         if (query) {
-          // Primero probamos si coincide con una Persona (Director / Actor)
           const personRes = await fetch(`https://api.themoviedb.org/3/search/person?api_key=${tmdbKey}&language=es-MX&query=${encodeURIComponent(query)}`);
           const personData = await personRes.json();
 
           if (personData.results && personData.results.length > 0) {
             const firstPerson = personData.results[0];
-            // Si el nombre coincide bastante o la persona tiene popularidad
             if (firstPerson.known_for_department === 'Directing' || firstPerson.popularity > 5.0) {
               const creditsRes = await fetch(`https://api.themoviedb.org/3/person/${firstPerson.id}/combined_credits?api_key=${tmdbKey}&language=es-MX`);
               const creditsData = await creditsRes.json();
 
-              // Unir lo que dirigió (crew) con lo que participó, priorizando dirección
               const directing = (creditsData.crew || []).filter(c => c.department === 'Directing' && c.poster_path);
               const other = (creditsData.cast || []).filter(c => c.poster_path);
 
-              // Eliminar duplicados
               const mapUnique = new Map();
               directing.forEach(item => mapUnique.set(item.id, item));
               other.forEach(item => { if (!mapUnique.has(item.id)) mapUnique.set(item.id, item); });
 
               let fullList = Array.from(mapUnique.values());
-              // Ordenar por popularidad descendente
               fullList.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
 
               if (fullList.length > 0) {
@@ -950,7 +934,6 @@
           }
         }
 
-        // Si no fue director o es navegación habitual, ocultamos el banner
         directorBanner.style.display = 'none';
         cachedPersonResults = [];
 
@@ -1073,7 +1056,6 @@
       }
     });
 
-    // INSPECCIÓN Y DETALLES
     window.prepararInspeccion = async function(type, tmdbId) {
       const tmdbKey = localStorage.getItem("tmdb_key");
       const isMovie = (type === "pelicula");
@@ -1139,16 +1121,16 @@
       }
     };
 
+    // Previsualización con MovieMaster
     document.getElementById("btn-load-stream-preview").addEventListener("click", () => {
       if (!inspectingItem) return;
       const { type, tmdb_id } = inspectingItem;
-      const base = "https://facilitoplay.com/e";
-      const params = "?color=f59e0b&fondo=101114";
+      const base = "https://api.moviemaster.lat/e";
+      const params = "?skin=cine&color=f59e0b";
       
-      let embedUrl = "";
-      if (type === "pelicula") embedUrl = `${base}/pelicula/${tmdb_id}${params}`;
-      else if (type === "serie") embedUrl = `${base}/serie/${tmdb_id}/1/1${params}`;
-      else if (type === "anime") embedUrl = `${base}/anime/${tmdb_id}/1/1${params}`;
+      let embedUrl = (type === "pelicula")
+        ? `${base}/movie/${tmdb_id}${params}`
+        : `${base}/tv/${tmdb_id}/1/1${params}`;
 
       const container = document.getElementById("player-test-container");
       const iframe = document.getElementById("prev-player-iframe");
