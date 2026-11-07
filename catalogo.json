@@ -1,21 +1,5 @@
 [
   {
-    "id": 1793744247132,
-    "tmdb_id": 1339713,
-    "title": "Obsesión",
-    "type": "pelicula",
-    "rating": 8.2,
-    "year": 2026,
-    "duration": "1h 49m",
-    "episodes": null,
-    "seasons": 1,
-    "seasons_detail": null,
-    "poster": "https://image.tmdb.org/t/p/w500/rmCkNtzYR2xTOO3ZXmIqB5zgYdE.jpg",
-    "backdrop": "https://image.tmdb.org/t/p/original/5lTZyuBTNOfawsfPT8Q0cIg6qAF.jpg",
-    "synopsis": "Tras romper el misterioso \"Sauce de un Deseo\" para conquistar el corazón de la chica que le gusta, un romántico empedernido consigue exactamente lo que pedía, pero pronto descubre que algunos deseos tienen un precio oscuro y siniestro.",
-    "quality": "1080p"
-  },
-  {
     "id": 1793744202592,
     "tmdb_id": 791523,
     "title": "Wildwood: El bosque salvaje",
