@@ -1,32 +1,5 @@
 [
   {
-    "id": 1793744317391,
-    "tmdb_id": 259909,
-    "title": "Dexter: Resurrección",
-    "type": "serie",
-    "rating": 8.5,
-    "year": 2025,
-    "duration": null,
-    "episodes": 20,
-    "seasons": 2,
-    "seasons_detail": [
-      {
-        "season_number": 1,
-        "name": "Temporada 1",
-        "episode_count": 10
-      },
-      {
-        "season_number": 2,
-        "name": "Temporada 2",
-        "episode_count": 10
-      }
-    ],
-    "poster": "https://image.tmdb.org/t/p/w500/lZyvtYfG6RMJm3B6sjfJvcTVtFw.jpg",
-    "backdrop": "https://image.tmdb.org/t/p/original/vcpj6rRDS93ImHCLPY8bwBuFGjR.jpg",
-    "synopsis": "Dexter Morgan despierta de un coma de diez semanas y, mientras comienza una dolorosa recuperación, se entera de que su hijo Harrison Morgan ha huido a Nueva York. Tanto el padre como el hijo se sienten más cerca de enfrentarse a la oscuridad de la que han intentado escapar.",
-    "quality": "1080p"
-  },
-  {
     "id": 1793744290413,
     "tmdb_id": 279246,
     "title": "La emperatriz divorciada",
