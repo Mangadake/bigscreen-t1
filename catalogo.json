@@ -1,20 +1,5 @@
 [
   {
-    "id": 1793808367198,
-    "tmdb_id": 1101412,
-    "type": "pelicula",
-    "title": "Vértigo 2: Punto muerto",
-    "year": 2026,
-    "duration": "98 min",
-    "episodes": null,
-    "rating": 7.3,
-    "synopsis": "Tras sobrevivir a una experiencia extrema, un nuevo grupo de jóvenes se enfrenta a un desafío aún más peligroso en un entorno remoto en Tailandia. A cientos de metros de altura, sin escapatoria y con condiciones impredecibles, deberán luchar contra el miedo, el tiempo y sus propios límites para sobrevivir.",
-    "poster": "https://image.tmdb.org/t/p/w500/xQlESgkDM7rczAWySdB0WBomh39.jpg",
-    "backdrop": "https://image.tmdb.org/t/p/original/nGau0KBOaRILSK5MqFcuTfv7GMl.jpg",
-    "quality": "1080p",
-    "seasons_detail": []
-  },
-  {
     "id": 1793745005256,
     "tmdb_id": 985939,
     "title": "Vértigo",
